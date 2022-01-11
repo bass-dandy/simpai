@@ -1,0 +1,27 @@
+@font-face {
+	font-family: 'benguiat-gothic-std';
+	src: url('/fonts/benguiat-gothic-std-medium.otf');
+}
+
+@font-face {
+	font-family: 'sims-llhp';
+	src: url('/fonts/sims-llhp.ttf');
+}
+
+:root {
+	--color-bg: rgb(87, 115, 184);
+	--color-fg: rgb(150, 166, 217);
+	--color-accent: rgb(29, 47, 119);
+	--color-input: rgb(207, 215, 252);
+	--color-btn: rgb(176, 188, 249);
+}
+
+body, button {
+	font-family: 'benguiat-gothic-std';
+	color: var(--color-accent);
+}
+
+a {
+	text-decoration: dotted underline;
+	text-underline-offset: 2px;
+}
