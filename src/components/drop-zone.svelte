@@ -1,16 +1,21 @@
 <script>
 	import {fly} from 'svelte/transition';
 	import {deserialize} from 'dbpf-transform';
+	import Box from './box.svelte';
 
-	export let file = null;
+	export let unpackedFiles = null;
 
 	let fileInput; // hidden file input ref
 	let stagedFile;
 </script>
 
-<div
-	class="container"
-	transition:fly={{ y: -200, duration: 500 }}
+<Box
+	style={{
+		display: 'flex',
+		'flex-direction': 'column',
+		'align-items': 'center',
+		width: '400px',
+	}}
 >
 	<div
 		class="drop-zone"
@@ -47,7 +52,7 @@
 		<button
 			aria-label="confirm file selection"
 			on:click={async () => {
-				file = deserialize(
+				unpackedFiles = deserialize(
 					await stagedFile.arrayBuffer()
 				);
 			}}
@@ -55,24 +60,11 @@
 			✓
 		</button>
 	</div>
-</div>
+</Box>
 
 <style>
 	input[type="file"] {
 		display: none;
-	}
-
-	.container {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		width: 400px;
-		padding: 15px;
-		background-color: var(--color-bg);
-		border: 2px solid var(--color-accent);
-		border-radius: 15px;
-		box-shadow: 5px 5px 10px 0px var(--color-accent);
-		font-size: 1.2rem;
 	}
 
 	.drop-zone {

@@ -1,17 +1,32 @@
 <script>
+	import {getFileType} from 'dbpf-transform';
 	import DropZone from '../components/drop-zone.svelte';
+	import FileList from '../components/file-list.svelte';
+	import * as fileViewers from '../components/file-viewers';
 	import '../global.css';
 	
-	let file;
-
-	$: console.log(file);
+	let unpackedFiles;
+	let selectedFile;
 </script>
 
-<h1>Sims 2 DBPF Package Editor</h1>
-{#if !file}
+{#if !unpackedFiles}
 <div class="modal">
-	<DropZone bind:file />
+	<DropZone bind:unpackedFiles />
 </div>
+{:else}
+	<div class="layout">
+		<div class="left">
+			<FileList files={unpackedFiles} bind:selectedFile />
+		</div>
+		<div class="right">
+			<svelte:component
+				this={fileViewers[
+					getFileType(selectedFile?.meta.typeId ?? '')
+				]}
+				file={selectedFile}
+			/>
+		</div>
+	</div>
 {/if}
 
 <style>
@@ -20,6 +35,18 @@
 		font-family: "sims-llhp";
 		-webkit-text-stroke: 1px var(--color-accent);
 		-webkit-text-fill-color: white;
+	}
+
+	.layout {
+		display: flex;
+		height: 100vh;
+		padding: 30px;
+		box-sizing: border-box;
+	}
+
+	.right {
+		flex: 1;
+		margin-left: 30px;
 	}
 
 	.modal {

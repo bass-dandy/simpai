@@ -16,6 +16,11 @@
 	--color-btn: rgb(176, 188, 249);
 }
 
+html, body {
+	padding: 0;
+	margin: 0;
+}
+
 body, button {
 	font-family: 'benguiat-gothic-std';
 	color: var(--color-accent);
