@@ -1,5 +1,9 @@
 export {default as STR} from './str.svelte';
 export {default as CTSS} from './str.svelte';
+export {default as TTAS} from './str.svelte';
 export {default as TGA} from './tga.svelte';
 export {default as JFIF} from './tga.svelte';
 export {default as NREF} from './nref.svelte';
+export {default as GLOB} from './glob.svelte';
+export {default as BCON} from './bcon.svelte';
+export {default as OBJF} from './objf.svelte';

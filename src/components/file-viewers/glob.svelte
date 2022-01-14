@@ -1,22 +1,21 @@
 <script>
 	import Box from '../box.svelte';
-
 	export let file;
 </script>
 
 <Box>
 	<Box secondary>
-		<label for="nref-input">Value</label>
+		<label for="semiglobal-input">Semi global</label>
 		<input
-			id="nref-input"
+			id="semiglobal-input"
 			type="text"
-			value={file.content}
+			value={file.content.semiglobal}
 		/>
 	</Box>
 </Box>
 
 <style>
-	#nref-input {
+	#semiglobal-input {
 		width: 100%;
 	}
 </style>

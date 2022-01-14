@@ -6,23 +6,41 @@
 	export let file;
 </script>
 
-<Box style={{ height: '100%', 'box-sizing': 'border-box' }}>
+<Box style={{ 'max-height': '100%' }}>
 	<ul>
-	{#each file.content.stringSets as stringSet}
-		<li>
-			<div class="description">
-				<input
-					type="text"
-					value={stringSet.description}
-				/>
-				<select value={stringSet.languageId}>
-				{#each languages as language, i}
-					<option value={i + 1}>{getLanguage(i + 1)}</option>
-				{/each}
-				</select>
+	{#each file.content.stringSets as stringSet, i (i)}
+		<Box as="li" style={{ 'margin-top': i ? '15px' : '0' }} secondary>
+			<div class="meta">
+				<div class="description">
+					<label>
+						Description
+						<input
+							type="text"
+							placeholder="No description"
+							value={stringSet.description}
+						/>
+					</label>
+				</div>
+				<div class="language">
+					<label>
+						Language
+						<select class="language" value={stringSet.languageId}>
+						{#each languages as language, i}
+							<option value={i + 1}>{getLanguage(i + 1)}</option>
+						{/each}
+						</select>
+					</label>
+				</div>
 			</div>
-			<textarea class="value" value={stringSet.value} />
-		</li>
+			<label>
+				Value
+				<textarea
+					class="value"
+					placeholder="No value"
+					value={stringSet.value}
+				/>
+			</label>
+		</Box>
 	{/each}
 	</ul>
 </Box>
@@ -36,27 +54,31 @@
 		overflow: auto;
 	}
 
-	li {
-		background-color: var(--color-fg);
-		padding: 15px;
+	label {
+		display: block;
+		margin-bottom: 0;
+	}
+
+	.meta {
+		display: flex;
 		margin-bottom: 15px;
-		border: 1px solid var(--color-accent);
-		border-radius: 15px;
 	}
 
 	.description {
-		display: flex;
-	}
-
-	.description input[type="text"] {
 		flex: 1;
 		margin-right: 15px;
 	}
 
+	input {
+		width: 100%;
+	}
+
+	select {
+		display: block;
+	}
+
 	.value {
 		resize: vertical;
-		margin-top: 15px;
 		width: 100%;
-		box-sizing: border-box;
 	}
 </style>

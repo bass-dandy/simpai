@@ -7,7 +7,7 @@
 	export let selectedFile;
 </script>
 
-<Box style={{ height: '100%', 'box-sizing': 'border-box' }}>
+<Box style={{ height: '100%' }}>
 	<ul>
 	{#each files as file}
 		<li
@@ -55,6 +55,12 @@
 		margin-top: 5px;
 		background-color: var(--color-input);
 		border: 1px solid var(--color-accent);
+		transition: transform 0.1s ease-out;
+	}
+
+	li:hover {
+		cursor: pointer;
+		transform: scale(1.02, 1.02);
 	}
 
 	.file-line {

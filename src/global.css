@@ -14,10 +14,19 @@
 	--color-accent: rgb(29, 47, 119);
 	--color-input: rgb(207, 215, 252);
 	--color-btn: rgb(176, 188, 249);
+	--color-green: rgb(132, 186, 117);
+}
+
+* {
+	box-sizing: border-box;
+}
+
+*:focus {
+	outline-color: var(--color-green);
 }
 
 html {
-	background-color: var(--color-input);
+	background: linear-gradient(0deg, rgba(66,79,126,1) 0%, rgba(153,183,236,1) 100%);
 }
 
 html, body {
@@ -39,4 +48,8 @@ input[type="text"], textarea, select {
 a {
 	text-decoration: dotted underline;
 	text-underline-offset: 2px;
+}
+
+label {
+	font-size: 1rem;
 }
