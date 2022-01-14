@@ -16,14 +16,24 @@
 	--color-btn: rgb(176, 188, 249);
 }
 
+html {
+	background-color: var(--color-input);
+}
+
 html, body {
 	padding: 0;
 	margin: 0;
 }
 
-body, button {
+body, button, input[type="text"], textarea, select {
 	font-family: 'benguiat-gothic-std';
 	color: var(--color-accent);
+}
+
+input[type="text"], textarea, select {
+	padding: 5px;
+	background-color: var(--color-input);
+	border: 1px solid var(--color-accent);
 }
 
 a {

@@ -1,4 +1,5 @@
 <script>
+	import {languages} from '../../consts';
 	import {getLanguage} from '../../util';
 	import Box from '../box.svelte';
 
@@ -10,12 +11,17 @@
 	{#each file.content.stringSets as stringSet}
 		<li>
 			<div class="description">
-				<span>{stringSet.description}</span>
-				<span>{getLanguage(stringSet.languageId)}</span>
+				<input
+					type="text"
+					value={stringSet.description}
+				/>
+				<select value={stringSet.languageId}>
+				{#each languages as language, i}
+					<option value={i + 1}>{getLanguage(i + 1)}</option>
+				{/each}
+				</select>
 			</div>
-			<div class="value">
-				{stringSet.value}
-			</div>
+			<textarea class="value" value={stringSet.value} />
 		</li>
 	{/each}
 	</ul>
@@ -40,12 +46,17 @@
 
 	.description {
 		display: flex;
-		justify-content: space-between;
+	}
+
+	.description input[type="text"] {
+		flex: 1;
+		margin-right: 15px;
 	}
 
 	.value {
-		background-color: var(--color-input);
-		padding: 5px 15px;
-		border: 1px solid var(--color-accent);
+		resize: vertical;
+		margin-top: 15px;
+		width: 100%;
+		box-sizing: border-box;
 	}
 </style>

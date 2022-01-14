@@ -5,7 +5,8 @@ export function getLanguage(id: number | string): string {
 		? id
 		: parseInt(id, 16);
 
-	return languages[normalizedIndex] || 'Unknown';;
+	// language ids are 1-indexed, our languages const is not
+	return languages[normalizedIndex - 1] || 'Unknown';
 }
 
 export function formatHex(val: number, length?: number): string {
