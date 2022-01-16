@@ -8,7 +8,7 @@
 	export let selectedFile;
 </script>
 
-<Box style={{ height: '100%' }}>
+<Box style={{ flex: '1', overflow: 'hidden' }}>
 	<ul>
 	{#each files as file}
 		<li
@@ -52,39 +52,34 @@
 		width: max-content;
 		overflow: auto;
 	}
-
 	li {
 		padding: 5px 15px;
-		margin-top: 5px;
 		background-color: var(--color-input);
 		border: 1px solid var(--color-accent);
 		transition: transform 0.1s ease-out;
 	}
-
+	li:not(:first-child) {
+		margin-top: 5px;
+	}
 	li:hover {
 		cursor: pointer;
 		transform: scale(1.02, 1.02);
 	}
-
 	.file-line {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 	}
-
 	.file-line:first-of-type {
 		margin-bottom: 10px;
 		border-bottom: 1px dashed var(--color-bg);
 	}
-
 	.type {
 		margin-left: 20px;
 	}
-
 	.meta {
 		font-size: 0.8rem;
 	}
-
 	.meta:last-child {
 		text-align: right;
 	}
