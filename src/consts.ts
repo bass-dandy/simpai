@@ -21,3 +21,15 @@ export const languages = [
 	'Korean',
 	'Czech',
 ] as const;
+
+export const defaultFileName = {
+	TGA: '[image file]',
+	NREF: '[name reference]',
+	BCON: '[behavior constant]',
+	BHAV: '[behavior function]',
+	CTSS: '[catalogue description]',
+	GLOB: '[global data]',
+	OBJD: '[object data]',
+	OBJF: '[object functions]',
+	STR: '[text lists]',
+};

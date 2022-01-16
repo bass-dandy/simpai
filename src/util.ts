@@ -9,7 +9,9 @@ export function getLanguage(id: number | string): string {
 	return languages[normalizedIndex - 1] || 'Unknown';
 }
 
-export function formatHex(val: number, length?: number): string {
+export function formatHex(val?: number, length?: number): string {
+	if (val === undefined) return '';
+
 	let hex = val.toString(16).toUpperCase();
 	while (length && hex.length < length) {
 		hex = '0' + hex;

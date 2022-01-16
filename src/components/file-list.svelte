@@ -2,6 +2,7 @@
 	import {getFileType} from 'dbpf-transform';
 	import Box from './box.svelte';
 	import {formatHex} from '../util';
+	import {defaultFileName} from '../consts';
 
 	export let files;
 	export let selectedFile;
@@ -16,7 +17,9 @@
 			}}
 		>
 			<div class="file-line">
-				<div>{file.content.filename ?? ''}</div>
+				<div>
+					{file.content.filename ?? defaultFileName[getFileType(file.meta.typeId)]}
+				</div>
 				<div class="type">
 					{getFileType(file.meta.typeId)}
 				</div>

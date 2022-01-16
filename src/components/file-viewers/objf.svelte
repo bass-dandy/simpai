@@ -37,28 +37,28 @@
 		'ui event',
 		'Restock',
 		'Wash Clothes',
-		'Start Live Mode',
-		'Stop Live Mode',
-		'Link Objects',
-		'Message Handler',
-		'Pre Route',
-		'Post Route',
-		'Goal Check',
-		'Reaction Handler',
-		'Along Route Callback',
+		'start live mode',
+		'stop live mode',
+		'link objects',
+		'message handler',
+		'pre route',
+		'post route',
+		'goal check',
+		'reaction handler',
+		'along route callback',
 		'awareness',
 		'reset',
-		'lookatTarget',
-		'Walk Over',
-		'Utility State Change',
-		'Set Model by Type',
-		'Get Model Type',
+		'look at target',
+		'walk over',
+		'utility state change',
+		'set model by type',
+		'get model type',
 		'delete',
 		'user delete',
-		'Just Moved In',
+		'just moved in',
 		'prevent place in slot',
-		'Global Awareness',
-		'Object Updated by Design Mode',
+		'global awareness',
+		'object updated by design mode',
 	];
 </script>
 
@@ -67,15 +67,27 @@
 		<table>
 			<thead>
 				<td>Function</td>
-				<td>Action</td>
-				<td>Guardian</td>
+				<td>Action BHAV</td>
+				<td>Guardian BHAV</td>
 			</thead>
 			<tbody>
 			{#each file.content.functions as fn, i}
 				<tr>
 					<td>{FNS[i]}</td>
-					<td>{fn.action ? formatHex(fn.action, 4) : '---'}</td>
-					<td>{fn.guardian ? formatHex(fn.guardian, 4) : '---'}</td>
+					<td>
+						<input
+							type="text"
+							placeholder="none"
+							value={formatHex(fn.action || undefined, 4)}
+						/>
+					</td>
+					<td>
+						<input
+							type="text"
+							placeholder="none"
+							value={formatHex(fn.guardian || undefined, 4)}
+						/>
+					</td>
 				</tr>
 			{/each}
 			</tbody>
@@ -86,14 +98,22 @@
 <style>
 	table {
 		width: 100%;
+		border-collapse: collapse;
 	}
-
+	thead {
+		border-bottom: 1px solid var(--color-accent);
+	}
+	thead td {
+		padding-bottom: 10px;
+	}
 	td {
-		padding: 5px;
+		padding-top: 10px;
 		font-size: 1rem;
 	}
-
-	tr td {
-		background-color: var(--color-input);
+	td:not(:last-child) {
+		padding-right: 10px;
+	}
+	input {
+		width: 100%;
 	}
 </style>
