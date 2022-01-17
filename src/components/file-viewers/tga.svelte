@@ -1,12 +1,12 @@
 <script>
 	import Box from '../box.svelte';
 
-	export let file;
+	export let resource;
 	let src;
 
 	$: {
 		const blob = new Blob([
-			new Uint8Array(file.content)
+			new Uint8Array(resource.content)
 		], {type: "image/jpeg"});
 
 		src = window.URL.createObjectURL(blob);

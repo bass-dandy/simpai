@@ -1,6 +1,6 @@
 <script>
 	import Box from '../box.svelte';
-	export let file;
+	export let resource;
 </script>
 
 <Box>
@@ -9,7 +9,7 @@
 		<input
 			id="semiglobal-input"
 			type="text"
-			value={file.content.semiglobal}
+			value={resource.content.semiglobal}
 		/>
 	</Box>
 </Box>

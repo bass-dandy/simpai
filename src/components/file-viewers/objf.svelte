@@ -1,7 +1,7 @@
 <script>
 	import Box from '../box.svelte';
 	import {formatHex} from '../../util';
-	export let file;
+	export let resource;
 
 	const FNS = [
 		'init',
@@ -71,7 +71,7 @@
 				<td>Guardian BHAV</td>
 			</thead>
 			<tbody>
-			{#each file.content.functions as fn, i}
+			{#each resource.content.functions as fn, i}
 				<tr>
 					<td>{FNS[i]}</td>
 					<td>

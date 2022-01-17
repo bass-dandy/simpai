@@ -2,14 +2,14 @@
 	import Box from '../box.svelte';
 	import {formatHex} from '../../util';
 
-	export let file;
+	export let resource;
 </script>
 
 <Box>
 	<Box secondary>
 		<label>
 			Flag
-			<input type="checkbox" checked={file.content.flag} />
+			<input type="checkbox" checked={resource.content.flag} />
 		</label>
 	</Box>
 	<Box
@@ -17,7 +17,7 @@
 		style={{ 'margin-top': '15px' }}
 		secondary
 	>
-	{#each file.content.items as item, i}
+	{#each resource.content.items as item, i}
 		<li>
 			<label>
 				{formatHex(i, 1)}:

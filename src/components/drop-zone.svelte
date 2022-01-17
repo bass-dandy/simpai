@@ -1,8 +1,6 @@
 <script>
-	import {deserialize} from 'dbpf-transform';
 	import Box from './box.svelte';
-
-	export let unpackedFiles = null;
+	import {packages} from '../stores';
 
 	let fileInput; // hidden file input ref
 </script>
@@ -24,7 +22,7 @@
 				.items[0]
 				.getAsFile();
 
-			unpackedFiles = deserialize(await file.arrayBuffer());
+			await packages.addPackage(file);
 		}}
 	>
 		<input
@@ -32,7 +30,7 @@
 			accept=".package"
 			bind:this={fileInput}
 			on:change={async () => {
-				unpackedFiles = deserialize(await fileInput.files?.[0]?.arrayBuffer());
+				await packages.addPackage(fileInput.files?.[0]);
 			}}
 		/>
 		Drag .package file here or <a on:click={fileInput.click()}>browse files</a>

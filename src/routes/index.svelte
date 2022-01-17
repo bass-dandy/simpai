@@ -2,12 +2,10 @@
 	import {getFileType} from 'dbpf-transform';
 	import DropZone from '../components/drop-zone.svelte';
 	import FileList from '../components/file-list.svelte';
-	import Plumbob from '../components/plumbob.svelte';
 	import * as fileViewers from '../components/file-viewers';
+	import Plumbob from '../components/plumbob.svelte';
+	import {activePackage, activeResource} from '../stores';
 	import '../global.css';
-	
-	let unpackedFiles;
-	let selectedFile;
 </script>
 
 <div class="layout">
@@ -16,20 +14,18 @@
 			<Plumbob size={60} />
 			<h1>SimPE Online</h1>
 		</div>
-		{#if !unpackedFiles}
-		<div class="modal">
-			<DropZone bind:unpackedFiles />
-		</div>
+		{#if !$activePackage}
+			<DropZone />
 		{:else}
-		<FileList files={unpackedFiles} bind:selectedFile />
+			<FileList />
 		{/if}
 	</div>
 	<div class="right">
 		<svelte:component
 			this={fileViewers[
-				getFileType(selectedFile?.meta.typeId ?? '')
+				getFileType($activeResource?.meta.typeId ?? '')
 			]}
-			file={selectedFile}
+			resource={$activeResource}
 		/>
 	</div>
 </div>

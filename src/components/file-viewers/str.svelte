@@ -3,12 +3,12 @@
 	import {getLanguage} from '../../util';
 	import Box from '../box.svelte';
 
-	export let file;
+	export let resource;
 </script>
 
 <Box style={{ 'max-height': '100%' }}>
 	<ul>
-	{#each file.content.stringSets as stringSet, i (i)}
+	{#each resource.content.stringSets as stringSet, i (i)}
 		<Box as="li" style={{ 'margin-top': i ? '15px' : '0' }} secondary>
 			<div class="meta">
 				<div class="description">

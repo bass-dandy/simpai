@@ -1,7 +1,7 @@
 <script>
 	import Box from '../box.svelte';
 
-	export let file;
+	export let resource;
 </script>
 
 <Box>
@@ -10,7 +10,7 @@
 		<input
 			id="nref-input"
 			type="text"
-			value={file.content}
+			value={resource.content}
 		/>
 	</Box>
 </Box>

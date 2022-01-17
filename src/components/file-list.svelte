@@ -1,21 +1,15 @@
 <script>
 	import {getFileType} from 'dbpf-transform';
 	import Box from './box.svelte';
-	import {formatHex} from '../util';
 	import {defaultFileName} from '../consts';
-
-	export let files;
-	export let selectedFile;
+	import {activePackage, activeResource} from '../stores';
+	import {formatHex} from '../util';
 </script>
 
 <Box style={{ flex: '1', overflow: 'hidden' }}>
 	<ul>
-	{#each files as file}
-		<li
-			on:click={() => {
-				selectedFile = file;
-			}}
-		>
+	{#each $activePackage.files as file, i}
+		<li on:click={() => activeResource.set(i)}>
 			<div class="file-line">
 				<div>
 					{file.content.filename ?? defaultFileName[getFileType(file.meta.typeId)]}
