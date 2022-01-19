@@ -13,17 +13,16 @@
 	}
 </script>
 
-<Box>
-	<div>
-		<img {src} alt="" />
-	</div>
-</Box>
+<div>
+	<img {src} alt="" />
+</div>
 
 <style>
 	div {
+		height: 100%;
+		overflow: auto;
 		text-align: center;
 	}
-
 	img {
 		background-color: white;
 	}

@@ -1,18 +1,10 @@
 <script>
-	import Box from './box.svelte';
 	import {packages} from '../stores';
 
 	let fileInput; // hidden file input ref
 </script>
 
-<Box
-	style={{
-		display: 'flex',
-		'flex-direction': 'column',
-		'align-items': 'center',
-		width: '400px',
-	}}
->
+<div>
 	<div
 		class="drop-zone"
 		on:dragover|preventDefault
@@ -35,9 +27,15 @@
 		/>
 		Drag .package file here or <a on:click={fileInput.click()}>browse files</a>
 	</div>
-</Box>
+</div>
 
 <style>
+	div {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		min-width: 400px;
+	}
 	input[type="file"] {
 		display: none;
 	}
@@ -48,7 +46,7 @@
 		justify-content: center;
 		width: 100%;
 		height: 200px;
-		background-color: var(--color-fg);
+		background-color: var(--color-input);
 		border: 2px dashed var(--color-accent);
 		border-radius: 15px;
 	}

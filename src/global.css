@@ -9,7 +9,7 @@
 }
 
 :root {
-	--color-bg: rgb(87, 115, 184);
+	--color-bg: rgba(87, 115, 184, 0.9);
 	--color-fg: rgb(150, 166, 217);
 	--color-accent: rgb(29, 47, 119);
 	--color-input: rgb(207, 215, 252);
@@ -42,8 +42,13 @@ body, button, input[type="text"], textarea, select {
 
 input[type="text"], textarea, select {
 	padding: 5px;
-	background-color: var(--color-input);
 	border: 1px solid var(--color-accent);
+	border-radius: 3px;
+	background-color: var(--color-input);
+}
+
+input[type="text"], textarea {
+	box-shadow: inset 3px 3px 3px 0px rgba(0, 0, 0, 0.25);
 }
 
 a {
@@ -51,6 +56,6 @@ a {
 	text-underline-offset: 2px;
 }
 
-label {
+label, button {
 	font-size: 1rem;
 }

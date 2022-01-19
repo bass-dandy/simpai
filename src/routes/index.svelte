@@ -1,10 +1,10 @@
 <script>
-	import {getFileType} from 'dbpf-transform';
 	import DropZone from '../components/drop-zone.svelte';
 	import FileList from '../components/file-list.svelte';
-	import * as fileViewers from '../components/file-viewers';
+	import FileViewer from '../components/file-viewer.svelte';
 	import Plumbob from '../components/plumbob.svelte';
-	import {activePackage, activeResource} from '../stores';
+	import TabPanel  from '../components/tab-panel.svelte';
+	import {activePackageIndex, packages} from '../stores';
 	import '../global.css';
 </script>
 
@@ -14,19 +14,21 @@
 			<Plumbob size={60} />
 			<h1>SimPE Online</h1>
 		</div>
-		{#if !$activePackage}
-			<DropZone />
-		{:else}
-			<FileList />
-		{/if}
+		<TabPanel
+			tabs={[
+				...$packages.map((pkg) => ({
+					title: pkg.name,
+					content: FileList,
+				})),
+				{title: '+', content: DropZone},
+			]}
+			activeTab={$activePackageIndex}
+			onChange={(i) => activePackageIndex.set(i)}
+			style={{ flex: '1' }}
+		/>
 	</div>
 	<div class="right">
-		<svelte:component
-			this={fileViewers[
-				getFileType($activeResource?.meta.typeId ?? '')
-			]}
-			resource={$activeResource}
-		/>
+		<FileViewer />
 	</div>
 </div>
 
@@ -42,7 +44,7 @@
 	}
 	.right {
 		flex: 1;
-		margin-left: 30px;
+		margin-left: 15px;
 	}
 	.logo {
 		display: flex;

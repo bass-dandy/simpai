@@ -1,41 +1,44 @@
 <script>
 	import {getFileType} from 'dbpf-transform';
-	import Box from './box.svelte';
 	import {defaultFileName} from '../consts';
-	import {activePackage, activeResource} from '../stores';
+	import {activePackage, activeResourceIndex} from '../stores';
 	import {formatHex} from '../util';
 </script>
 
-<Box style={{ flex: '1', overflow: 'hidden' }}>
-	<ul>
-	{#each $activePackage.files as file, i}
-		<li on:click={() => activeResource.set(i)}>
-			<div class="file-line">
-				<div>
-					{file.content.filename ?? defaultFileName[getFileType(file.meta.typeId)]}
-				</div>
-				<div class="type">
-					{getFileType(file.meta.typeId)}
-				</div>
+{#if $activePackage}
+<ul>
+{#each $activePackage.files as file, i}
+	<li on:click={() => activeResourceIndex.set(i)}>
+		<div class="file-line">
+			<div>
+				{
+					file.content.filename || defaultFileName[
+						getFileType(file.meta.typeId)
+					]
+				}
 			</div>
-			<div class="file-line">
-				<div class="meta">
-					<div>Group</div>
-					{formatHex(file.meta.groupId)}
-				</div>
-				<div class="meta">
-					<div>Instance (High)</div>
-					{formatHex(file.meta.instanceId2, 8)}
-				</div>
-				<div class="meta">
-					<div>Instance</div>
-					{formatHex(file.meta.instanceId, 8)}
-				</div>
+			<div class="type">
+				{getFileType(file.meta.typeId)}
 			</div>
-		</li>
-	{/each}
-	</ul>
-</Box>
+		</div>
+		<div class="file-line">
+			<div class="meta">
+				<div>Group</div>
+				{formatHex(file.meta.groupId)}
+			</div>
+			<div class="meta">
+				<div>Instance (High)</div>
+				{formatHex(file.meta.instanceId2, 8)}
+			</div>
+			<div class="meta">
+				<div>Instance</div>
+				{formatHex(file.meta.instanceId, 8)}
+			</div>
+		</div>
+	</li>
+{/each}
+</ul>
+{/if}
 
 <style>
 	ul {

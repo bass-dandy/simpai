@@ -62,7 +62,7 @@
 	];
 </script>
 
-<Box>
+<div>
 	<Box secondary>
 		<table>
 			<thead>
@@ -93,9 +93,13 @@
 			</tbody>
 		</table>
 	</Box>
-</Box>
+</div>
 
 <style>
+	div {
+		height: 100%;
+		overflow: auto;
+	}
 	table {
 		width: 100%;
 		border-collapse: collapse;

@@ -33,24 +33,20 @@
 
 <style>
 	div, ul, ol, li {
-		padding: 15px;
-		border: 2px solid var(--color-accent);
+		border: 1px solid var(--color-accent);
 		border-radius: 15px;
 		font-size: 1.2rem;
 	}
-
 	ul, ol {
 		list-style: none;
 		margin: 0;
 	}
-
 	.primary {
+		padding: 5px;
 		background-color: var(--color-bg);
-		box-shadow: 5px 5px 10px 0px var(--color-accent);
 	}
-
 	.secondary {
+		padding: 15px;
 		background-color: var(--color-fg);
-		border-width: 1px;
 	}
 </style>

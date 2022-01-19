@@ -5,7 +5,7 @@
 	export let resource;
 </script>
 
-<Box>
+<div>
 	<Box secondary>
 		<label>
 			Flag
@@ -14,7 +14,7 @@
 	</Box>
 	<Box
 		as="ol"
-		style={{ 'margin-top': '15px' }}
+		style={{ 'margin-top': '5px' }}
 		secondary
 	>
 	{#each resource.content.items as item, i}
@@ -26,18 +26,20 @@
 		</li>
 	{/each}
 	</Box>
-</Box>
+</div>
 
 <style>
+	div {
+		height: 100%;
+		overflow: auto;
+	}
 	li {
 		margin-top: 5px;
 	}
-
 	label {
 		display: flex;
 		align-items: center;
 	}
-
 	input {
 		margin-left: 5px;
 	}
