@@ -4,6 +4,7 @@
 	export let tabs;
 	export let activeTab;
 	export let onChange;
+	export let hideSingleTab = false;
 	export let style = {};
 	export let contentStyle = {};
 </script>
@@ -15,7 +16,7 @@
 		...style,
 	}}
 >
-	{#if tabs.length > 1}
+	{#if !hideSingleTab || tabs.length > 1}
 		<ul>
 		{#each tabs as tab, i}
 			<li>
@@ -41,6 +42,7 @@
 	ul {
 		position: relative;
 		top: 1px;
+		z-index: 1;
 		list-style: none;
 		margin: 0;
 		padding: 0 15px;
