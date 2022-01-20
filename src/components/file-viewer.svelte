@@ -11,17 +11,21 @@
 <div class="file-viewer">
 	<TabPanel
 		tabs={[
-			{title: $activeResource.content.filename || getFileType($activeResource.meta.typeId), content: FileMeta}
+			{
+				title: $activeResource.content.filename || getFileType($activeResource.meta.typeId),
+				content: FileMeta,
+			},
 		]}
 		activeTab={0}
 		onChange={() => null}
 		style={{ 'flex-shrink': 0 }}
+		contentStyle={{ 'padding-bottom': '30px', 'position': 'relative' }}
 	/>
 	<Box
 		style={{
 			'flex-shrink': '1',
 			'min-height': '0',
-			'margin-top': '15px',
+			'margin-top': '30px',
 			overflow: 'hidden',
 		}}
 	>

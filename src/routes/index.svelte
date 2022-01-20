@@ -24,7 +24,8 @@
 			]}
 			activeTab={$activePackageIndex}
 			onChange={(i) => activePackageIndex.set(i)}
-			style={{ flex: '1' }}
+			style={{ flex: '1', overflow: 'hidden' }}
+			contentStyle={{ overflow: 'hidden' }}
 		/>
 	</div>
 	<div class="right">

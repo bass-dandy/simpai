@@ -1,5 +1,10 @@
 <script>
+	import Button from './button.svelte';
 	import {activeResource} from '../stores';
+	import Undo from '../svg/undo.svg';
+	import Trash from '../svg/trash.svg';
+	import Save from '../svg/save-outline.svg';
+	import Copy from '../svg/copy.svg';
 </script>
 
 <div>
@@ -37,9 +42,28 @@
 			/>
 		</div>
 	</div>
+	<div class="actions">
+		<Button disabled>
+			<Save height={20}/>
+		</Button>
+		<Button disabled>
+			<Undo height={20} />
+		</Button>
+		<Button>
+			<Copy height={20} />
+		</Button>
+		<Button>
+			<Trash height={20} />
+		</Button>
+	</div>
 </div>
 
 <style>
+	.actions {
+		position: absolute;
+		bottom: 0;
+		transform: translateY(23px);
+	}
 	.meta {
 		display: flex;
 	}

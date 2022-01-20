@@ -1,17 +1,17 @@
 <script>
-	import Box from './Box.svelte';
+	import Box from './box.svelte';
 
 	export let tabs;
 	export let activeTab;
 	export let onChange;
 	export let style = {};
+	export let contentStyle = {};
 </script>
 
 <Box
 	style={{
 		display: 'flex',
 		'flex-direction': 'column',
-		overflow: 'hidden',
 		...style,
 	}}
 >
@@ -31,7 +31,7 @@
 	{/if}
 	<Box
 		secondary
-		style={{ flex: '1', overflow: 'hidden' }}
+		style={{ flex: '1', ...contentStyle }}
 	>
 		<svelte:component this={tabs[activeTab].content} />
 	</Box>

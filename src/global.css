@@ -1,6 +1,6 @@
 @font-face {
-	font-family: 'benguiat-gothic-std';
-	src: url('/fonts/benguiat-gothic-std-medium.otf');
+	font-family: 'benguiat-gothic-bold';
+	src: url('/fonts/benguiat-gothic-std-bold.otf');
 }
 
 @font-face {
@@ -16,6 +16,7 @@
 	--color-btn: rgb(176, 188, 249);
 	--color-green: rgb(132, 186, 117);
 	--color-white: rgb(255, 255, 255);
+	--color-black: rgb(0, 0, 0);
 }
 
 * {
@@ -36,7 +37,7 @@ html, body {
 }
 
 body, button, input[type="text"], textarea, select {
-	font-family: 'benguiat-gothic-std';
+	font-family: 'benguiat-gothic-bold';
 	color: var(--color-accent);
 }
 
@@ -49,6 +50,10 @@ input[type="text"], textarea, select {
 
 input[type="text"], textarea {
 	box-shadow: inset 3px 3px 3px 0px rgba(0, 0, 0, 0.25);
+}
+
+button:not(:disabled) {
+	cursor: pointer;
 }
 
 a {
