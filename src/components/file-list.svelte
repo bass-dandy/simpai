@@ -1,14 +1,14 @@
 <script>
 	import {getFileType} from 'dbpf-transform';
 	import {defaultFileName} from '../consts';
-	import {activePackage, activeResourceIndex} from '../stores';
+	import {activePackage, openResources} from '../stores';
 	import {formatHex} from '../util';
 </script>
 
 {#if $activePackage}
 <ul>
 {#each $activePackage.files as file, i}
-	<li on:click={() => activeResourceIndex.set(i)}>
+	<li on:click={() => openResources.openResource(i)}>
 		<div class="file-line">
 			<div>
 				{

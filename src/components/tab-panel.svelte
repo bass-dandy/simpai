@@ -34,7 +34,7 @@
 		secondary
 		style={{ flex: '1', ...contentStyle }}
 	>
-		<svelte:component this={tabs[activeTab].content} />
+		<svelte:component this={tabs[activeTab]?.content} />
 	</Box>
 </Box>
 

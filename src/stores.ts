@@ -1,5 +1,6 @@
 import {deserialize} from 'dbpf-transform';
 import {derived, writable} from 'svelte/store';
+import {without} from './util';
 
 type Package = {
 	name: string;
@@ -24,13 +25,12 @@ export const packages = {
 			activePackageIndex.set(store.length);
 			return [...store, newPackage];
 		});
+		openResourceIndexesStore.update((store) => [...store, []]);
 	},
 
 	removePackage(index: number): void {
-		packagesStore.update((store) => [
-			...store.slice(0, index),
-			...store.slice(index + 1),
-		]);
+		packagesStore.update((store) => without(store, index));
+
 		activePackageIndex.update((currentIndex) =>
 			index <= currentIndex
 				? Math.max(currentIndex - 1, 0)
@@ -45,15 +45,91 @@ export const activePackage = derived([
 	activePackageIndex,
 ], ([$packages, $activePackageIndex]) => $packages[$activePackageIndex]);
 
-// tracks the index of the currently selected resource in activePackage.files (-1 means none selected)
-export const activeResourceIndex = writable(-1);
+const openResourceIndexesStore = writable<number[][]>([]);
 
-// for conveniently accessing the currently selected resource in the currently selected package
+// the open resources of the active package
+const openResourcesStore = derived([
+	activePackage,
+	activePackageIndex,
+	openResourceIndexesStore,
+], ([$activePackage, $activePackageIndex, $openResourceIndexes]) => {
+	return $openResourceIndexes[$activePackageIndex]?.map((resourceIndex) =>
+		$activePackage?.files[resourceIndex]
+	) || [];
+});
+
+export const openResources = {
+	subscribe: openResourcesStore.subscribe,
+
+	openResource(i: number): void {
+		// outer update is a no-op so we can use the packageIndex
+		activePackageIndex.update((packageIndex) => {
+			// append the resource index to the open resources in the active package (or do nothing if it's already open)
+			openResourceIndexesStore.update((openResourceIndexes) => {
+				if (openResourceIndexes[packageIndex].includes(i)) {
+					return openResourceIndexes;
+				}
+				const newVal = [...openResourceIndexes];
+				newVal[packageIndex] = [...newVal[packageIndex], i];
+				return newVal;
+			});
+			// set the newly opened resource as active for the active package
+			activeResourceIndexesStore.update((activeResourceIndexes) => {
+				const newVal = [...activeResourceIndexes];
+				newVal[packageIndex] = i;
+				return newVal;
+			});
+			return packageIndex;
+		});
+	},
+
+	closeResource(i: number): void {
+		// another no-op so we can use the packageIndex
+		activePackageIndex.update((packageIndex) => {
+			let newActiveIndex = 0;
+
+			// remove resource index from the active package's array
+			openResourceIndexesStore.update((openResourceIndexes) => {
+				const newVal = [...openResourceIndexes];
+				newVal[packageIndex] = newVal[packageIndex].filter((index) => index !== i);
+				newActiveIndex = Math.min(newVal[packageIndex].length - 1, i);
+				return newVal;
+			});
+			// set new active resource
+			activeResourceIndexesStore.update((activeResourceIndexes) => {
+				const newVal = [...activeResourceIndexes];
+				newVal[packageIndex] = newActiveIndex;
+				return newVal;
+			});
+			return packageIndex;
+		});
+	},
+};
+
+const activeResourceIndexesStore = writable<number[]>([]);
+
+const activeResourceIndexStore = derived([
+	activePackageIndex,
+	activeResourceIndexesStore,
+], ([$activePackageIndex, $activeResourceIndexes]) => $activeResourceIndexes[$activePackageIndex]) || [];
+
+export const activeResourceIndex = {
+	subscribe: activeResourceIndexStore.subscribe,
+
+	set(i: number): void {
+		// another no-op so we can use the packageIndex
+		activePackageIndex.update((packageIndex) => {
+			activeResourceIndexesStore.update((activeResourceIndexes) => {
+				const newVal = [...activeResourceIndexes];
+				newVal[packageIndex] = i;
+				return newVal;
+			});
+			return packageIndex;
+		});
+	},
+};
+
 export const activeResource = derived([
 	activePackage,
-	activeResourceIndex,
-], ([$activePackage, $activeResourceIndex]) => {
-	return $activeResourceIndex >= 0
-		? $activePackage?.files[$activeResourceIndex]
-		: undefined;
-});
+	activeResourceIndexStore,
+], ([$activePackage, $activeResourceIndex]) => $activePackage?.files[$activeResourceIndex]);

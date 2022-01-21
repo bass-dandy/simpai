@@ -18,3 +18,10 @@ export function formatHex(val?: number, length?: number): string {
 	}
 	return `0x${hex}`;
 }
+
+export function without<T>(arr: T[], i: number): T[] {
+	return [
+		...arr.slice(0, i),
+		...arr.slice(i + 1),
+	];
+}

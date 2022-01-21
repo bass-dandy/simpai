@@ -21,8 +21,9 @@ const views = {
 	TTAS: STR,
 };
 
-export function getViewForFileType(typeId: number): typeof SvelteComponent {
+export function getViewForFileType(resource): typeof SvelteComponent {
+	if (!resource) return;
 	return views[
-		getFileType(typeId)
+		getFileType(resource.meta.typeId)
 	] ?? UNK;
 }

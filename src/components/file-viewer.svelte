@@ -4,20 +4,19 @@
 	import FileMeta from './file-meta.svelte';
 	import {getViewForFileType} from './file-views';
 	import TabPanel  from './tab-panel.svelte';
-	import {activeResource} from '../stores';
+	import {activeResource, activeResourceIndex, openResources} from '../stores';
 </script>
 
-{#if $activeResource}
 <div class="file-viewer">
 	<TabPanel
-		tabs={[
-			{
-				title: $activeResource.content.filename || getFileType($activeResource.meta.typeId),
+		tabs={
+			$openResources.map((resource) => ({
+				title: resource.content.filename || getFileType(resource.meta.typeId),
 				content: FileMeta,
-			},
-		]}
-		activeTab={0}
-		onChange={() => null}
+			}))
+		}
+		activeTab={$activeResourceIndex}
+		onChange={(i) => activeResourceIndex.set(i)}
 		style={{ 'flex-shrink': 0 }}
 		contentStyle={{ 'padding-bottom': '30px', 'position': 'relative' }}
 	/>
@@ -30,12 +29,11 @@
 		}}
 	>
 		<svelte:component
-			this={getViewForFileType($activeResource?.meta.typeId ?? '')}
+			this={getViewForFileType($activeResource)}
 			resource={$activeResource}
 		/>
 	</Box>
 </div>
-{/if}
 
 <style>
 	.file-viewer {
