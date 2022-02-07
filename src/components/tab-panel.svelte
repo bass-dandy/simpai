@@ -16,13 +16,13 @@
 		...style,
 	}}
 >
-	{#if !hideSingleTab || tabs.length > 1}
+	{#if !hideSingleTab || Object.keys(tabs).length > 1}
 		<ul>
-		{#each tabs as tab, i}
+		{#each Object.entries(tabs) as [id, tab] (id)}
 			<li>
 				<button
-					on:click={() => onChange(i)}
-					disabled={activeTab === i}
+					on:click={() => onChange(id)}
+					disabled={activeTab === id}
 				>
 					{tab.title}
 				</button>

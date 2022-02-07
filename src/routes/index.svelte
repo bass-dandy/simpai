@@ -4,7 +4,7 @@
 	import FileViewer from '../components/file-viewer.svelte';
 	import Plumbob from '../components/plumbob.svelte';
 	import TabPanel  from '../components/tab-panel.svelte';
-	import {activePackageIndex, packages} from '../stores';
+	import {packages} from '../stores';
 	import '../global.css';
 </script>
 
@@ -15,15 +15,19 @@
 			<h1>SimPE Online</h1>
 		</div>
 		<TabPanel
-			tabs={[
-				...$packages.map((pkg) => ({
-					title: pkg.name,
-					content: FileList,
-				})),
-				{title: '+', content: DropZone},
-			]}
-			activeTab={$activePackageIndex}
-			onChange={(i) => activePackageIndex.set(i)}
+			tabs={{
+				...Object.entries($packages.packages)
+					.reduce((acc, [id, pkg]) => {
+						acc[id] = {
+							title: pkg.filename,
+							content: FileList,
+						};
+						return acc;
+					}, {}),
+				'': {title: '+', content: DropZone},
+			}}
+			activeTab={$packages.activePackageId}
+			onChange={(id) => packages.setActivePackage(id)}
 			style={{ flex: '1', overflow: 'hidden' }}
 			contentStyle={{ overflow: 'hidden' }}
 			hideSingleTab

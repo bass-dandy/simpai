@@ -1,6 +1,6 @@
 <script>
 	import Button from './button.svelte';
-	import {activeResource} from '../stores';
+	import {activeResource, packages} from '../stores';
 	import Undo from '../svg/undo.svg';
 	import Trash from '../svg/trash.svg';
 	import Save from '../svg/save-outline.svg';
@@ -49,10 +49,10 @@
 		<Button disabled>
 			<Undo height={20} />
 		</Button>
-		<Button>
+		<Button onClick={() => packages.copyActiveResource()}>
 			<Copy height={20} />
 		</Button>
-		<Button>
+		<Button onClick={() => packages.deleteActiveResource()}>
 			<Trash height={20} />
 		</Button>
 	</div>

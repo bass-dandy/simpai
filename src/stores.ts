@@ -1,135 +1,136 @@
 import {deserialize} from 'dbpf-transform';
+import produce from 'immer';
 import {derived, writable} from 'svelte/store';
-import {without} from './util';
+import {v4 as uuid} from 'uuid';
 
-type Package = {
-	name: string;
-	files: any[];
-};
-
-// tracks the index of the currently selected .package file in packagesStore
-export const activePackageIndex = writable(0);
+import type {SimsFile} from 'dbpf-transform/dist/esm/types';
 
 // tracks all open .package files
-const packagesStore = writable<Package[]>([]);
+const packagesStore = writable<{
+	activePackageId: string;
+	packages: Record<string, {
+		filename: string;
+		activeResourceId: string;
+		resources: Record<string, SimsFile & { isOpen?: boolean }>;
+	}>;
+}>({
+	activePackageId: '',
+	packages: {},
+});
 
 export const packages = {
 	subscribe: packagesStore.subscribe,
 
 	async addPackage(file: File): Promise<void> {
-		const newPackage = {
-			name: file.name,
-			files: deserialize(await file.arrayBuffer()),
-		};
-		packagesStore.update((store) => {
-			activePackageIndex.set(store.length);
-			return [...store, newPackage];
-		});
-		openResourceIndexesStore.update((store) => [...store, []]);
+		// key files in package by uuid
+		const keyedFiles = deserialize(await file.arrayBuffer())
+			.reduce((acc: Record<string, SimsFile>, file) => {
+				acc[uuid()] = file;
+				return acc;
+			}, {});
+
+		const packageId = uuid();
+
+		packagesStore.update((store) => (
+			produce(store, (draft) => {
+				draft.packages[packageId] = {
+					filename: file.name,
+					resources: keyedFiles,
+					activeResourceId: '',
+				};
+				draft.activePackageId = packageId;
+			})
+		));
 	},
 
-	removePackage(index: number): void {
-		packagesStore.update((store) => without(store, index));
+	removePackage(idToRemove: string): void {
+		packagesStore.update((store) => (
+			produce(store, (draft) => {
+				// if closing the currently active package, activate the package to the left (if it exists)
+				if (idToRemove === store.activePackageId) {
+					const packageIds = Object.keys(store);
 
-		activePackageIndex.update((currentIndex) =>
-			index <= currentIndex
-				? Math.max(currentIndex - 1, 0)
-				: currentIndex
-		);
+					draft.activePackageId = packageIds[
+						Math.max(packageIds.indexOf(idToRemove) - 1, 0)
+					] ?? '';
+				}
+				delete draft.packages[idToRemove];
+			})
+		));
+	},
+
+	setActivePackage(packageId: string): void {
+		packagesStore.update((store) => (
+			produce(store, (draft) => {
+				draft.activePackageId = packageId;
+			})
+		));
+	},
+
+	openResource(resourceId: string): void {
+		packagesStore.update((store) => (
+			produce(store, (draft) => {
+				draft.packages[store.activePackageId].resources[resourceId].isOpen = true;
+				draft.packages[store.activePackageId].activeResourceId = resourceId;
+			})
+		));
+	},
+
+	closeResource(resourceId: string): void {
+		packagesStore.update((store) => (
+			produce(store, (draft) => {
+				draft.packages[store.activePackageId].resources[resourceId].isOpen = false;
+			})
+		));
+	},
+
+	copyActiveResource(): void {
+		packagesStore.update((store) => (
+			produce(store, (draft) => {
+				const activePkg = store.packages[store.activePackageId];
+				const resourceToCopy = activePkg.resources[activePkg.activeResourceId];
+				const newId = uuid();
+
+				draft.packages[store.activePackageId].resources[newId] = {...resourceToCopy};
+				draft.packages[store.activePackageId].activeResourceId = newId;
+			})
+		));
+	},
+
+	deleteActiveResource(): void {
+		packagesStore.update((store) => (
+			produce(store, (draft) => {
+				const activePkg = store.packages[store.activePackageId];
+
+				const resourceIds = Object
+					.keys(activePkg.resources)
+					.filter((resourceId) => activePkg.resources[resourceId].isOpen);
+
+				// activate resource to the left (if one exists)
+				draft.packages[store.activePackageId].activeResourceId =
+					resourceIds.filter((resourceId) => resourceId !== activePkg.activeResourceId)[
+						Math.max(resourceIds.indexOf(activePkg.activeResourceId) - 1, 0)
+					] ?? '';
+
+				delete draft.packages[store.activePackageId].resources[activePkg.activeResourceId];
+			})
+		));
+	},
+
+	setActiveResource(resourceId: string): void {
+		packagesStore.update((store) => (
+			produce(store, (draft) => {
+				draft.packages[store.activePackageId].activeResourceId = resourceId;
+			})
+		));
 	},
 };
 
-// for conveniently accessing the currently selected package
-export const activePackage = derived([
-	packagesStore,
-	activePackageIndex,
-], ([$packages, $activePackageIndex]) => $packages[$activePackageIndex]);
-
-const openResourceIndexesStore = writable<number[][]>([]);
-
-// the open resources of the active package
-const openResourcesStore = derived([
-	activePackage,
-	activePackageIndex,
-	openResourceIndexesStore,
-], ([$activePackage, $activePackageIndex, $openResourceIndexes]) => {
-	return $openResourceIndexes[$activePackageIndex]?.map((resourceIndex) =>
-		$activePackage?.files[resourceIndex]
-	) || [];
+export const activePackage = derived(packagesStore, ($packages) => {
+	return $packages.packages[$packages.activePackageId];
 });
 
-export const openResources = {
-	subscribe: openResourcesStore.subscribe,
-
-	openResource(i: number): void {
-		// outer update is a no-op so we can use the packageIndex
-		activePackageIndex.update((packageIndex) => {
-			// append the resource index to the open resources in the active package (or do nothing if it's already open)
-			openResourceIndexesStore.update((openResourceIndexes) => {
-				if (openResourceIndexes[packageIndex].includes(i)) {
-					return openResourceIndexes;
-				}
-				const newVal = [...openResourceIndexes];
-				newVal[packageIndex] = [...newVal[packageIndex], i];
-				return newVal;
-			});
-			// set the newly opened resource as active for the active package
-			activeResourceIndexesStore.update((activeResourceIndexes) => {
-				const newVal = [...activeResourceIndexes];
-				newVal[packageIndex] = i;
-				return newVal;
-			});
-			return packageIndex;
-		});
-	},
-
-	closeResource(i: number): void {
-		// another no-op so we can use the packageIndex
-		activePackageIndex.update((packageIndex) => {
-			let newActiveIndex = 0;
-
-			// remove resource index from the active package's array
-			openResourceIndexesStore.update((openResourceIndexes) => {
-				const newVal = [...openResourceIndexes];
-				newVal[packageIndex] = newVal[packageIndex].filter((index) => index !== i);
-				newActiveIndex = Math.min(newVal[packageIndex].length - 1, i);
-				return newVal;
-			});
-			// set new active resource
-			activeResourceIndexesStore.update((activeResourceIndexes) => {
-				const newVal = [...activeResourceIndexes];
-				newVal[packageIndex] = newActiveIndex;
-				return newVal;
-			});
-			return packageIndex;
-		});
-	},
-};
-
-const activeResourceIndexesStore = writable<number[]>([]);
-
-const activeResourceIndexStore = derived([
-	activePackageIndex,
-	activeResourceIndexesStore,
-], ([$activePackageIndex, $activeResourceIndexes]) => $activeResourceIndexes[$activePackageIndex]) || [];
-
-export const activeResourceIndex = {
-	subscribe: activeResourceIndexStore.subscribe,
-
-	set(i: number): void {
-		// another no-op so we can use the packageIndex
-		activePackageIndex.update((packageIndex) => {
-			activeResourceIndexesStore.update((activeResourceIndexes) => {
-				const newVal = [...activeResourceIndexes];
-				newVal[packageIndex] = i;
-				return newVal;
-			});
-			return packageIndex;
-		});
-	},
-};
-
-export const activeResource = derived([
-	activePackage,
-	activeResourceIndexStore,
-], ([$activePackage, $activeResourceIndex]) => $activePackage?.files[$activeResourceIndex]);
+export const activeResource = derived(packagesStore, ($packages) => {
+	const pkg = $packages.packages[$packages.activePackageId];
+	return pkg?.resources[pkg.activeResourceId];
+});

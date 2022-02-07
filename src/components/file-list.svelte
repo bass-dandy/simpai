@@ -1,44 +1,42 @@
 <script>
 	import {getFileType} from 'dbpf-transform';
 	import {defaultFileName} from '../consts';
-	import {activePackage, openResources} from '../stores';
+	import {packages} from '../stores';
 	import {formatHex} from '../util';
 </script>
 
-{#if $activePackage}
 <ul>
-{#each $activePackage.files as file, i}
-	<li on:click={() => openResources.openResource(i)}>
+{#each Object.entries($packages.packages[$packages.activePackageId]?.resources ?? {}) as [resourceId, resource] (resourceId)}
+	<li on:click={() => packages.openResource(resourceId)}>
 		<div class="file-line">
 			<div>
 				{
-					file.content.filename || defaultFileName[
-						getFileType(file.meta.typeId)
+					resource.content.filename || defaultFileName[
+						getFileType(resource.meta.typeId)
 					]
 				}
 			</div>
 			<div class="type">
-				{getFileType(file.meta.typeId)}
+				{getFileType(resource.meta.typeId)}
 			</div>
 		</div>
 		<div class="file-line">
 			<div class="meta">
 				<div>Group</div>
-				{formatHex(file.meta.groupId)}
+				{formatHex(resource.meta.groupId)}
 			</div>
 			<div class="meta">
 				<div>Instance (High)</div>
-				{formatHex(file.meta.instanceId2, 8)}
+				{formatHex(resource.meta.instanceId2, 8)}
 			</div>
 			<div class="meta">
 				<div>Instance</div>
-				{formatHex(file.meta.instanceId, 8)}
+				{formatHex(resource.meta.instanceId, 8)}
 			</div>
 		</div>
 	</li>
 {/each}
 </ul>
-{/if}
 
 <style>
 	ul {

@@ -4,19 +4,25 @@
 	import FileMeta from './file-meta.svelte';
 	import {getViewForFileType} from './file-views';
 	import TabPanel  from './tab-panel.svelte';
-	import {activeResource, activeResourceIndex, openResources} from '../stores';
+	import {activePackage, activeResource, packages} from '../stores';
 </script>
 
+{#if $activeResource}
 <div class="file-viewer">
 	<TabPanel
-		tabs={
-			$openResources.map((resource) => ({
-				title: resource.content.filename || getFileType(resource.meta.typeId),
-				content: FileMeta,
-			}))
-		}
-		activeTab={$activeResourceIndex}
-		onChange={(i) => activeResourceIndex.set(i)}
+		tabs={{
+			...Object.entries($activePackage?.resources ?? {}).reduce((acc, [resourceId, resource]) => {
+				if (resource.isOpen) {
+					acc[resourceId] = {
+						title: resource.content.filename || getFileType(resource.meta.typeId),
+						content: FileMeta,
+					};
+				}
+				return acc;
+			}, {})
+		}}
+		activeTab={$activePackage?.activeResourceId}
+		onChange={(resourceId) => packages.setActiveResource(resourceId)}
 		style={{ 'flex-shrink': 0 }}
 		contentStyle={{ 'padding-bottom': '30px', 'position': 'relative' }}
 	/>
@@ -34,6 +40,7 @@
 		/>
 	</Box>
 </div>
+{/if}
 
 <style>
 	.file-viewer {
