@@ -1,6 +1,5 @@
 <script>
 	import Box from './box.svelte';
-	import TabClose from './tab-close.svelte';
 
 	export let tabs;
 	export let activeTab;
@@ -28,17 +27,13 @@
 					on:click={() => onChange(id)}
 					disabled={activeTab === id}
 				>
-					{tab.title}
+					<span class="tab-text">{tab.title}</span>
 				</button>
 				{#if !tab.hideClose}
-					<TabClose
-						onClick={() => onClose(id)}
-						style={{
-							position: 'absolute',
-							right: '10px',
-							top: '50%',
-							transform: 'translateY(-50%)',
-						}}
+					<button
+						class="tab-close"
+						on:click={() => onClose(id)}
+						aria-label="close tab"
 					/>
 				{/if}
 			</li>
@@ -88,5 +83,29 @@
 	}
 	.tab:not(:disabled):hover {
 		background-color: rgba(0, 0, 0, 0.1);
+	}
+	.tab-text {
+		vertical-align: sub;
+	}
+	.tab-close {
+		position: absolute;
+		right: 10px;
+		top: 50%;
+		transform: translateY(-50%);
+		padding: 0;
+		margin: 0;
+		border: 0;
+		line-height: 15px;
+		background-color: transparent;
+		color: var(--color-accent);
+	}
+	.tab-close::after {
+		display: block;
+		width: 15px;
+		height: 15px;
+		content: url('static/images/times-circle-regular.svg');
+	}
+	.tab-close:hover::after {
+		content: url('static/images/times-circle-solid.svg');
 	}
 </style>

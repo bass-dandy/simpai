@@ -48,7 +48,7 @@ export const packages = {
 			produce(store, (draft) => {
 				// if closing the currently active package, activate the package to the left (if it exists)
 				if (idToRemove === store.activePackageId) {
-					const packageIds = Object.keys(store);
+					const packageIds = Object.keys(store.packages);
 
 					draft.activePackageId = packageIds.filter((packageId) => packageId !== idToRemove)[
 						Math.max(packageIds.indexOf(idToRemove) - 1, 0)
