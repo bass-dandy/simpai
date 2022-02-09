@@ -24,10 +24,15 @@
 						};
 						return acc;
 					}, {}),
-				'': {title: '+', content: DropZone},
+				'': {
+					title: '+',
+					content: DropZone,
+					hideClose: true,
+				},
 			}}
 			activeTab={$packages.activePackageId}
-			onChange={(id) => packages.setActivePackage(id)}
+			onChange={(packageId) => packages.setActivePackage(packageId)}
+			onClose={(packageId) => packages.removePackage(packageId)}
 			style={{ flex: '1', overflow: 'hidden' }}
 			contentStyle={{ overflow: 'hidden' }}
 			hideSingleTab

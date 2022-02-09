@@ -50,7 +50,7 @@ export const packages = {
 				if (idToRemove === store.activePackageId) {
 					const packageIds = Object.keys(store);
 
-					draft.activePackageId = packageIds[
+					draft.activePackageId = packageIds.filter((packageId) => packageId !== idToRemove)[
 						Math.max(packageIds.indexOf(idToRemove) - 1, 0)
 					] ?? '';
 				}
@@ -76,10 +76,22 @@ export const packages = {
 		));
 	},
 
-	closeResource(resourceId: string): void {
+	closeResource(resourceIdToClose: string): void {
 		packagesStore.update((store) => (
 			produce(store, (draft) => {
-				draft.packages[store.activePackageId].resources[resourceId].isOpen = false;
+				const activePkg = store.packages[store.activePackageId];
+
+				const resourceIds = Object
+					.keys(activePkg.resources)
+					.filter((resourceId) => activePkg.resources[resourceId].isOpen);
+
+				// activate resource to the left (if one exists)
+				draft.packages[store.activePackageId].activeResourceId =
+					resourceIds.filter((resourceId) => resourceId !== resourceIdToClose)[
+						Math.max(resourceIds.indexOf(activePkg.activeResourceId) - 1, 0)
+					] ?? '';
+
+				draft.packages[store.activePackageId].resources[resourceIdToClose].isOpen = false;
 			})
 		));
 	},
@@ -98,6 +110,9 @@ export const packages = {
 	},
 
 	deleteActiveResource(): void {
+		if (!window.confirm('Remove this resource from the package file? This cannot be undone.')) {
+			return;
+		}
 		packagesStore.update((store) => (
 			produce(store, (draft) => {
 				const activePkg = store.packages[store.activePackageId];

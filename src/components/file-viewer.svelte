@@ -23,6 +23,7 @@
 		}}
 		activeTab={$activePackage?.activeResourceId}
 		onChange={(resourceId) => packages.setActiveResource(resourceId)}
+		onClose={(resourceId) => packages.closeResource(resourceId)}
 		style={{ 'flex-shrink': 0 }}
 		contentStyle={{ 'padding-bottom': '30px', 'position': 'relative' }}
 	/>

@@ -19,6 +19,13 @@ export function formatHex(val?: number, length?: number): string {
 	return `0x${hex}`;
 }
 
+export function formatStyle(styleObj: Record<string, string>): string {
+	return Object
+		.entries(styleObj)
+		.map(([key, val]) => `${key}: ${val}`)
+		.join(';');
+}
+
 export function without<T>(arr: T[], i: number): T[] {
 	return [
 		...arr.slice(0, i),

@@ -1,14 +1,13 @@
 <script>
+	import {formatStyle} from '../util';
+
 	export let style = {};
 	export let secondary = false;
 	export let as = 'div';
 	let props;
 
 	$: props = {
-		style: Object
-			.entries(style)
-			.map(([key, val]) => `${key}: ${val}`)
-			.join(';'),
+		style: formatStyle(style),
 		class: secondary ? 'secondary' : 'primary',
 	};
 </script>
