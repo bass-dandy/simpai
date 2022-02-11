@@ -5,13 +5,24 @@ import {v4 as uuid} from 'uuid';
 
 import type {SimsFile} from 'dbpf-transform/dist/esm/types';
 
+function getActiveTabIdAfterClose(tabIdToClose: string, tabIds: string[]): string {
+	const newTabIds = tabIds.filter((tabId) => tabId !== tabIdToClose);
+
+	return newTabIds[
+		Math.min(tabIds.indexOf(tabIdToClose), newTabIds.length - 1)
+	] ?? '';
+}
+
 // tracks all open .package files
 const packagesStore = writable<{
 	activePackageId: string;
 	packages: Record<string, {
 		filename: string;
 		activeResourceId: string;
-		resources: Record<string, SimsFile & { isOpen?: boolean }>;
+		resources: Record<string, SimsFile & {
+			isOpen?: boolean;
+			changes?: any;
+		}>;
 	}>;
 }>({
 	activePackageId: '',
@@ -44,15 +55,13 @@ export const packages = {
 	},
 
 	removePackage(idToRemove: string): void {
+		if (!window.confirm('Close this package? You\'ll lose all changes.')) {
+			return;
+		}
 		packagesStore.update((store) => (
 			produce(store, (draft) => {
-				// if closing the currently active package, activate the package to the left (if it exists)
 				if (idToRemove === store.activePackageId) {
-					const packageIds = Object.keys(store.packages);
-
-					draft.activePackageId = packageIds.filter((packageId) => packageId !== idToRemove)[
-						Math.max(packageIds.indexOf(idToRemove) - 1, 0)
-					] ?? '';
+					draft.activePackageId = getActiveTabIdAfterClose(idToRemove, Object.keys(store.packages))
 				}
 				delete draft.packages[idToRemove];
 			})
@@ -79,19 +88,53 @@ export const packages = {
 	closeResource(resourceIdToClose: string): void {
 		packagesStore.update((store) => (
 			produce(store, (draft) => {
-				const activePkg = store.packages[store.activePackageId];
+				const {resources, activeResourceId} = store.packages[store.activePackageId];
+
+				if (resources[resourceIdToClose].changes && !window.confirm('Close this resource? You\'ll lose all unsaved changes.')) {
+					return;
+				}
 
 				const resourceIds = Object
-					.keys(activePkg.resources)
-					.filter((resourceId) => activePkg.resources[resourceId].isOpen);
+					.keys(resources)
+					.filter((resourceId) => resources[resourceId].isOpen);
 
-				// activate resource to the left (if one exists)
-				draft.packages[store.activePackageId].activeResourceId =
-					resourceIds.filter((resourceId) => resourceId !== resourceIdToClose)[
-						Math.max(resourceIds.indexOf(activePkg.activeResourceId) - 1, 0)
-					] ?? '';
-
+				if (resourceIdToClose === activeResourceId) {
+					draft.packages[store.activePackageId].activeResourceId =
+						getActiveTabIdAfterClose(resourceIdToClose, resourceIds);
+				}
 				draft.packages[store.activePackageId].resources[resourceIdToClose].isOpen = false;
+				delete draft.packages[store.activePackageId].resources[resourceIdToClose].changes;
+			})
+		));
+	},
+
+	editActiveResource(changes: any): void {
+		packagesStore.update((store) => (
+			produce(store, (draft) => {
+				const {activeResourceId} = store.packages[store.activePackageId];
+				draft.packages[store.activePackageId].resources[activeResourceId].changes = changes;
+			})
+		));
+	},
+
+	resetActiveResource(): void {
+		if (!window.confirm('Undo all unsaved changes to this resource? This cannot be undone.')) {
+			return;
+		}
+		packagesStore.update((store) => (
+			produce(store, (draft) => {
+				const {activeResourceId} = store.packages[store.activePackageId];
+				delete draft.packages[store.activePackageId].resources[activeResourceId].changes;
+			})
+		));
+	},
+
+	saveActiveResource(): void {
+		packagesStore.update((store) => (
+			produce(store, (draft) => {
+				const {resources, activeResourceId} = store.packages[store.activePackageId];
+				draft.packages[store.activePackageId].resources[activeResourceId].content = resources[activeResourceId].changes;
+				delete draft.packages[store.activePackageId].resources[activeResourceId].changes;
 			})
 		));
 	},
@@ -99,8 +142,8 @@ export const packages = {
 	copyActiveResource(): void {
 		packagesStore.update((store) => (
 			produce(store, (draft) => {
-				const activePkg = store.packages[store.activePackageId];
-				const resourceToCopy = activePkg.resources[activePkg.activeResourceId];
+				const {resources, activeResourceId} = store.packages[store.activePackageId];
+				const resourceToCopy = resources[activeResourceId];
 				const newId = uuid();
 
 				draft.packages[store.activePackageId].resources[newId] = {...resourceToCopy};
@@ -115,19 +158,16 @@ export const packages = {
 		}
 		packagesStore.update((store) => (
 			produce(store, (draft) => {
-				const activePkg = store.packages[store.activePackageId];
+				const {resources, activeResourceId} = store.packages[store.activePackageId];
 
 				const resourceIds = Object
-					.keys(activePkg.resources)
-					.filter((resourceId) => activePkg.resources[resourceId].isOpen);
+					.keys(resources)
+					.filter((resourceId) => resources[resourceId].isOpen);
 
-				// activate resource to the left (if one exists)
 				draft.packages[store.activePackageId].activeResourceId =
-					resourceIds.filter((resourceId) => resourceId !== activePkg.activeResourceId)[
-						Math.max(resourceIds.indexOf(activePkg.activeResourceId) - 1, 0)
-					] ?? '';
+					getActiveTabIdAfterClose(activeResourceId, resourceIds);
 
-				delete draft.packages[store.activePackageId].resources[activePkg.activeResourceId];
+				delete draft.packages[store.activePackageId].resources[activeResourceId];
 			})
 		));
 	},

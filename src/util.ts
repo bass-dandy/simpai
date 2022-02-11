@@ -32,3 +32,17 @@ export function without<T>(arr: T[], i: number): T[] {
 		...arr.slice(i + 1),
 	];
 }
+
+export function debounce(fn: () => void, delay: number): () => void {
+	let timeout: NodeJS.Timeout | undefined;
+
+	return (...args) => {
+		if (timeout) {
+			clearTimeout(timeout);
+		}
+		timeout = setTimeout(() => {
+			fn(...args);
+			timeout = undefined;
+		}, delay);
+	};
+}

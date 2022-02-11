@@ -1,10 +1,15 @@
 <script>
 	import Button from './button.svelte';
 	import {activeResource, packages} from '../stores';
-	import Undo from '../svg/undo.svg';
-	import Trash from '../svg/trash.svg';
-	import Save from '../svg/save-outline.svg';
+
 	import Copy from '../svg/copy.svg';
+	import Save from '../svg/save.svg';
+	import SaveOutline from '../svg/save-outline.svg';
+	import Trash from '../svg/trash.svg';
+	import Undo from '../svg/undo.svg';
+
+	let dirty = false;
+	$: dirty = $activeResource.changes !== undefined;
 </script>
 
 <div>
@@ -43,10 +48,20 @@
 		</div>
 	</div>
 	<div class="actions">
-		<Button disabled>
-			<Save height={20}/>
+		<Button
+			disabled={!dirty}
+			onClick={() => packages.saveActiveResource()}
+		>
+			{#if dirty}
+				<Save height={20}/>
+			{:else}
+				<SaveOutline height={20}/>
+			{/if}
 		</Button>
-		<Button disabled>
+		<Button
+			disabled={!dirty}
+			onClick={() => packages.resetActiveResource()}
+		>
 			<Undo height={20} />
 		</Button>
 		<Button onClick={() => packages.copyActiveResource()}>
