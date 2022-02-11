@@ -1,6 +1,8 @@
 <script>
 	import Box from '../box.svelte';
+
 	export let resource;
+	export let onChange;
 </script>
 
 <div>
@@ -9,7 +11,8 @@
 		<input
 			id="semiglobal-input"
 			type="text"
-			value={resource.content.semiglobal}
+			value={resource.changes?.semiglobal ?? resource.content.semiglobal}
+			on:input={(e) => onChange({ semiglobal: e.target.value })}
 		/>
 	</Box>
 </div>
