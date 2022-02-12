@@ -23,9 +23,9 @@
 	}}
 >
 	{#if !hideSingleTab || Object.keys(tabs).length > 1}
-		<ul>
+		<ul role="tablist">
 		{#each Object.entries(tabs) as [id, tab] (id)}
-			<li>
+			<li role="tab" aria-selected={activeTab === id}>
 				<button
 					class="tab"
 					class:closable={!tab.hideClose}

@@ -81,6 +81,7 @@
 			disabled={!dirty}
 			onClick={() => packages.saveActiveResource()}
 			variant="skeuomorphic"
+			aria-label="Save changes"
 		>
 			{#if dirty}
 				<Save height={20}/>
@@ -92,18 +93,21 @@
 			disabled={!dirty}
 			onClick={() => packages.resetActiveResource()}
 			variant="skeuomorphic"
+			aria-label="Abandon changes"
 		>
 			<Undo height={20} />
 		</Button>
 		<Button
 			onClick={() => packages.copyActiveResource()}
 			variant="skeuomorphic"
+			aria-label="Clone resource"
 		>
 			<Copy height={20} />
 		</Button>
 		<Button
 			onClick={() => packages.deleteActiveResource()}
 			variant="skeuomorphic"
+			aria-label="Delete resource"
 		>
 			<Trash height={20} />
 		</Button>

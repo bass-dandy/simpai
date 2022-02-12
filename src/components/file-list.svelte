@@ -14,7 +14,7 @@
 			onClick={() => packages.openResource(resourceId)}
 			style="padding: 5px 15px;"
 		>
-			<div class="file-line">
+			<div class="file-info">
 				<div class="filename">
 					{
 						resource.content.filename || defaultFileName[
@@ -26,20 +26,20 @@
 					{getFileType(resource.meta.typeId)}
 				</div>
 			</div>
-			<div class="file-line">
-				<div class="meta">
-					<div>Group</div>
-					{formatHex(resource.meta.groupId)}
+			<dl>
+				<div class="file-meta">
+					<dt>Group</dt>
+					<dd>{formatHex(resource.meta.groupId)}</dd>
 				</div>
-				<div class="meta">
-					<div>Instance (High)</div>
-					{formatHex(resource.meta.instanceId2, 8)}
+				<div class="file-meta">
+					<dt>Instance (High)</dt>
+					<dd>{formatHex(resource.meta.instanceId2, 8)}</dd>
 				</div>
-				<div class="meta">
-					<div>Instance</div>
-					{formatHex(resource.meta.instanceId, 8)}
+				<div class="file-meta">
+					<dt>Instance</dt>
+					<dd>{formatHex(resource.meta.instanceId, 8)}</dd>
 				</div>
-			</div>
+			</dl>
 		</Button>
 	</li>
 {/each}
@@ -66,12 +66,10 @@
 		cursor: pointer;
 		transform: scale(1.02, 1.02);
 	}
-	.file-line {
+	.file-info {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-	}
-	.file-line:first-of-type {
 		margin-bottom: 10px;
 		border-bottom: 1px dashed var(--color-bg);
 	}
@@ -83,13 +81,19 @@
 	.type {
 		margin-left: 15px;
 	}
-	.meta {
+	dl {
+		display: flex;
+		justify-content: space-between;
 		font-size: 0.8rem;
 	}
-	.meta:nth-child(2) {
+	dl, dd, dt {
+		margin: 0;
+		padding: 0;
+	}
+	.file-meta:nth-child(2) {
 		margin: 0 15px;
 	}
-	.meta:last-child {
+	.file-meta:last-child {
 		text-align: right;
 	}
 </style>
