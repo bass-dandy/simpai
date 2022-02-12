@@ -2,12 +2,12 @@
 	import {getFileType} from 'dbpf-transform';
 	import Button from './button.svelte';
 	import {defaultFileName} from '../consts';
-	import {packages} from '../stores';
+	import {packages, activePackage} from '../stores';
 	import {formatHex} from '../util';
 </script>
 
 <ul>
-{#each Object.entries($packages.packages[$packages.activePackageId]?.resources ?? {}) as [resourceId, resource] (resourceId)}
+{#each Object.entries($activePackage?.resources ?? {}) as [resourceId, resource] (resourceId)}
 	<li>
 		<Button
 			variant="block"

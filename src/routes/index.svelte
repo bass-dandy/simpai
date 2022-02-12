@@ -12,7 +12,7 @@
 	<div class="left">
 		<div class="logo">
 			<Plumbob size={60} />
-			<h1>SimPE Online</h1>
+			<h1>SIMPAI</h1>
 		</div>
 		<TabPanel
 			tabs={{

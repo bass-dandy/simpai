@@ -2,6 +2,7 @@
 	import produce from 'immer';
 	import Button from './button.svelte';
 	import {activeResource, packages} from '../stores';
+	import {select} from '../selectors';
 
 	import Copy from '../svg/copy.svg';
 	import Save from '../svg/save.svg';
@@ -14,7 +15,7 @@
 	let meta;
 
 	$: {
-		dirty = $activeResource.contentChanges !== undefined || $activeResource.metaChanges !== undefined;
+		dirty = select($packages).isDirty();
 		content = $activeResource.contentChanges ?? $activeResource.content;
 		meta = $activeResource.metaChanges ?? $activeResource.meta;
 	}

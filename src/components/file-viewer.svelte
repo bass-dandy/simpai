@@ -4,6 +4,7 @@
 	import FileMeta from './file-meta.svelte';
 	import {getViewForFileType} from './file-views';
 	import TabPanel  from './tab-panel.svelte';
+	import {select} from '../selectors';
 	import {activePackage, activeResource, packages} from '../stores';
 </script>
 
@@ -14,7 +15,11 @@
 			...Object.entries($activePackage?.resources ?? {}).reduce((acc, [resourceId, resource]) => {
 				if (resource.isOpen) {
 					acc[resourceId] = {
-						title: `${resource.content.filename || getFileType(resource.meta.typeId)}${resource.contentChanges || resource.metaChanges ? '*' : ''}`,
+						title: `${
+							resource.content.filename || getFileType(resource.meta.typeId)
+						}${
+							select($packages).isDirty(resourceId) ? '*' : ''
+						}`,
 						content: FileMeta,
 					};
 				}

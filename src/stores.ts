@@ -3,7 +3,10 @@ import produce from 'immer';
 import {derived, writable} from 'svelte/store';
 import {v4 as uuid} from 'uuid';
 
-import type {SimsFile, SimsFileMeta} from 'dbpf-transform/dist/esm/types';
+import type {SimsFile, SimsFileMeta, SimsFileContent} from 'dbpf-transform/dist/types/types';
+
+import {select} from './selectors';
+import type {PackagesStore} from './types';
 
 function getActiveTabIdAfterClose(tabIdToClose: string, tabIds: string[]): string {
 	const newTabIds = tabIds.filter((tabId) => tabId !== tabIdToClose);
@@ -13,19 +16,7 @@ function getActiveTabIdAfterClose(tabIdToClose: string, tabIds: string[]): strin
 	] ?? '';
 }
 
-// tracks all open .package files
-const packagesStore = writable<{
-	activePackageId: string;
-	packages: Record<string, {
-		filename: string;
-		activeResourceId: string;
-		resources: Record<string, SimsFile & {
-			isOpen?: boolean;
-			contentChanges?: any;
-			metaChanges?: SimsFileMeta;
-		}>;
-	}>;
-}>({
+const packagesStore = writable<PackagesStore>({
 	activePackageId: '',
 	packages: {},
 });
@@ -62,7 +53,10 @@ export const packages = {
 		packagesStore.update((store) => (
 			produce(store, (draft) => {
 				if (idToRemove === store.activePackageId) {
-					draft.activePackageId = getActiveTabIdAfterClose(idToRemove, Object.keys(store.packages))
+					draft.activePackageId = getActiveTabIdAfterClose(
+						idToRemove,
+						Object.keys(store.packages)
+					);
 				}
 				delete draft.packages[idToRemove];
 			})
@@ -80,8 +74,8 @@ export const packages = {
 	openResource(resourceId: string): void {
 		packagesStore.update((store) => (
 			produce(store, (draft) => {
-				draft.packages[store.activePackageId].resources[resourceId].isOpen = true;
-				draft.packages[store.activePackageId].activeResourceId = resourceId;
+				select(draft).resourceById(resourceId).isOpen = true;
+				select(draft).activePackage().activeResourceId = resourceId;
 			})
 		));
 	},
@@ -89,33 +83,31 @@ export const packages = {
 	closeResource(resourceIdToClose: string): void {
 		packagesStore.update((store) => (
 			produce(store, (draft) => {
-				const {resources, activeResourceId} = store.packages[store.activePackageId];
-				const {contentChanges, metaChanges} = resources[resourceIdToClose];
+				const {activeResourceId} = select(store).activePackage();
 
-				if ((contentChanges || metaChanges) && !window.confirm('Close this resource? You\'ll lose all unsaved changes.')) {
+				if (select(store).isDirty(resourceIdToClose) && !window.confirm('Close this resource? You\'ll lose all unsaved changes.')) {
 					return;
 				}
 
-				const resourceIds = Object
-					.keys(resources)
-					.filter((resourceId) => resources[resourceId].isOpen);
+				const resourceIds = select(store).openResourceIds();
 
 				if (resourceIdToClose === activeResourceId) {
-					draft.packages[store.activePackageId].activeResourceId =
+					select(draft).activePackage().activeResourceId =
 						getActiveTabIdAfterClose(resourceIdToClose, resourceIds);
 				}
-				draft.packages[store.activePackageId].resources[resourceIdToClose].isOpen = false;
-				delete draft.packages[store.activePackageId].resources[resourceIdToClose].contentChanges;
-				delete draft.packages[store.activePackageId].resources[resourceIdToClose].metaChanges;
+				const resourceToClose = select(draft).resourceById(resourceIdToClose);
+
+				resourceToClose.isOpen = false;
+				delete resourceToClose.contentChanges;
+				delete resourceToClose.metaChanges;
 			})
 		));
 	},
 
-	editActiveResource(contentChanges: any): void {
+	editActiveResource(contentChanges: SimsFileContent): void {
 		packagesStore.update((store) => (
 			produce(store, (draft) => {
-				const {activeResourceId} = store.packages[store.activePackageId];
-				draft.packages[store.activePackageId].resources[activeResourceId].contentChanges = contentChanges;
+				select(draft).activeResource().contentChanges = contentChanges;
 			})
 		));
 	},
@@ -123,8 +115,7 @@ export const packages = {
 	editActiveResourceMeta(metaChanges: SimsFileMeta): void {
 		packagesStore.update((store) => (
 			produce(store, (draft) => {
-				const {activeResourceId} = store.packages[store.activePackageId];
-				draft.packages[store.activePackageId].resources[activeResourceId].metaChanges = metaChanges;
+				select(draft).activeResource().metaChanges = metaChanges;
 			})
 		));
 	},
@@ -135,9 +126,8 @@ export const packages = {
 		}
 		packagesStore.update((store) => (
 			produce(store, (draft) => {
-				const {activeResourceId} = store.packages[store.activePackageId];
-				delete draft.packages[store.activePackageId].resources[activeResourceId].contentChanges;
-				delete draft.packages[store.activePackageId].resources[activeResourceId].metaChanges;
+				delete select(draft).activeResource().contentChanges;
+				delete select(draft).activeResource().metaChanges;
 			})
 		));
 	},
@@ -145,15 +135,15 @@ export const packages = {
 	saveActiveResource(): void {
 		packagesStore.update((store) => (
 			produce(store, (draft) => {
-				const {resources, activeResourceId} = store.packages[store.activePackageId];
+				const activeResource = select(draft).activeResource();
 
-				if (resources[activeResourceId].contentChanges !== undefined) {
-					draft.packages[store.activePackageId].resources[activeResourceId].content = resources[activeResourceId].contentChanges;
-					delete draft.packages[store.activePackageId].resources[activeResourceId].contentChanges;
+				if (activeResource.contentChanges !== undefined) {
+					activeResource.content = activeResource.contentChanges;
+					delete activeResource.contentChanges;
 				}
-				if (resources[activeResourceId].metaChanges !== undefined) {
-					draft.packages[store.activePackageId].resources[activeResourceId].meta = resources[activeResourceId].metaChanges as SimsFileMeta;
-					delete draft.packages[store.activePackageId].resources[activeResourceId].metaChanges;
+				if (activeResource.metaChanges !== undefined) {
+					activeResource.meta = activeResource.metaChanges as SimsFileMeta;
+					delete activeResource.metaChanges;
 				}
 			})
 		));
@@ -162,12 +152,11 @@ export const packages = {
 	copyActiveResource(): void {
 		packagesStore.update((store) => (
 			produce(store, (draft) => {
-				const {resources, activeResourceId} = store.packages[store.activePackageId];
-				const resourceToCopy = resources[activeResourceId];
+				const resourceToCopy = select(store).activeResource();
 				const newId = uuid();
 
-				draft.packages[store.activePackageId].resources[newId] = {...resourceToCopy};
-				draft.packages[store.activePackageId].activeResourceId = newId;
+				select(draft).activePackage().resources[newId] = {...resourceToCopy};
+				select(draft).activePackage().activeResourceId = newId;
 			})
 		));
 	},
@@ -178,11 +167,8 @@ export const packages = {
 		}
 		packagesStore.update((store) => (
 			produce(store, (draft) => {
-				const {resources, activeResourceId} = store.packages[store.activePackageId];
-
-				const resourceIds = Object
-					.keys(resources)
-					.filter((resourceId) => resources[resourceId].isOpen);
+				const {activeResourceId} = store.packages[store.activePackageId];
+				const resourceIds = select(store).openResourceIds();
 
 				draft.packages[store.activePackageId].activeResourceId =
 					getActiveTabIdAfterClose(activeResourceId, resourceIds);
@@ -195,17 +181,16 @@ export const packages = {
 	setActiveResource(resourceId: string): void {
 		packagesStore.update((store) => (
 			produce(store, (draft) => {
-				draft.packages[store.activePackageId].activeResourceId = resourceId;
+				select(draft).activePackage().activeResourceId = resourceId;
 			})
 		));
 	},
 };
 
 export const activePackage = derived(packagesStore, ($packages) => {
-	return $packages.packages[$packages.activePackageId];
+	return select($packages).activePackage();
 });
 
 export const activeResource = derived(packagesStore, ($packages) => {
-	const pkg = $packages.packages[$packages.activePackageId];
-	return pkg?.resources[pkg.activeResourceId];
+	return select($packages).activeResource();
 });
