@@ -54,13 +54,15 @@
 		top: 1px;
 		z-index: 1;
 		list-style: none;
-		margin: 0;
-		padding: 0 15px;
+		margin: 0 15px;
+		padding: 0;
 		display: flex;
+		align-items: flex-end;
 		overflow: auto;
 	}
 	li {
 		position: relative;
+		white-space: nowrap;
 	}
 	.tab {
 		padding: 10px 15px;

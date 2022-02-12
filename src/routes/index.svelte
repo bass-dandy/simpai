@@ -52,10 +52,12 @@
 	.left {
 		display: flex;
 		flex-direction: column;
+		max-width: 550px;
 	}
 	.right {
 		flex: 1;
 		margin-left: 15px;
+		overflow: hidden;
 	}
 	.logo {
 		display: flex;

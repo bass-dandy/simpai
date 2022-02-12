@@ -9,7 +9,7 @@
 {#each Object.entries($packages.packages[$packages.activePackageId]?.resources ?? {}) as [resourceId, resource] (resourceId)}
 	<li on:click={() => packages.openResource(resourceId)}>
 		<div class="file-line">
-			<div>
+			<div class="filename">
 				{
 					resource.content.filename || defaultFileName[
 						getFileType(resource.meta.typeId)
@@ -44,10 +44,10 @@
 		list-style: none;
 		margin: 0;
 		padding: 0;
-		width: max-content;
 		overflow: auto;
 	}
 	li {
+		width: 100%;
 		padding: 5px 15px;
 		background-color: var(--color-input);
 		border: 1px solid var(--color-accent);
@@ -69,11 +69,19 @@
 		margin-bottom: 10px;
 		border-bottom: 1px dashed var(--color-bg);
 	}
+	.filename {
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
+	}
 	.type {
-		margin-left: 20px;
+		margin-left: 15px;
 	}
 	.meta {
 		font-size: 0.8rem;
+	}
+	.meta:nth-child(2) {
+		margin: 0 15px;
 	}
 	.meta:last-child {
 		text-align: right;
