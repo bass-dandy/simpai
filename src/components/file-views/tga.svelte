@@ -1,12 +1,15 @@
 <script>
 	export let content;
+
 	let src;
 
-	const blob = new Blob([
-		new Uint8Array(content)
-	], {type: "image/jpeg"});
+	$: {
+		const blob = new Blob([
+			new Uint8Array(content)
+		], {type: "image/jpeg"});
 
-	src = window.URL.createObjectURL(blob);
+		src = window.URL.createObjectURL(blob);
+	}
 </script>
 
 <div>
