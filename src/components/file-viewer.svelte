@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import {getFileType} from 'dbpf-transform';
 	import Box from './box.svelte';
 	import FileMeta from './file-meta.svelte';

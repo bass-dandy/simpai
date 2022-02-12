@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import produce from 'immer';
 	import Button from './button.svelte';
 	import {activeResource, packages} from '../stores';
@@ -79,6 +79,7 @@
 		<Button
 			disabled={!dirty}
 			onClick={() => packages.saveActiveResource()}
+			variant="skeuomorphic"
 		>
 			{#if dirty}
 				<Save height={20}/>
@@ -89,13 +90,20 @@
 		<Button
 			disabled={!dirty}
 			onClick={() => packages.resetActiveResource()}
+			variant="skeuomorphic"
 		>
 			<Undo height={20} />
 		</Button>
-		<Button onClick={() => packages.copyActiveResource()}>
+		<Button
+			onClick={() => packages.copyActiveResource()}
+			variant="skeuomorphic"
+		>
 			<Copy height={20} />
 		</Button>
-		<Button onClick={() => packages.deleteActiveResource()}>
+		<Button
+			onClick={() => packages.deleteActiveResource()}
+			variant="skeuomorphic"
+		>
 			<Trash height={20} />
 		</Button>
 	</div>

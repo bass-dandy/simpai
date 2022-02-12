@@ -1,5 +1,5 @@
-<script>
-	export let content;
+<script lang="ts">
+	export let content: ArrayBuffer;
 
 	let src;
 

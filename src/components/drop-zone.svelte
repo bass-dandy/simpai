@@ -1,4 +1,5 @@
-<script>
+<script lang="ts">
+	import Button from './button.svelte';
 	import {packages} from '../stores';
 
 	let fileInput; // hidden file input ref
@@ -25,7 +26,14 @@
 				await packages.addPackage(fileInput.files?.[0]);
 			}}
 		/>
-		Drag .package file here or <a on:click={fileInput.click()}>browse files</a>
+		Drag .package file here or
+		<Button
+			variant="link"
+			style="font-size: 1.2rem;"
+			onClick={() => fileInput.click()}
+		>
+			browse files
+		</Button>
 	</div>
 </div>
 

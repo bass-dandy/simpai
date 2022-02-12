@@ -1,7 +1,7 @@
-<script>
+<script lang="ts">
 	import {formatStyle} from '../util';
 
-	export let style = {};
+	export let style: Record<string, string> = {};
 	export let secondary = false;
 	export let as = 'div';
 	let props;

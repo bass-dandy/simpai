@@ -1,13 +1,18 @@
-<script>
+<script lang="ts">
+	import type { SvelteComponent } from 'svelte';
 	import Box from './box.svelte';
 
-	export let tabs;
-	export let activeTab;
-	export let onChange;
-	export let onClose;
+	export let tabs: {
+		title: string;
+		hideClose?: boolean;
+		content: typeof SvelteComponent;
+	}[];
+	export let activeTab: string;
+	export let onChange: () => void;
+	export let onClose: () => void;
 	export let hideSingleTab = false;
-	export let style = {};
-	export let contentStyle = {};
+	export let style: Record<string, string> = {};
+	export let contentStyle: Record<string, string> = {};
 </script>
 
 <Box

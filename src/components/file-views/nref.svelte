@@ -1,8 +1,9 @@
-<script>
+<script lang="ts">
+	import type {NrefContent} from 'dbpf-transform/dist/esm/types';
 	import Box from '../box.svelte';
 
-	export let content;
-	export let onChange;
+	export let content: NrefContent;;
+	export let onChange: () => void;
 </script>
 
 <div>

@@ -1,4 +1,5 @@
 import {getFileType} from 'dbpf-transform';
+import type {SimsFile} from 'dbpf-transform/dist/esm/types';
 import type {SvelteComponent} from 'svelte';
 
 import BCON from './bcon.svelte';
@@ -9,7 +10,7 @@ import STR from './str.svelte';
 import TGA from './tga.svelte';
 import UNK from './unk.svelte';
 
-const views = {
+const views: Record<string, typeof SvelteComponent> = {
 	BCON,
 	CTSS: STR,
 	GLOB,
@@ -21,7 +22,7 @@ const views = {
 	TTAS: STR,
 };
 
-export function getViewForFileType(resource): typeof SvelteComponent {
+export function getViewForFileType(resource: SimsFile): typeof SvelteComponent | undefined {
 	if (!resource) return;
 	return views[
 		getFileType(resource.meta.typeId)

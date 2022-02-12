@@ -1,9 +1,10 @@
-<script>
+<script lang="ts">
+	import type {GlobContent} from 'dbpf-transform/dist/esm/types';
 	import produce from 'immer';
 	import Box from '../box.svelte';
 
-	export let content;
-	export let onChange;
+	export let content: GlobContent;
+	export let onChange: () => void;
 </script>
 
 <div>

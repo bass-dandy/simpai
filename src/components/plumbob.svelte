@@ -1,5 +1,5 @@
-<script>
-	export let size;
+<script lang="ts">
+	export let size: number;
 	let style;
 
 	$: style = size ? `transform:scale(${size / 100})` : undefined;

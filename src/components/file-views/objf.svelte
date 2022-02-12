@@ -1,10 +1,11 @@
-<script>
+<script lang="ts">
+	import type {ObjfContent} from 'dbpf-transform/dist/esm/types';
 	import produce from 'immer';
 	import Box from '../box.svelte';
 	import {formatHex} from '../../util';
 
-	export let content;
-	export let onChange;
+	export let content: ObjfContent;
+	export let onChange: () => void;
 
 	const FNS = [
 		'init',

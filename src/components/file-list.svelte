@@ -1,5 +1,6 @@
-<script>
+<script lang="ts">
 	import {getFileType} from 'dbpf-transform';
+	import Button from './button.svelte';
 	import {defaultFileName} from '../consts';
 	import {packages} from '../stores';
 	import {formatHex} from '../util';
@@ -7,33 +8,39 @@
 
 <ul>
 {#each Object.entries($packages.packages[$packages.activePackageId]?.resources ?? {}) as [resourceId, resource] (resourceId)}
-	<li on:click={() => packages.openResource(resourceId)}>
-		<div class="file-line">
-			<div class="filename">
-				{
-					resource.content.filename || defaultFileName[
-						getFileType(resource.meta.typeId)
-					]
-				}
+	<li>
+		<Button
+			variant="block"
+			onClick={() => packages.openResource(resourceId)}
+			style="padding: 5px 15px;"
+		>
+			<div class="file-line">
+				<div class="filename">
+					{
+						resource.content.filename || defaultFileName[
+							getFileType(resource.meta.typeId)
+						]
+					}
+				</div>
+				<div class="type">
+					{getFileType(resource.meta.typeId)}
+				</div>
 			</div>
-			<div class="type">
-				{getFileType(resource.meta.typeId)}
+			<div class="file-line">
+				<div class="meta">
+					<div>Group</div>
+					{formatHex(resource.meta.groupId)}
+				</div>
+				<div class="meta">
+					<div>Instance (High)</div>
+					{formatHex(resource.meta.instanceId2, 8)}
+				</div>
+				<div class="meta">
+					<div>Instance</div>
+					{formatHex(resource.meta.instanceId, 8)}
+				</div>
 			</div>
-		</div>
-		<div class="file-line">
-			<div class="meta">
-				<div>Group</div>
-				{formatHex(resource.meta.groupId)}
-			</div>
-			<div class="meta">
-				<div>Instance (High)</div>
-				{formatHex(resource.meta.instanceId2, 8)}
-			</div>
-			<div class="meta">
-				<div>Instance</div>
-				{formatHex(resource.meta.instanceId, 8)}
-			</div>
-		</div>
+		</Button>
 	</li>
 {/each}
 </ul>
@@ -48,7 +55,6 @@
 	}
 	li {
 		width: 100%;
-		padding: 5px 15px;
 		background-color: var(--color-input);
 		border: 1px solid var(--color-accent);
 		transition: transform 0.1s ease-out;
@@ -56,7 +62,7 @@
 	li:not(:first-child) {
 		margin-top: 5px;
 	}
-	li:hover {
+	li:hover, li:focus-within {
 		cursor: pointer;
 		transform: scale(1.02, 1.02);
 	}
