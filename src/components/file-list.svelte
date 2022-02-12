@@ -43,7 +43,7 @@
 		height: 100%;
 		list-style: none;
 		margin: 0;
-		padding: 0;
+		padding: 5px 15px;
 		overflow: auto;
 	}
 	li {

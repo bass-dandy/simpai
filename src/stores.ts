@@ -3,7 +3,7 @@ import produce from 'immer';
 import {derived, writable} from 'svelte/store';
 import {v4 as uuid} from 'uuid';
 
-import type {SimsFile} from 'dbpf-transform/dist/esm/types';
+import type {SimsFile, SimsFileMeta} from 'dbpf-transform/dist/esm/types';
 
 function getActiveTabIdAfterClose(tabIdToClose: string, tabIds: string[]): string {
 	const newTabIds = tabIds.filter((tabId) => tabId !== tabIdToClose);
@@ -21,7 +21,8 @@ const packagesStore = writable<{
 		activeResourceId: string;
 		resources: Record<string, SimsFile & {
 			isOpen?: boolean;
-			changes?: any;
+			contentChanges?: any;
+			metaChanges?: SimsFileMeta;
 		}>;
 	}>;
 }>({
@@ -89,8 +90,9 @@ export const packages = {
 		packagesStore.update((store) => (
 			produce(store, (draft) => {
 				const {resources, activeResourceId} = store.packages[store.activePackageId];
+				const {contentChanges, metaChanges} = resources[resourceIdToClose];
 
-				if (resources[resourceIdToClose].changes && !window.confirm('Close this resource? You\'ll lose all unsaved changes.')) {
+				if ((contentChanges || metaChanges) && !window.confirm('Close this resource? You\'ll lose all unsaved changes.')) {
 					return;
 				}
 
@@ -103,16 +105,26 @@ export const packages = {
 						getActiveTabIdAfterClose(resourceIdToClose, resourceIds);
 				}
 				draft.packages[store.activePackageId].resources[resourceIdToClose].isOpen = false;
-				delete draft.packages[store.activePackageId].resources[resourceIdToClose].changes;
+				delete draft.packages[store.activePackageId].resources[resourceIdToClose].contentChanges;
+				delete draft.packages[store.activePackageId].resources[resourceIdToClose].metaChanges;
 			})
 		));
 	},
 
-	editActiveResource(changes: any): void {
+	editActiveResource(contentChanges: any): void {
 		packagesStore.update((store) => (
 			produce(store, (draft) => {
 				const {activeResourceId} = store.packages[store.activePackageId];
-				draft.packages[store.activePackageId].resources[activeResourceId].changes = changes;
+				draft.packages[store.activePackageId].resources[activeResourceId].contentChanges = contentChanges;
+			})
+		));
+	},
+
+	editActiveResourceMeta(metaChanges: SimsFileMeta): void {
+		packagesStore.update((store) => (
+			produce(store, (draft) => {
+				const {activeResourceId} = store.packages[store.activePackageId];
+				draft.packages[store.activePackageId].resources[activeResourceId].metaChanges = metaChanges;
 			})
 		));
 	},
@@ -124,7 +136,8 @@ export const packages = {
 		packagesStore.update((store) => (
 			produce(store, (draft) => {
 				const {activeResourceId} = store.packages[store.activePackageId];
-				delete draft.packages[store.activePackageId].resources[activeResourceId].changes;
+				delete draft.packages[store.activePackageId].resources[activeResourceId].contentChanges;
+				delete draft.packages[store.activePackageId].resources[activeResourceId].metaChanges;
 			})
 		));
 	},
@@ -133,8 +146,15 @@ export const packages = {
 		packagesStore.update((store) => (
 			produce(store, (draft) => {
 				const {resources, activeResourceId} = store.packages[store.activePackageId];
-				draft.packages[store.activePackageId].resources[activeResourceId].content = resources[activeResourceId].changes;
-				delete draft.packages[store.activePackageId].resources[activeResourceId].changes;
+
+				if (resources[activeResourceId].contentChanges !== undefined) {
+					draft.packages[store.activePackageId].resources[activeResourceId].content = resources[activeResourceId].contentChanges;
+					delete draft.packages[store.activePackageId].resources[activeResourceId].contentChanges;
+				}
+				if (resources[activeResourceId].metaChanges !== undefined) {
+					draft.packages[store.activePackageId].resources[activeResourceId].meta = resources[activeResourceId].metaChanges as SimsFileMeta;
+					delete draft.packages[store.activePackageId].resources[activeResourceId].metaChanges;
+				}
 			})
 		));
 	},

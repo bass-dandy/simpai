@@ -34,7 +34,7 @@
 			onChange={(packageId) => packages.setActivePackage(packageId)}
 			onClose={(packageId) => packages.removePackage(packageId)}
 			style={{ flex: '1', overflow: 'hidden' }}
-			contentStyle={{ overflow: 'hidden' }}
+			contentStyle={{ overflow: 'hidden', padding: '10px 0' }}
 			hideSingleTab
 		/>
 	</div>

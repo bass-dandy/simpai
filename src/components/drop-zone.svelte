@@ -35,6 +35,7 @@
 		flex-direction: column;
 		align-items: center;
 		min-width: 400px;
+		margin: 5px 15px;
 	}
 	input[type="file"] {
 		display: none;

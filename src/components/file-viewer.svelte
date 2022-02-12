@@ -14,7 +14,7 @@
 			...Object.entries($activePackage?.resources ?? {}).reduce((acc, [resourceId, resource]) => {
 				if (resource.isOpen) {
 					acc[resourceId] = {
-						title: `${resource.content.filename || getFileType(resource.meta.typeId)}${resource.changes ? '*' : ''}`,
+						title: `${resource.content.filename || getFileType(resource.meta.typeId)}${resource.contentChanges || resource.metaChanges ? '*' : ''}`,
 						content: FileMeta,
 					};
 				}
@@ -37,8 +37,8 @@
 	>
 		<svelte:component
 			this={getViewForFileType($activeResource)}
-			content={$activeResource.changes ?? $activeResource.content}
-			onChange={(changes) => packages.editActiveResource(changes)}
+			content={$activeResource.contentChanges ?? $activeResource.content}
+			onChange={(contentChanges) => packages.editActiveResource(contentChanges)}
 		/>
 	</Box>
 </div>

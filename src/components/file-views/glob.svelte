@@ -1,4 +1,5 @@
 <script>
+	import produce from 'immer';
 	import Box from '../box.svelte';
 
 	export let content;
@@ -12,7 +13,9 @@
 			id="semiglobal-input"
 			type="text"
 			value={content.semiglobal}
-			on:input={(e) => onChange({ semiglobal: e.target.value })}
+			on:input={(e) => onChange(
+				produce(content, (draft) => { draft.semiglobal = e.target.value; })
+			)}
 		/>
 	</Box>
 </div>

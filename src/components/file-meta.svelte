@@ -1,4 +1,5 @@
 <script>
+	import produce from 'immer';
 	import Button from './button.svelte';
 	import {activeResource, packages} from '../stores';
 
@@ -8,8 +9,15 @@
 	import Trash from '../svg/trash.svg';
 	import Undo from '../svg/undo.svg';
 
-	let dirty = false;
-	$: dirty = $activeResource.changes !== undefined;
+	let dirty;
+	let content;
+	let meta;
+
+	$: {
+		dirty = $activeResource.contentChanges !== undefined || $activeResource.metaChanges !== undefined;
+		content = $activeResource.contentChanges ?? $activeResource.content;
+		meta = $activeResource.metaChanges ?? $activeResource.meta;
+	}
 </script>
 
 <div>
@@ -18,7 +26,12 @@
 		<input
 			id="filename-input"
 			type="text"
-			value={$activeResource.content.filename}
+			value={content.filename}
+			on:input={(e) => packages.editActiveResource(
+				produce(content, (draft) => {
+					draft.filename = e.target.value;
+				})
+			)}
 		/>
 	{/if}
 	<div class="meta">
@@ -27,7 +40,12 @@
 			<input
 				id="group-id-input"
 				type="text"
-				value={$activeResource.meta.groupId}
+				value={meta.groupId}
+				on:input={(e) => packages.editActiveResourceMeta(
+					produce(meta, (draft) => {
+						draft.groupId = e.target.value;
+					})
+				)}
 			/>
 		</div>
 		<div class="input-wrapper">
@@ -35,7 +53,12 @@
 			<input
 				id="instance-id2-input"
 				type="text"
-				value={$activeResource.meta.instanceId2}
+				value={meta.instanceId2}
+				on:input={(e) => packages.editActiveResourceMeta(
+					produce(meta, (draft) => {
+						draft.instanceId2 = e.target.value;
+					})
+				)}
 			/>
 		</div>
 		<div class="input-wrapper">
@@ -43,7 +66,12 @@
 			<input
 				id="instance-id-input"
 				type="text"
-				value={$activeResource.meta.instanceId}
+				value={meta.instanceId}
+				on:input={(e) => packages.editActiveResourceMeta(
+					produce(meta, (draft) => {
+						draft.instanceId = e.target.value;
+					})
+				)}
 			/>
 		</div>
 	</div>
