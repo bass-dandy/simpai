@@ -37,7 +37,7 @@
 	>
 		<svelte:component
 			this={getViewForFileType($activeResource)}
-			resource={$activeResource}
+			content={$activeResource.changes ?? $activeResource.content}
 			onChange={(changes) => packages.editActiveResource(changes)}
 		/>
 	</Box>

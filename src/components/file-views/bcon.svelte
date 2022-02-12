@@ -3,7 +3,7 @@
 	import Box from '../box.svelte';
 	import {formatHex} from '../../util';
 
-	export let resource;
+	export let content;
 	export let onChange;
 
 	const displayOptions = {
@@ -36,9 +36,9 @@
 			Flag
 			<input
 				type="checkbox"
-				checked={resource.changes?.flag ?? resource.content.flag}
+				checked={content.flag}
 				on:input={(e) => onChange(
-					produce(resource.changes ?? resource.content, (draft) => {
+					produce(content, (draft) => {
 						draft.flag = e.target.checked;
 					})
 				)}
@@ -64,7 +64,7 @@
 		style={{ 'margin-top': '5px' }}
 		secondary
 	>
-	{#each resource.changes?.items ?? resource.content.items as item, i}
+	{#each content.items as item, i}
 		<li>
 			<label>
 				{formatHex(i, 1)}:
@@ -73,7 +73,7 @@
 					value={format(item)}
 					on:input={(e) => {
 						onChange(
-							produce(resource.changes ?? resource.content, (draft) => {
+							produce(content, (draft) => {
 								draft.items[i] = parse(e.target.value);
 							})
 						);

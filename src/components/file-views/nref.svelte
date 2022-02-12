@@ -1,7 +1,7 @@
 <script>
 	import Box from '../box.svelte';
 
-	export let resource;
+	export let content;
 	export let onChange;
 </script>
 
@@ -11,7 +11,7 @@
 		<input
 			id="nref-input"
 			type="text"
-			value={resource.changes ?? resource.content}
+			value={content}
 			on:input={(e) => onChange(e.target.value)}
 		/>
 	</Box>

@@ -1,7 +1,10 @@
 <script>
+	import produce from 'immer';
 	import Box from '../box.svelte';
 	import {formatHex} from '../../util';
-	export let resource;
+
+	export let content;
+	export let onChange;
 
 	const FNS = [
 		'init',
@@ -71,7 +74,7 @@
 				<td>Guardian BHAV</td>
 			</thead>
 			<tbody>
-			{#each resource.content.functions as fn, i}
+			{#each content.functions as fn, i}
 				<tr>
 					<td>{FNS[i]}</td>
 					<td>
@@ -79,6 +82,11 @@
 							type="text"
 							placeholder="none"
 							value={formatHex(fn.action || undefined, 4)}
+							on:input={(e) => onChange(
+								produce(content, (draft) => {
+									draft.functions[i].action = parseInt(e.target.value, 16);
+								})
+							)}
 						/>
 					</td>
 					<td>
@@ -86,6 +94,11 @@
 							type="text"
 							placeholder="none"
 							value={formatHex(fn.guardian || undefined, 4)}
+							on:input={(e) => onChange(
+								produce(content, (draft) => {
+									draft.functions[i].guardian = parseInt(e.target.value, 16);
+								})
+							)}
 						/>
 					</td>
 				</tr>
