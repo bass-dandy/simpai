@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { SvelteComponent } from 'svelte';
 	import Box from './box.svelte';
+	import CloseButton from './close-button.svelte';
 
 	export let tabs: {
 		title: string;
@@ -35,10 +36,15 @@
 					<span class="tab-text">{tab.title}</span>
 				</button>
 				{#if !tab.hideClose}
-					<button
-						class="tab-close"
-						on:click={() => onClose(id)}
+					<CloseButton
+						onClick={() => onClose(id)}
 						aria-label="close tab"
+						style={{
+							position: 'absolute',
+							right: '10px',
+							top: '50%',
+							transform: 'translateY(-50%)',
+						}}
 					/>
 				{/if}
 			</li>
@@ -93,26 +99,5 @@
 	}
 	.tab-text {
 		vertical-align: sub;
-	}
-	.tab-close {
-		position: absolute;
-		right: 10px;
-		top: 50%;
-		transform: translateY(-50%);
-		padding: 0;
-		margin: 0;
-		border: 0;
-		line-height: 15px;
-		background-color: transparent;
-		color: var(--color-accent);
-	}
-	.tab-close::after {
-		display: block;
-		width: 15px;
-		height: 15px;
-		content: url('static/images/times-circle-regular.svg');
-	}
-	.tab-close:hover::after {
-		content: url('static/images/times-circle-solid.svg');
 	}
 </style>

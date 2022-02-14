@@ -2,7 +2,8 @@
 	import type {BconContent} from 'dbpf-transform/dist/esm/types';
 	import produce from 'immer';
 	import Box from '../box.svelte';
-	import {formatHex, formatSignedInt} from '../../util';
+	import CloseButton from '../close-button.svelte';
+	import {formatHex, formatSignedInt, without} from '../../util';
 
 	export let content: BconContent;
 	export let onChange: () => void;
@@ -64,29 +65,60 @@
 			</select>
 		</label>
 	</Box>
-	<Box
-		as="ol"
-		style={{ 'margin-top': '5px' }}
-		secondary
-	>
-	{#each content.items as item, i}
-		<li>
-			<label>
-				{formatHex(i, 1)}:
-				<input
-					type="text"
-					value={format(item)}
-					on:input={(e) => {
-						onChange(
-							produce(content, (draft) => {
-								draft.items[i] = parse(e.target.value);
-							})
-						);
-					}}
-				/>
-			</label>
-		</li>
-	{/each}
+	<Box secondary style={{ 'margin-top': '5px' }}>
+		<table>
+			<thead>
+				<td/>
+				<td>Line</td>
+				<td>Value</td>
+				<td>Label</td>
+			</thead>
+			<tbody>
+			{#each content.items as item, i}
+				<tr>
+					<td>
+						<CloseButton
+							onClick={() => {
+								onChange(
+									produce(content, (draft) => {
+										draft.items = without(draft.items, i);
+									})
+								)
+							}}
+							aria-label="remove value"
+						/>
+					</td>
+					<td>{format(i)}</td>
+					<td>
+						<input
+							type="text"
+							value={format(item)}
+							on:input={(e) => {
+								onChange(
+									produce(content, (draft) => {
+										draft.items[i] = parse(e.target.value);
+									})
+								);
+							}}
+						/>
+					</td>
+					<td>
+						<input
+							type="text"
+							value={content.labels?.[i] ?? ''}
+							on:input={(e) => {
+								onChange(
+									produce(content, (draft) => {
+										draft.labels[i] = e.target.value;
+									})
+								);
+							}}
+						/>
+					</td>
+				</tr>
+			{/each}
+			</tbody>
+		</table>
 	</Box>
 </div>
 
@@ -98,14 +130,14 @@
 	.display-as {
 		margin-left: 5px;
 	}
-	li {
-		margin-top: 5px;
+	table {
+		border-collapse: collapse;
+		font-size: 1rem;
 	}
-	label {
-		display: flex;
-		align-items: center;
+	td {
+		padding: 2px 0;
 	}
-	input {
-		margin-left: 5px;
+	td:not(:first-of-type), td:not(:last-of-type) {
+		padding: 2px 5px;
 	}
 </style>
