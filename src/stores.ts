@@ -1,6 +1,6 @@
-import {deserialize} from 'dbpf-transform';
+import {deserialize, serialize} from 'dbpf-transform';
 import produce from 'immer';
-import {derived, writable} from 'svelte/store';
+import {derived, get, writable} from 'svelte/store';
 import {v4 as uuid} from 'uuid';
 
 import type {SimsFile, SimsFileMeta, SimsFileContent} from 'dbpf-transform/dist/types/types';
@@ -69,6 +69,27 @@ export const packages = {
 				draft.activePackageId = packageId;
 			})
 		));
+	},
+
+	downloadActivePackage(): void {
+		const store = get(packagesStore);
+		if (select(store).isPackageDirty() && !window.confirm('This package contains resources with unsaved changes. Download anyway?')) {
+			return;
+		}
+		const activePkg = select(store).activePackage();
+
+		const data = serialize(
+			Object.values(activePkg.resources)
+		);
+		const blob = new Blob([new Uint8Array(data)], { type: 'octet/stream' }),
+		url = window.URL.createObjectURL(blob);
+
+		const a = document.createElement('a');
+		a.href = url;
+		a.download = activePkg.filename;;
+		a.click();
+
+		window.URL.revokeObjectURL(url);
 	},
 
 	openResource(resourceId: string): void {

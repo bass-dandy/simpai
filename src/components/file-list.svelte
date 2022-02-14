@@ -5,6 +5,9 @@
 	import {packages, activePackage} from '../stores';
 	import {formatHex} from '../util';
 
+	import PlusIcon from '../svg/plus.svg';
+	import DownloadIcon from '../svg/file-arrow-down.svg';
+
 	let search = '';
 	let resources;
 
@@ -30,14 +33,32 @@
 </script>
 
 <div class="file-list">
-	<label>
+	<label for="file-search">
 		Search
+	</label>
+	<div class="actions">
 		<input
+			id="file-search"
 			type="text"
-			placeholder="Search by file name, file type, group ID, or instance ID"
+			placeholder="File name, file type, group ID, or instance ID"
 			bind:value={search}
 		/>
-	</label>
+		<Button
+			variant="skeuomorphic"
+			size={25}
+			style="margin: 0 5px; padding: 1px;"
+			onClick={() => packages.downloadActivePackage()}
+		>
+			<DownloadIcon height={20} />
+		</Button>
+		<Button
+			variant="skeuomorphic"
+			size={25}
+			style="padding: 1px;"
+		>
+			<PlusIcon height={20} />
+		</Button>
+	</div>
 	<ul>
 	{#each resources as [resourceId, resource] (resourceId)}
 		<li>
@@ -81,16 +102,19 @@
 		height: 100%;
 		overflow: hidden;
 	}
-	label {
-		margin: 10px 15px;
+	label, .actions {
+		margin: 0 15px;
 	}
-	input {
-		display: block;
-		width: 100%;
+	.actions {
+		display: flex;
+		align-items: center;
+	}
+	#file-search {
+		flex: 1;
 	}
 	ul {
 		flex: 1;
-		margin: 0;
+		margin: 10px 0 0;
 		padding: 5px 15px;
 		overflow: auto;
 		list-style: none;

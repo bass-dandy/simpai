@@ -1,5 +1,9 @@
 import type {PackagesStore, Package, Resource} from './types';
 
+function isDirty(resource: Resource): boolean {
+	return resource?.contentChanges !== undefined || resource?.metaChanges !== undefined;
+}
+
 export function select(store: PackagesStore) {
 	return {
 		activePackage(): Package {
@@ -27,8 +31,14 @@ export function select(store: PackagesStore) {
 		},
 
 		isDirty(resourceId: string): boolean {
-			const resource = this.resourceById(resourceId ?? this.activeResourceId());
-			return resource?.contentChanges !== undefined || resource?.metaChanges !== undefined;
+			return isDirty(
+				this.resourceById(resourceId ?? this.activeResourceId())
+			);
+		},
+
+		isPackageDirty(packageId?: string): boolean {
+			const pkg = store.packages[packageId ?? store.activePackageId];
+			return Object.values(pkg.resources).some(isDirty);
 		},
 	};
 }

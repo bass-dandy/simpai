@@ -1,14 +1,19 @@
 <script lang="ts">
 	export let onClick: () => void;
 	export let variant: 'skeuomorphic' | 'block' | 'link' = 'link';
+	export let style: string;
+
+	// only used for skeuomorphic buttons
+	export let size = 35;
 </script>
 
 {#if variant === 'skeuomorphic'}
-	<div class="bevel">
+	<div class="bevel" {style}>
 		<button
 			class={variant}
 			on:click={onClick}
-			{...$$props}
+			style={`height: ${size}px; width: ${size}px;`}
+			{...$$restProps}
 		>
 			<slot />
 		</button>
@@ -17,7 +22,8 @@
 	<button
 		class={variant}
 		on:click={onClick}
-		{...$$props}
+		{style}
+		{...$$restProps}
 	>
 		<slot />
 	</button>
@@ -39,8 +45,6 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: 35px;
-		height: 35px;
 		border: 1px solid var(--color-bg);
 		border-radius: 50%;
 		background:
