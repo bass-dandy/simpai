@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "immer": "^9.0.12",
+    "tgaimage": "1.1.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
