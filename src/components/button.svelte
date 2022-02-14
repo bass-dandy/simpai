@@ -80,4 +80,7 @@
 		text-decoration: dotted underline;
 		text-underline-offset: 2px;
 	}
+	.link:hover {
+		text-decoration: underline;
+	}
 </style>

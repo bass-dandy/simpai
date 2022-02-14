@@ -2,6 +2,7 @@
 	import type {BconContent} from 'dbpf-transform/dist/esm/types';
 	import produce from 'immer';
 	import Box from '../box.svelte';
+	import Button from '../button.svelte';
 	import CloseButton from '../close-button.svelte';
 	import {formatHex, formatSignedInt, without} from '../../util';
 
@@ -119,6 +120,17 @@
 			{/each}
 			</tbody>
 		</table>
+		<Button
+			onClick={() => {
+				onChange(
+					produce(content, (draft) => {
+						draft.items.push(0);
+					})
+				);
+			}}
+		>
+			Add new value
+		</Button>
 	</Box>
 </div>
 
@@ -133,11 +145,12 @@
 	table {
 		border-collapse: collapse;
 		font-size: 1rem;
+		margin-bottom: 10px;
 	}
 	td {
 		padding: 2px 0;
 	}
-	td:not(:first-of-type), td:not(:last-of-type) {
-		padding: 2px 5px;
+	td:not(:last-of-type) {
+		padding-right: 10px;
 	}
 </style>
