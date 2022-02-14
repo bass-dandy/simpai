@@ -48,6 +48,7 @@
 			size={25}
 			style="margin: 0 5px; padding: 1px;"
 			onClick={() => packages.downloadActivePackage()}
+			aria-label="download package"
 		>
 			<DownloadIcon height={20} />
 		</Button>
@@ -55,6 +56,7 @@
 			variant="skeuomorphic"
 			size={25}
 			style="padding: 1px;"
+			aria-label="add resource"
 		>
 			<PlusIcon height={20} />
 		</Button>
