@@ -19,6 +19,16 @@ export function formatHex(val?: number, length?: number): string {
 	return `0x${hex}`;
 }
 
+// currently only works with 16bit values
+export function formatSignedInt(val: number): number {
+	const mask = 0b1 << 15;
+	const uVal = new Uint16Array([val])[0];
+
+	return mask & uVal
+		? (uVal ^ mask) - mask
+		: val;
+}
+
 export function formatStyle(styleObj: Record<string, string>): string {
 	return Object
 		.entries(styleObj)

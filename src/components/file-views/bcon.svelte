@@ -2,7 +2,7 @@
 	import type {BconContent} from 'dbpf-transform/dist/esm/types';
 	import produce from 'immer';
 	import Box from '../box.svelte';
-	import {formatHex} from '../../util';
+	import {formatHex, formatSignedInt} from '../../util';
 
 	export let content: BconContent;
 	export let onChange: () => void;
@@ -11,6 +11,10 @@
 		Hex: {
 			format: (val) => formatHex(val, 4),
 			parse: (val) => parseInt(val, 16),
+		},
+		Int: {
+			format: (val) => formatSignedInt(val, 4),
+			parse: (val) => new Uint16Array([parseInt(val, 10)])[0],
 		},
 		uInt: {
 			format: (val) => val >>> 0,
