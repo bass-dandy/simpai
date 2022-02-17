@@ -33,8 +33,8 @@
 			activeTab={$packages.activePackageId}
 			onChange={(packageId) => packages.setActivePackage(packageId)}
 			onClose={(packageId) => packages.removePackage(packageId)}
-			style={{ flex: '1', overflow: 'hidden' }}
-			contentStyle={{ overflow: 'hidden', padding: '15px 0' }}
+			style={{ flex: '1', 'min-height': '0' }}
+			contentStyle={{ 'min-height': '0', padding: '15px 0' }}
 			hideSingleTab
 		/>
 	</div>
@@ -56,8 +56,8 @@
 	}
 	.right {
 		flex: 1;
+		min-width: 0;
 		margin-left: 15px;
-		overflow: hidden;
 	}
 	.logo {
 		display: flex;

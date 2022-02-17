@@ -81,6 +81,7 @@
 			disabled={!dirty}
 			onClick={() => packages.saveActiveResource()}
 			variant="skeuomorphic"
+			tooltip="Save changes"
 			aria-label="Save changes"
 		>
 			{#if dirty}
@@ -93,6 +94,7 @@
 			disabled={!dirty}
 			onClick={() => packages.resetActiveResource()}
 			variant="skeuomorphic"
+			tooltip="Abandon changes"
 			aria-label="Abandon changes"
 		>
 			<Undo height={20} />
@@ -100,6 +102,7 @@
 		<Button
 			onClick={() => packages.copyActiveResource()}
 			variant="skeuomorphic"
+			tooltip="Clone resource"
 			aria-label="Clone resource"
 		>
 			<Copy height={20} />
@@ -107,6 +110,7 @@
 		<Button
 			onClick={() => packages.deleteActiveResource()}
 			variant="skeuomorphic"
+			tooltip="Delete resource"
 			aria-label="Delete resource"
 		>
 			<Trash height={20} />

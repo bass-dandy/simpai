@@ -1,10 +1,13 @@
 <script lang="ts">
+	import Popover from './popover.svelte';
+
 	export let onClick: () => void;
 	export let variant: 'skeuomorphic' | 'block' | 'link' = 'link';
 	export let style: string;
 
 	// only used for skeuomorphic buttons
 	export let size = 35;
+	export let tooltip = '';
 </script>
 
 {#if variant === 'skeuomorphic'}
@@ -17,6 +20,9 @@
 		>
 			<slot />
 		</button>
+		{#if tooltip}
+			<Popover position="top">{tooltip}</Popover>
+		{/if}
 	</div>
 {:else}
 	<button
@@ -31,6 +37,7 @@
 
 <style>
 	.bevel {
+		position: relative;
 		display: inline-block;
 		width: min-content;
 		padding: 2px;
@@ -40,6 +47,9 @@
 		background:
 			radial-gradient(at bottom right, var(--color-accent), var(--color-accent) 10%, transparent 70%, #eee 85%),
 			var(--color-bg);
+	}
+	.skeuomorphic:not(:hover):not(:focus) + :global(.popover) {
+		display: none;
 	}
 	.skeuomorphic {
 		display: flex;

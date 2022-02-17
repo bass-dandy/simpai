@@ -103,19 +103,7 @@
 							}}
 						/>
 					</td>
-					<td>
-						<input
-							type="text"
-							value={content.labels?.[i] ?? ''}
-							on:input={(e) => {
-								onChange(
-									produce(content, (draft) => {
-										draft.labels[i] = e.target.value;
-									})
-								);
-							}}
-						/>
-					</td>
+					<td>{content.labels?.[i] ?? '-'}</td>
 				</tr>
 			{/each}
 			</tbody>

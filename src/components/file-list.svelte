@@ -48,6 +48,7 @@
 			size={25}
 			style="margin: 0 5px; padding: 1px;"
 			onClick={() => packages.downloadActivePackage()}
+			tooltip="Download package"
 			aria-label="download package"
 		>
 			<DownloadIcon height={20} />
@@ -56,6 +57,7 @@
 			variant="skeuomorphic"
 			size={25}
 			style="padding: 1px;"
+			tooltip="Add resource"
 			aria-label="add resource"
 		>
 			<PlusIcon height={20} />
@@ -102,7 +104,6 @@
 		display: flex;
 		flex-direction: column;
 		height: 100%;
-		overflow: hidden;
 	}
 	label, .actions {
 		margin: 0 15px;
