@@ -1,18 +1,16 @@
 <script lang="ts">
 	import {getFileType} from 'dbpf-transform';
 	import Button from './button.svelte';
+	import FileListActions from './file-list-actions.svelte';
 	import {defaultFileName} from '../consts';
 	import {packages, activePackage} from '../stores';
 	import {formatHex} from '../util';
-
-	import PlusIcon from '../svg/plus.svg';
-	import DownloadIcon from '../svg/file-arrow-down.svg';
 
 	let search = '';
 	let resources;
 
 	const getFileName = (resource) =>
-		resource.content.filename || defaultFileName[
+		resource.content?.filename || defaultFileName[
 			getFileType(resource.meta.typeId)
 		];
 
@@ -33,36 +31,7 @@
 </script>
 
 <div class="file-list">
-	<label for="file-search">
-		Search
-	</label>
-	<div class="actions">
-		<input
-			id="file-search"
-			type="text"
-			placeholder="File name, file type, group ID, or instance ID"
-			bind:value={search}
-		/>
-		<Button
-			variant="skeuomorphic"
-			size={25}
-			style="margin: 0 5px; padding: 1px;"
-			onClick={() => packages.downloadActivePackage()}
-			tooltip="Download package"
-			aria-label="download package"
-		>
-			<DownloadIcon height={20} />
-		</Button>
-		<Button
-			variant="skeuomorphic"
-			size={25}
-			style="padding: 1px;"
-			tooltip="Add resource"
-			aria-label="add resource"
-		>
-			<PlusIcon height={20} />
-		</Button>
-	</div>
+	<FileListActions bind:search />
 	<ul>
 	{#each resources as [resourceId, resource] (resourceId)}
 		<li>
@@ -104,16 +73,6 @@
 		display: flex;
 		flex-direction: column;
 		height: 100%;
-	}
-	label, .actions {
-		margin: 0 15px;
-	}
-	.actions {
-		display: flex;
-		align-items: center;
-	}
-	#file-search {
-		flex: 1;
 	}
 	ul {
 		flex: 1;

@@ -1,6 +1,12 @@
 <script lang="ts">
 	import Popover from './popover.svelte';
 
+	let buttonRef;
+
+	export function focus(): void {
+		buttonRef.focus();
+	}
+
 	export let onClick: () => void;
 	export let variant: 'skeuomorphic' | 'block' | 'link' = 'link';
 	export let style: string;
@@ -15,6 +21,7 @@
 		<button
 			class={variant}
 			on:click={onClick}
+			bind:this={buttonRef}
 			style={`height: ${size}px; width: ${size}px;`}
 			{...$$restProps}
 		>
@@ -28,6 +35,7 @@
 	<button
 		class={variant}
 		on:click={onClick}
+		bind:this={buttonRef}
 		{style}
 		{...$$restProps}
 	>

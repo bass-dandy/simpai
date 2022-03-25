@@ -10,7 +10,7 @@ import STR from './str.svelte';
 import TGA from './tga.svelte';
 import UNK from './unk.svelte';
 
-const views: Record<string, typeof SvelteComponent> = {
+export const views: Record<string, typeof SvelteComponent> = {
 	BCON,
 	CTSS: STR,
 	GLOB,

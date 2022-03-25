@@ -18,7 +18,9 @@
 		const bytes = new Uint8Array(content);
 		let blob;
 
-		if (matchesHeader(bytes, knownHeaders.jpg)) {
+		if (!content) {
+			src = '';
+		} else if (matchesHeader(bytes, knownHeaders.jpg)) {
 			blob = new Blob([bytes], {type: "image/jpeg"});
 			src = window.URL.createObjectURL(blob);
 		} else if (matchesHeader(bytes, knownHeaders.png)) {
@@ -34,7 +36,9 @@
 </script>
 
 <div>
-	<img {src} alt="" />
+	{#if src}
+		<img {src} alt="" />
+	{/if}
 </div>
 
 <style>

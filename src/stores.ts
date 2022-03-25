@@ -1,10 +1,11 @@
-import {deserialize, serialize} from 'dbpf-transform';
+import {deserialize, TYPE_ID, serialize} from 'dbpf-transform';
 import produce from 'immer';
 import {derived, get, writable} from 'svelte/store';
 import {v4 as uuid} from 'uuid';
 
 import type {SimsFile, SimsFileMeta, SimsFileContent} from 'dbpf-transform/dist/types/types';
 
+import {defaultFileData} from './consts';
 import {select} from './selectors';
 import type {PackagesStore} from './types';
 
@@ -195,6 +196,29 @@ export const packages = {
 					getActiveTabIdAfterClose(activeResourceId, resourceIds);
 
 				delete draft.packages[store.activePackageId].resources[activeResourceId];
+			})
+		));
+	},
+
+	createNewResource(fileType: keyof typeof TYPE_ID): void {
+		packagesStore.update((store) => (
+			produce(store, (draft) => {
+				const activePkg = select(draft).activePackage();
+				const newResourceId = uuid();
+
+				activePkg.resources[newResourceId] = {
+					meta: {
+						typeId: TYPE_ID[fileType],
+						groupId: 0,
+						instanceId: 0,
+						instanceId2: 0,
+						location: 0,
+						size: 0,
+					},
+					content: defaultFileData[fileType],
+					isOpen: true,
+				};
+				activePkg.activeResourceId = newResourceId;
 			})
 		));
 	},
