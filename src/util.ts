@@ -24,6 +24,8 @@ export function formatSignedInt(val: number): number {
 	const mask = 0b1 << 15;
 	const uVal = new Uint16Array([val])[0];
 
+	if (uVal === undefined) return NaN;
+
 	return mask & uVal
 		? (uVal ^ mask) - mask
 		: val;
@@ -44,7 +46,7 @@ export function without<T>(arr: T[], i: number): T[] {
 }
 
 export function debounce(fn: () => void, delay: number): () => void {
-	let timeout: NodeJS.Timeout | undefined;
+	let timeout: number | undefined;
 
 	return (...args) => {
 		if (timeout) {

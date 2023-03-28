@@ -1,38 +1,55 @@
 <script lang="ts">
+	import type {SimsFileContent, SimsFileMeta} from 'dbpf-transform/dist/types/types';
 	import produce from 'immer';
 	import Button from './button.svelte';
 	import {activeResource, packages} from '../stores';
 	import {select} from '../selectors';
 
-	import Copy from '../svg/copy.svg';
-	import Save from '../svg/save.svg';
-	import SaveOutline from '../svg/save-outline.svg';
-	import Trash from '../svg/trash.svg';
-	import Undo from '../svg/undo.svg';
+	import Copy from '../svg/copy.svg?component';
+	import Save from '../svg/save.svg?component';
+	import SaveOutline from '../svg/save-outline.svg?component';
+	import Trash from '../svg/trash.svg?component';
+	import Undo from '../svg/undo.svg?component';
 
-	let dirty;
-	let content;
-	let meta;
+	let dirty: boolean;
+	let content: SimsFileContent | undefined;
+	let meta: SimsFileMeta | undefined;
 
 	$: {
 		dirty = select($packages).isDirty();
-		content = $activeResource.contentChanges ?? $activeResource.content;
-		meta = $activeResource.metaChanges ?? $activeResource.meta;
+		content = $activeResource?.contentChanges ?? $activeResource?.content;
+		meta = $activeResource?.metaChanges ?? $activeResource?.meta;
 	}
+
+	const handleFilenameChange = (e: Event) => {
+		if (!content || content instanceof ArrayBuffer) return;
+
+		packages.editActiveResource(
+			produce(content, (draft) => {
+				draft.filename = (e.target as HTMLInputElement).value;
+			})
+		);
+	};
+
+	const getMetaChangeHandler = (key: 'groupId' | 'instanceId' | 'instanceId2') => (e: Event) => {
+		if (!meta) return;
+
+		packages.editActiveResourceMeta(
+			produce(meta, (draft) => {
+				draft[key] = parseInt((e.target as HTMLInputElement).value, 10);
+			})
+		);
+	};
 </script>
 
 <div>
-	{#if Object.hasOwn($activeResource?.content, 'filename')}
+	{#if content && !(content instanceof ArrayBuffer) && Object.hasOwn(content, 'filename')}
 		<label for="filename-input">File name</label>
 		<input
 			id="filename-input"
 			type="text"
-			value={content.filename}
-			on:input={(e) => packages.editActiveResource(
-				produce(content, (draft) => {
-					draft.filename = e.target.value;
-				})
-			)}
+			value={content?.filename}
+			on:input={handleFilenameChange}
 		/>
 	{/if}
 	<div class="meta">
@@ -41,12 +58,8 @@
 			<input
 				id="group-id-input"
 				type="text"
-				value={meta.groupId}
-				on:input={(e) => packages.editActiveResourceMeta(
-					produce(meta, (draft) => {
-						draft.groupId = e.target.value;
-					})
-				)}
+				value={meta?.groupId}
+				on:input={getMetaChangeHandler('groupId')}
 			/>
 		</div>
 		<div class="input-wrapper">
@@ -54,12 +67,8 @@
 			<input
 				id="instance-id2-input"
 				type="text"
-				value={meta.instanceId2}
-				on:input={(e) => packages.editActiveResourceMeta(
-					produce(meta, (draft) => {
-						draft.instanceId2 = e.target.value;
-					})
-				)}
+				value={meta?.instanceId2}
+				on:input={getMetaChangeHandler('instanceId2')}
 			/>
 		</div>
 		<div class="input-wrapper">
@@ -67,12 +76,8 @@
 			<input
 				id="instance-id-input"
 				type="text"
-				value={meta.instanceId}
-				on:input={(e) => packages.editActiveResourceMeta(
-					produce(meta, (draft) => {
-						draft.instanceId = e.target.value;
-					})
-				)}
+				value={meta?.instanceId}
+				on:input={getMetaChangeHandler('instanceId')}
 			/>
 		</div>
 	</div>

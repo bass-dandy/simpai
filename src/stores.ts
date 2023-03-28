@@ -79,6 +79,8 @@ export const packages = {
 		}
 		const activePkg = select(store).activePackage();
 
+		if (!activePkg) return console.error('Failed to find active package, unable to download');
+
 		const data = serialize(
 			Object.values(activePkg.resources)
 		);
@@ -96,8 +98,16 @@ export const packages = {
 	openResource(resourceId: string): void {
 		packagesStore.update((store) => (
 			produce(store, (draft) => {
-				select(draft).resourceById(resourceId).isOpen = true;
-				select(draft).activePackage().activeResourceId = resourceId;
+				const resource = select(draft).resourceById(resourceId);
+
+				if (resource) {
+					resource.isOpen = true;
+					const activePackage = select(draft).activePackage();
+
+					if (activePackage) {
+						activePackage.activeResourceId = resourceId;
+					}
+				}
 			})
 		));
 	},
@@ -105,7 +115,7 @@ export const packages = {
 	closeResource(resourceIdToClose: string): void {
 		packagesStore.update((store) => (
 			produce(store, (draft) => {
-				const {activeResourceId} = select(store).activePackage();
+				const activeResourceId = select(store).activePackage()?.activeResourceId;
 
 				if (select(store).isDirty(resourceIdToClose) && !window.confirm('Close this resource? You\'ll lose all unsaved changes.')) {
 					return;
@@ -114,14 +124,16 @@ export const packages = {
 				const resourceIds = select(store).openResourceIds();
 
 				if (resourceIdToClose === activeResourceId) {
-					select(draft).activePackage().activeResourceId =
-						getActiveTabIdAfterClose(resourceIdToClose, resourceIds);
+					const activePkg = select(draft).activePackage();
+					if (activePkg) activePkg.activeResourceId = getActiveTabIdAfterClose(resourceIdToClose, resourceIds);
 				}
 				const resourceToClose = select(draft).resourceById(resourceIdToClose);
 
-				resourceToClose.isOpen = false;
-				delete resourceToClose.contentChanges;
-				delete resourceToClose.metaChanges;
+				if (resourceToClose) {
+					resourceToClose.isOpen = false;
+					delete resourceToClose.contentChanges;
+					delete resourceToClose.metaChanges;
+				}
 			})
 		));
 	},
@@ -129,7 +141,8 @@ export const packages = {
 	editActiveResource(contentChanges: SimsFileContent): void {
 		packagesStore.update((store) => (
 			produce(store, (draft) => {
-				select(draft).activeResource().contentChanges = contentChanges;
+				const activeResource = select(draft).activeResource();
+				if (activeResource) activeResource.contentChanges = contentChanges;
 			})
 		));
 	},
@@ -137,7 +150,8 @@ export const packages = {
 	editActiveResourceMeta(metaChanges: SimsFileMeta): void {
 		packagesStore.update((store) => (
 			produce(store, (draft) => {
-				select(draft).activeResource().metaChanges = metaChanges;
+				const activeResource = select(draft).activeResource();
+				if (activeResource) activeResource.metaChanges = metaChanges;
 			})
 		));
 	},
@@ -148,8 +162,11 @@ export const packages = {
 		}
 		packagesStore.update((store) => (
 			produce(store, (draft) => {
-				delete select(draft).activeResource().contentChanges;
-				delete select(draft).activeResource().metaChanges;
+				const activeResource = select(draft).activeResource();
+				if (activeResource) {
+					delete activeResource.contentChanges;
+					delete activeResource.metaChanges;
+				}
 			})
 		));
 	},
@@ -159,11 +176,11 @@ export const packages = {
 			produce(store, (draft) => {
 				const activeResource = select(draft).activeResource();
 
-				if (activeResource.contentChanges !== undefined) {
+				if (activeResource?.contentChanges !== undefined) {
 					activeResource.content = activeResource.contentChanges;
 					delete activeResource.contentChanges;
 				}
-				if (activeResource.metaChanges !== undefined) {
+				if (activeResource?.metaChanges !== undefined) {
 					activeResource.meta = activeResource.metaChanges as SimsFileMeta;
 					delete activeResource.metaChanges;
 				}
@@ -174,11 +191,14 @@ export const packages = {
 	copyActiveResource(): void {
 		packagesStore.update((store) => (
 			produce(store, (draft) => {
+				const activePackage = select(draft).activePackage();
 				const resourceToCopy = select(store).activeResource();
-				const newId = uuid();
 
-				select(draft).activePackage().resources[newId] = {...resourceToCopy};
-				select(draft).activePackage().activeResourceId = newId;
+				if (activePackage && resourceToCopy) {
+					const newId = uuid();
+					activePackage.resources[newId] = {...resourceToCopy};
+					activePackage.activeResourceId = newId;
+				}
 			})
 		));
 	},
@@ -189,13 +209,14 @@ export const packages = {
 		}
 		packagesStore.update((store) => (
 			produce(store, (draft) => {
-				const {activeResourceId} = store.packages[store.activePackageId];
-				const resourceIds = select(store).openResourceIds();
+				const activePackage = select(draft).activePackage();
+				const activeResourceId = select(draft).activeResourceId();
 
-				draft.packages[store.activePackageId].activeResourceId =
-					getActiveTabIdAfterClose(activeResourceId, resourceIds);
-
-				delete draft.packages[store.activePackageId].resources[activeResourceId];
+				if (activePackage && activeResourceId) {
+					const resourceIds = select(draft).openResourceIds();
+					activePackage.activeResourceId = getActiveTabIdAfterClose(activeResourceId, resourceIds);
+					delete activePackage.resources[activeResourceId];
+				}
 			})
 		));
 	},
@@ -206,19 +227,21 @@ export const packages = {
 				const activePkg = select(draft).activePackage();
 				const newResourceId = uuid();
 
-				activePkg.resources[newResourceId] = {
-					meta: {
-						typeId: TYPE_ID[fileType],
-						groupId: 0,
-						instanceId: 0,
-						instanceId2: 0,
-						location: 0,
-						size: 0,
-					},
-					content: defaultFileData[fileType],
-					isOpen: true,
-				};
-				activePkg.activeResourceId = newResourceId;
+				if (activePkg) {
+					activePkg.resources[newResourceId] = {
+						meta: {
+							typeId: TYPE_ID[fileType],
+							groupId: 0,
+							instanceId: 0,
+							instanceId2: 0,
+							location: 0,
+							size: 0,
+						},
+						content: defaultFileData[fileType],
+						isOpen: true,
+					};
+					activePkg.activeResourceId = newResourceId;
+				}
 			})
 		));
 	},
@@ -226,7 +249,8 @@ export const packages = {
 	setActiveResource(resourceId: string): void {
 		packagesStore.update((store) => (
 			produce(store, (draft) => {
-				select(draft).activePackage().activeResourceId = resourceId;
+				const activePkg = select(draft).activePackage();
+				if (activePkg) activePkg.activeResourceId = resourceId;
 			})
 		));
 	},

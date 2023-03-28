@@ -4,7 +4,11 @@
 	export let style: Record<string, string> = {};
 	export let secondary = false;
 	export let as = 'div';
-	let props;
+
+	let props: {
+		style: string;
+		class: 'primary' | 'secondary';
+	};
 
 	$: props = {
 		style: formatStyle(style),

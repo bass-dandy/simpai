@@ -1,4 +1,5 @@
-<script>
+<script lang="ts">
+	import type {ComponentProps} from 'svelte';
 	import DropZone from '../components/drop-zone.svelte';
 	import FileList from '../components/file-list.svelte';
 	import FileViewer from '../components/file-viewer.svelte';
@@ -6,6 +7,24 @@
 	import TabPanel  from '../components/tab-panel.svelte';
 	import {packages} from '../stores';
 	import '../global.css';
+
+	let tabs: ComponentProps<TabPanel>['tabs'];
+
+	$: tabs = {
+		...Object.entries($packages.packages)
+			.reduce((acc: ComponentProps<TabPanel>['tabs'], [id, pkg]) => {
+				acc[id] = {
+					title: pkg.filename,
+					content: FileList,
+				};
+				return acc;
+			}, {}),
+		'': {
+			title: '+',
+			content: DropZone,
+			hideClose: true,
+		},
+	};
 </script>
 
 <div class="layout">
@@ -15,21 +34,7 @@
 			<h1>SIMPAI</h1>
 		</div>
 		<TabPanel
-			tabs={{
-				...Object.entries($packages.packages)
-					.reduce((acc, [id, pkg]) => {
-						acc[id] = {
-							title: pkg.filename,
-							content: FileList,
-						};
-						return acc;
-					}, {}),
-				'': {
-					title: '+',
-					content: DropZone,
-					hideClose: true,
-				},
-			}}
+			tabs={tabs}
 			activeTab={$packages.activePackageId}
 			onChange={(packageId) => packages.setActivePackage(packageId)}
 			onClose={(packageId) => packages.removePackage(packageId)}

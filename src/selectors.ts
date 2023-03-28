@@ -1,44 +1,47 @@
-import type {PackagesStore, Package, Resource} from './types';
+import type {PackagesStore, Resource} from './types';
 
-function isDirty(resource: Resource): boolean {
+function isDirty(resource?: Resource): boolean {
 	return resource?.contentChanges !== undefined || resource?.metaChanges !== undefined;
 }
 
 export function select(store: PackagesStore) {
 	return {
-		activePackage(): Package {
+		activePackage() {
 			return store.packages[store.activePackageId];
 		},
 
-		activeResourceId(): string {
-			return this.activePackage().activeResourceId;
+		activeResourceId() {
+			return this.activePackage()?.activeResourceId;
 		},
 
-		activeResource(): Resource {
-			return this.activePackage()?.resources[this.activeResourceId()];
+		activeResource() {
+			const activeResourceId = this.activeResourceId();
+
+			return activeResourceId
+				? this.activePackage()?.resources[activeResourceId]
+				: undefined;
 		},
 
-		openResourceIds(): string[] {
-			const {resources} = this.activePackage();
+		openResourceIds() {
+			const resources = this.activePackage()?.resources;
 
-			return Object
-				.keys(resources)
-				.filter((key) => resources[key].isOpen);
+			return resources
+				? Object.keys(resources).filter((key) => resources[key]?.isOpen)
+				: [];
 		},
 
-		resourceById(resourceId: string): Resource {
+		resourceById(resourceId: string) {
 			return this.activePackage()?.resources[resourceId];
 		},
 
-		isDirty(resourceId: string): boolean {
-			return isDirty(
-				this.resourceById(resourceId ?? this.activeResourceId())
-			);
+		isDirty(resourceId?: string) {
+			const tgt = resourceId ?? this.activeResourceId();
+			return tgt ? isDirty(this.resourceById(tgt)) : false;
 		},
 
-		isPackageDirty(packageId?: string): boolean {
+		isPackageDirty(packageId?: string) {
 			const pkg = store.packages[packageId ?? store.activePackageId];
-			return Object.values(pkg.resources).some(isDirty);
+			return Object.values(pkg?.resources ?? {}).some(isDirty);
 		},
 	};
 }

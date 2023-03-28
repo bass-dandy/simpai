@@ -2,7 +2,7 @@
 	import Button from './button.svelte';
 	import {packages} from '../stores';
 
-	let fileInput; // hidden file input ref
+	let fileInput: HTMLInputElement; // hidden file input ref
 </script>
 
 <div>
@@ -11,11 +11,11 @@
 		on:dragover|preventDefault
 		on:drop|preventDefault={async (e) => {
 			const file = e
-				.dataTransfer
-				.items[0]
-				.getAsFile();
+				?.dataTransfer
+				?.items?.[0]
+				?.getAsFile();
 
-			await packages.addPackage(file);
+			if (file) await packages.addPackage(file);
 		}}
 	>
 		<input
@@ -23,7 +23,8 @@
 			accept=".package"
 			bind:this={fileInput}
 			on:change={async () => {
-				await packages.addPackage(fileInput.files?.[0]);
+				const file = fileInput.files?.[0];
+				if (file) await packages.addPackage(file);
 			}}
 		/>
 		Drag .package file here or

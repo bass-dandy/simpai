@@ -1,11 +1,11 @@
 <script lang="ts">
-	import type {ObjfContent} from 'dbpf-transform/dist/esm/types';
+	import type {ObjfContent} from 'dbpf-transform/dist/types/types';
 	import produce from 'immer';
 	import Box from '../box.svelte';
 	import {formatHex} from '../../util';
 
 	export let content: ObjfContent;
-	export let onChange: () => void;
+	export let onChange: (newContent: ObjfContent) => void;
 
 	const FNS = [
 		'init',
@@ -64,6 +64,17 @@
 		'global awareness',
 		'object updated by design mode',
 	];
+
+	const getInputHandler = (key: 'action' | 'guard', i: number) => (e: Event) => onChange(
+		produce(content, (draft) => {
+			const tgt = draft.functions[i];
+
+			if (tgt) {
+				const val = (e.target as HTMLInputElement).value;
+				tgt[key] = parseInt(val, 16);
+			}
+		})
+	);
 </script>
 
 <div>
@@ -83,23 +94,15 @@
 							type="text"
 							placeholder="none"
 							value={formatHex(fn.action || undefined, 4)}
-							on:input={(e) => onChange(
-								produce(content, (draft) => {
-									draft.functions[i].action = parseInt(e.target.value, 16);
-								})
-							)}
+							on:input={getInputHandler('action', i)}
 						/>
 					</td>
 					<td>
 						<input
 							type="text"
 							placeholder="none"
-							value={formatHex(fn.guardian || undefined, 4)}
-							on:input={(e) => onChange(
-								produce(content, (draft) => {
-									draft.functions[i].guardian = parseInt(e.target.value, 16);
-								})
-							)}
+							value={formatHex(fn.guard || undefined, 4)}
+							on:input={getInputHandler('guard', i)}
 						/>
 					</td>
 				</tr>

@@ -1,3 +1,6 @@
+import type {TYPE_ID} from 'dbpf-transform';
+import type {SimsFileContent} from 'dbpf-transform/dist/types/types';
+
 export const languages = [
 	'English (US)',
 	'English (UK)',
@@ -22,7 +25,9 @@ export const languages = [
 	'Czech',
 ] as const;
 
-export const defaultFileName = {
+export const defaultFileName: Partial<
+	Record<keyof typeof TYPE_ID, string>
+> = {
 	TGA: '[image file]',
 	NREF: '[name reference]',
 	BCON: '[behavior constant]',
@@ -43,7 +48,9 @@ const defaultStrData = {
 	}],
 };
 
-export const defaultFileData = {
+export const defaultFileData: Partial<
+	Record<keyof typeof TYPE_ID, SimsFileContent>
+> = {
 	BCON: {
 		filename: '',
 		flag: false,
@@ -53,16 +60,18 @@ export const defaultFileData = {
 		filename: '',
 		semiglobal: '',
 	},
-	NREF: '',
+	NREF: {
+		filename: '',
+	},
 	OBJF: {
 		filename: '',
 		functions: Array.from(Array(55)).map(() => ({
-			action: undefined,
-			guardian: undefined,
+			action: 0,
+			guard: 0,
 		})),
 	},
-	TGA: '',
-	JFIF: '',
+	TGA: new ArrayBuffer(0),
+	JFIF: new ArrayBuffer(0),
 	STR: defaultStrData,
 	CTSS: defaultStrData,
 	TTAS: defaultStrData,

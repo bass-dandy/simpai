@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type {BconContent} from 'dbpf-transform/dist/esm/types';
+	import type {BconContent} from 'dbpf-transform/dist/types/types';
 	import produce from 'immer';
 	import Box from '../box.svelte';
 	import Button from '../button.svelte';
@@ -7,28 +7,48 @@
 	import {formatHex, formatSignedInt, without} from '../../util';
 
 	export let content: BconContent;
-	export let onChange: () => void;
+	export let onChange: (newContent: BconContent) => void;
 
 	const displayOptions = {
 		Hex: {
-			format: (val) => formatHex(val, 4),
-			parse: (val) => parseInt(val, 16),
+			format: (val: number) => formatHex(val, 4),
+			parse: (val: string) => parseInt(val, 16),
 		},
 		Int: {
-			format: (val) => formatSignedInt(val, 4),
-			parse: (val) => new Uint16Array([parseInt(val, 10)])[0],
+			format: (val: number) => formatSignedInt(val),
+			parse: (val: string) => new Uint16Array([parseInt(val, 10)])[0],
 		},
 		uInt: {
-			format: (val) => val >>> 0,
-			parse: (val) => parseInt(val, 10),
+			format: (val: number) => val >>> 0,
+			parse: (val: string) => parseInt(val, 10),
 		},
 	};
 
-	let selectedDisplayOption = 'Hex';
-	let format;
-	let parse;
+	type DisplayOption = keyof typeof displayOptions;
+
+	let selectedDisplayOption: DisplayOption = 'Hex';
+	let format: (typeof displayOptions)[DisplayOption]['format'];
+	let parse: (typeof displayOptions)[DisplayOption]['parse'];
 
 	$: ({format, parse} = displayOptions[selectedDisplayOption]);
+
+	const handleFlagChange = (e: Event) => onChange(
+		produce(content, (draft) => {
+			draft.flag = (e.target as HTMLInputElement).checked;
+		})
+	);
+
+	const handleDisplayChange = (e: Event) => {
+		selectedDisplayOption = (e.target as HTMLInputElement).value as DisplayOption;
+	};
+
+	const handleValueChange = (e: Event, i: number) => onChange(
+		produce(content, (draft) => {
+			draft.items[i] = parse(
+				(e.target as HTMLInputElement).value
+			) ?? 0;
+		})
+	);
 </script>
 
 <div>
@@ -44,11 +64,7 @@
 			<input
 				type="checkbox"
 				checked={content.flag}
-				on:input={(e) => onChange(
-					produce(content, (draft) => {
-						draft.flag = e.target.checked;
-					})
-				)}
+				on:input={handleFlagChange}
 			/>
 		</label>
 		<label>
@@ -56,7 +72,7 @@
 			<select
 				class="display-as"
 				value={selectedDisplayOption}
-				on:input={(e) => { selectedDisplayOption = e.target.value; }}
+				on:input={handleDisplayChange}
 			>
 			{#each Object.keys(displayOptions) as key (key)}
 				<option value={key}>
@@ -94,16 +110,10 @@
 						<input
 							type="text"
 							value={format(item)}
-							on:input={(e) => {
-								onChange(
-									produce(content, (draft) => {
-										draft.items[i] = parse(e.target.value);
-									})
-								);
-							}}
+							on:input={(e) => handleValueChange(e, i)}
 						/>
 					</td>
-					<td>{content.labels?.[i] ?? '-'}</td>
+					<td>-</td>
 				</tr>
 			{/each}
 			</tbody>

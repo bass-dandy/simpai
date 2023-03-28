@@ -1,6 +1,6 @@
 <script lang="ts">
 	export let size: number;
-	let style;
+	let style: string | undefined;
 
 	$: style = size ? `transform:scale(${size / 100})` : undefined;
 </script>

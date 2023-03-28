@@ -1,12 +1,33 @@
 <script lang="ts">
-	import type {StrContent} from 'dbpf-transform/dist/esm/types';
+	import type {StrContent} from 'dbpf-transform/dist/types/types';
 	import produce from 'immer';
 	import {languages} from '../../consts';
 	import {getLanguage} from '../../util';
 	import Box from '../box.svelte';
 
 	export let content: StrContent;
-	export let onChange: () => void;
+	export let onChange: (newContent: StrContent) => void;
+
+	const handleDescChange = (e: Event, i: number) => onChange(
+		produce(content, (draft) => {
+			const tgt = draft.stringSets[i];
+			if (tgt) tgt.description = (e.target as HTMLInputElement).value;
+		})
+	);
+
+	const handleLangChange = (e: Event, i: number) => onChange(
+		produce(content, (draft) => {
+			const tgt = draft.stringSets[i];
+			if (tgt) tgt.languageId = parseInt((e.target as HTMLSelectElement).value, 10);
+		})
+	);
+
+	const handleValChange = (e: Event, i: number) => onChange(
+		produce(content, (draft) => {
+			const tgt = draft.stringSets[i];
+			if (tgt) tgt.value = (e.target as HTMLTextAreaElement).value;
+		})
+	);
 </script>
 
 <ul>
@@ -20,11 +41,7 @@
 						type="text"
 						placeholder="No description"
 						value={stringSet.description}
-						on:input={(e) => onChange(
-							produce(content, (draft) => {
-								draft.stringSets[i].description = e.target.value;
-							})
-						)}
+						on:input={(e) => handleDescChange(e, i)}
 					/>
 				</label>
 			</div>
@@ -34,11 +51,7 @@
 					<select
 						class="language"
 						value={stringSet.languageId}
-						on:input={(e) => onChange(
-							produce(content, (draft) => {
-								draft.stringSets[i].languageId = parseInt(e.target.value, 10);
-							})
-						)}
+						on:input={(e) => handleLangChange(e, i)}
 					>
 					{#each languages as language, i}
 						<option value={i + 1}>{getLanguage(i + 1)}</option>
@@ -53,11 +66,7 @@
 				class="value"
 				placeholder="No value"
 				value={stringSet.value}
-				on:input={(e) => onChange(
-					produce(content, (draft) => {
-						draft.stringSets[i].value = e.target.value;
-					})
-				)}
+				on:input={(e) => handleValChange(e, i)}
 			/>
 		</label>
 	</Box>

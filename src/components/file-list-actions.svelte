@@ -4,27 +4,31 @@
 	import Modal from './modal.svelte';
 	import {views} from './file-views';
 
-	import PlusIcon from '../svg/plus.svg';
-	import DownloadIcon from '../svg/file-arrow-down.svg';
-	import CheckIcon from '../svg/check.svg';
-	import XIcon from '../svg/x.svg';
+	import PlusIcon from '../svg/plus.svg?component';
+	import DownloadIcon from '../svg/file-arrow-down.svg?component';
+	import CheckIcon from '../svg/check.svg?component';
+	import XIcon from '../svg/x.svg?component';
 
 	export let search = '';
 
+	type ViewKey = keyof typeof views;
+
 	let isModalOpen = false;
-	let newResourceType = Object.keys(views)[0];
-	let selectRef;
-	let toggleModalRef;
+	let newResourceType = Object.keys(views)[0] as ViewKey;
+	let selectRef: HTMLSelectElement;
+	let toggleModalRef: Button;
 
 	const onModalClose = () => {
 		isModalOpen = false;
-		newResourceType = Object.keys(views)[0];
+		newResourceType = Object.keys(views)[0] as ViewKey;
 		toggleModalRef.focus();
 	};
 
-	$: {
-		selectRef?.focus();
-	}
+	const handleTypeSelect = (e: Event) => {
+		newResourceType = (e.target as HTMLSelectElement).value as ViewKey;
+	};
+
+	$: { selectRef?.focus(); }
 </script>
 
 <div>
@@ -69,9 +73,7 @@
 			Type:
 			<select
 				value={newResourceType}
-				on:input={(e) => {
-					newResourceType = e.target.value;
-				}}
+				on:input={handleTypeSelect}
 				bind:this={selectRef}
 			>
 			{#each Object.keys(views) as fileType (fileType)}

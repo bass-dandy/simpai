@@ -1,15 +1,11 @@
-/// <reference types="@sveltejs/kit" />
-
-/*** begin sveltekit-svg plugin ***/
-declare module '*.svg' {
-  import { SvelteComponent } from 'svelte'
-  const content: SvelteComponent
-  export default content
-}
-
 declare module '*.svg?component' {
-  import { SvelteComponent } from 'svelte'
-  const content: SvelteComponent
+  import type { ComponentType, SvelteComponentTyped } from 'svelte'
+  import type { SVGAttributes } from 'svelte/elements'
+
+  const content: ComponentType<
+    SvelteComponentTyped<SVGAttributes<SVGSVGElement>>
+  >
+
   export default content
 }
 
@@ -22,4 +18,23 @@ declare module '*.svg?url' {
   const content: string
   export default content
 }
-/*** end sveltekit-svg plugin ***/
+
+declare module '*.svg?dataurl' {
+  const content: string
+  export default content
+}
+
+declare module '*.svg?dataurl=base64' {
+  const content: string
+  export default content
+}
+
+declare module '*.svg?dataurl=enc' {
+  const content: string
+  export default content
+}
+
+declare module '*.svg?dataurl=unenc' {
+  const content: string
+  export default content
+}

@@ -3,14 +3,14 @@
 	import Box from './box.svelte';
 	import CloseButton from './close-button.svelte';
 
-	export let tabs: {
+	export let tabs: Record<string, {
 		title: string;
 		hideClose?: boolean;
 		content: typeof SvelteComponent;
-	}[];
+	}>;
 	export let activeTab: string;
-	export let onChange: () => void;
-	export let onClose: () => void;
+	export let onChange: (id: string) => void;
+	export let onClose: (id: string) => void;
 	export let hideSingleTab = false;
 	export let style: Record<string, string> = {};
 	export let contentStyle: Record<string, string> = {};
@@ -24,9 +24,9 @@
 	}}
 >
 	{#if !hideSingleTab || Object.keys(tabs).length > 1}
-		<ul role="tablist">
+		<section role="tablist" tabindex="0">
 		{#each Object.entries(tabs) as [id, tab] (id)}
-			<li role="tab" aria-selected={activeTab === id}>
+			<div role="tab" aria-selected={activeTab === id}>
 				<button
 					class="tab"
 					class:closable={!tab.hideClose}
@@ -47,9 +47,9 @@
 						}}
 					/>
 				{/if}
-			</li>
+			</div>
 		{/each}
-		</ul>
+		</section>
 	{/if}
 	<Box
 		secondary
@@ -60,18 +60,16 @@
 </Box>
 
 <style>
-	ul {
+	section[role="tablist"] {
 		position: relative;
 		top: 1px;
 		z-index: 1;
-		list-style: none;
 		margin: 0 15px;
-		padding: 0;
 		display: flex;
 		align-items: flex-end;
 		overflow: auto;
 	}
-	li {
+	div[role="tab"] {
 		position: relative;
 		white-space: nowrap;
 	}

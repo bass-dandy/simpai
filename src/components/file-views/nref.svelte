@@ -1,20 +1,10 @@
 <script lang="ts">
-	import type {NrefContent} from 'dbpf-transform/dist/esm/types';
 	import Box from '../box.svelte';
-
-	export let content: NrefContent;;
-	export let onChange: () => void;
 </script>
 
 <div>
 	<Box secondary>
-		<label for="nref-input">Value</label>
-		<input
-			id="nref-input"
-			type="text"
-			value={content}
-			on:input={(e) => onChange(e.target.value)}
-		/>
+		This file can be edited by changing the file name!
 	</Box>
 </div>
 
@@ -22,8 +12,5 @@
 	div {
 		height: 100%;
 		overflow: auto;
-	}
-	#nref-input {
-		width: 100%;
 	}
 </style>

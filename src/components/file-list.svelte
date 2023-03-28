@@ -4,15 +4,18 @@
 	import FileListActions from './file-list-actions.svelte';
 	import {defaultFileName} from '../consts';
 	import {packages, activePackage} from '../stores';
+	import type {Resource} from '../types';
 	import {formatHex} from '../util';
 
 	let search = '';
-	let resources;
+	let resources: [string, Resource][];
 
-	const getFileName = (resource) =>
-		resource.content?.filename || defaultFileName[
-			getFileType(resource.meta.typeId)
-		];
+	const getFileName = (resource: Resource) =>
+		(resource.content as { filename: string })?.filename
+			|| defaultFileName[
+				getFileType(resource.meta.typeId) as keyof typeof defaultFileName
+			]
+			|| '';
 
 	$: {
 		const regex = new RegExp(search, 'i');

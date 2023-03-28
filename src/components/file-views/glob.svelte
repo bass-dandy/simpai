@@ -1,10 +1,16 @@
 <script lang="ts">
-	import type {GlobContent} from 'dbpf-transform/dist/esm/types';
+	import type {GlobContent} from 'dbpf-transform/dist/types/types';
 	import produce from 'immer';
 	import Box from '../box.svelte';
 
 	export let content: GlobContent;
-	export let onChange: () => void;
+	export let onChange: (newContent: GlobContent) => void;
+
+	const handleInput = (e: Event) => onChange(
+		produce(content, (draft) => {
+			draft.semiglobal = (e.target as HTMLInputElement).value;
+		})
+	);
 </script>
 
 <div>
@@ -14,9 +20,7 @@
 			id="semiglobal-input"
 			type="text"
 			value={content.semiglobal}
-			on:input={(e) => onChange(
-				produce(content, (draft) => { draft.semiglobal = e.target.value; })
-			)}
+			on:input={handleInput}
 		/>
 	</Box>
 </div>

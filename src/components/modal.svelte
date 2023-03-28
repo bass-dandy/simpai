@@ -3,11 +3,11 @@
 	import Portal from 'svelte-portal/src/Portal.svelte';
 	import Box from './box.svelte';
 
-	export let title;
-	export let isOpen;
-	export let onClose;
+	export let title: string | undefined = undefined;
+	export let isOpen: boolean;
+	export let onClose: () => void;
 
-	let backgroundRef;
+	let backgroundRef: HTMLDivElement;
 </script>
 
 {#if isOpen}

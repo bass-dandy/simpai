@@ -2,7 +2,7 @@
 	import {formatStyle} from '../util';
 
 	export let onClick: () => void;
-	export let style: string;
+	export let style: Record<string, string> | undefined = undefined;
 </script>
 
 <button
@@ -24,9 +24,9 @@
 		display: block;
 		width: 15px;
 		height: 15px;
-		content: url('static/images/times-circle-regular.svg');
+		content: url('images/times-circle-regular.svg');
 	}
 	button:hover::after {
-		content: url('static/images/times-circle-solid.svg');
+		content: url('images/times-circle-solid.svg');
 	}
 </style>

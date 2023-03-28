@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Popover from './popover.svelte';
 
-	let buttonRef;
+	let buttonRef: HTMLButtonElement;
 
 	export function focus(): void {
 		buttonRef.focus();
@@ -9,7 +9,7 @@
 
 	export let onClick: () => void;
 	export let variant: 'skeuomorphic' | 'block' | 'link' = 'link';
-	export let style: string;
+	export let style: string | undefined = undefined;
 
 	// only used for skeuomorphic buttons
 	export let size = 35;
