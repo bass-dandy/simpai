@@ -11,6 +11,7 @@
     "format": "prettier --plugin-search-dir . --write ."
   },
   "dependencies": {
+    "dbpf-transform": "0.0.1",
     "immer": "^9.0.12",
     "svelte-portal": "^2.2.0",
     "tgaimage": "1.1.0",
