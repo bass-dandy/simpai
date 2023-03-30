@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { base } from "$app/paths";
 	import {packages} from '../stores';
 	import Button from './button.svelte';
 	import DropZone from './drop-zone.svelte';
@@ -17,7 +16,7 @@
 		Not sure where to start?<br />
 		<Button
 			onClick={async () => {
-				const res = await fetch(`${base}/templates/${careerTemplate}`);
+				const res = await fetch(`/simpai/templates/${careerTemplate}`);
 
 				await packages.addPackage(
 					new File([await res.arrayBuffer()], careerTemplate)
