@@ -1,10 +1,9 @@
 <script lang="ts">
 	import type {ComponentProps} from 'svelte';
-	import DropZone from '../components/drop-zone.svelte';
 	import FileList from '../components/file-list.svelte';
 	import FileViewer from '../components/file-viewer.svelte';
-	import Plumbob from '../components/plumbob.svelte';
 	import TabPanel  from '../components/tab-panel.svelte';
+	import Welcome from '../components/welcome.svelte';
 	import {packages} from '../stores';
 	import '../global.css';
 
@@ -21,7 +20,7 @@
 			}, {}),
 		'': {
 			title: '+',
-			content: DropZone,
+			content: Welcome,
 			hideClose: true,
 		},
 	};
@@ -29,10 +28,6 @@
 
 <div class="layout">
 	<div class="left">
-		<div class="logo">
-			<Plumbob size={60} />
-			<h1>SIMPAI</h1>
-		</div>
 		<TabPanel
 			tabs={tabs}
 			activeTab={$packages.activePackageId}
@@ -56,25 +51,11 @@
 	}
 	.left {
 		display: flex;
-		flex-direction: column;
 		max-width: 550px;
 	}
 	.right {
 		flex: 1;
 		min-width: 0;
 		margin-left: 15px;
-	}
-	.logo {
-		display: flex;
-		align-items: center;
-		margin: 0 0 10px;
-	}
-	.logo h1 {
-		margin: 0 0 0 10px;
-		font-family: "sims-llhp";
-		font-size: 3rem;
-		color: var(--color-white);;
-		-webkit-text-stroke: 1px var(--color-accent);
-		-webkit-text-fill-color: white;
 	}
 </style>

@@ -1,11 +1,12 @@
 <script lang="ts">
-	import Button from './button.svelte';
 	import {packages} from '../stores';
+	import Button from './button.svelte';
+	import Plumbob from './plumbob.svelte';
 
 	let fileInput: HTMLInputElement; // hidden file input ref
 </script>
 
-<div>
+<div class="wrapper">
 	<div
 		class="drop-zone"
 		on:dragover|preventDefault
@@ -27,7 +28,10 @@
 				if (file) await packages.addPackage(file);
 			}}
 		/>
-		Drag .package file here or
+		<Plumbob size={50} />
+		<span class="text">
+			Drag .package file here or
+		</span>
 		<Button
 			variant="link"
 			style="font-size: 1.2rem;"
@@ -39,15 +43,12 @@
 </div>
 
 <style>
-	div {
+	.wrapper {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		min-width: 400px;
 		margin: 5px 15px;
-	}
-	input[type="file"] {
-		display: none;
 	}
 	.drop-zone {
 		display: flex;
@@ -55,9 +56,15 @@
 		align-items: center;
 		justify-content: center;
 		width: 100%;
-		height: 200px;
+		padding: 30px 0;
 		background-color: var(--color-input);
 		border: 2px dashed var(--color-accent);
 		border-radius: 15px;
+	}
+	input[type="file"] {
+		display: none;
+	}
+	.text {
+		margin-top: 10px;
 	}
 </style>

@@ -24,9 +24,9 @@
 		display: block;
 		width: 15px;
 		height: 15px;
-		content: url('images/times-circle-regular.svg');
+		content: url('/images/times-circle-regular.svg');
 	}
 	button:hover::after {
-		content: url('images/times-circle-solid.svg');
+		content: url('/images/times-circle-solid.svg');
 	}
 </style>
