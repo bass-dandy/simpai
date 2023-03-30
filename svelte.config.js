@@ -8,11 +8,10 @@ const config = {
 	preprocess: vitePreprocess(),
 
 	kit: {
-		adapter: adapter({
-			paths: {
-				base: dev ? '' : '/simpai',
-			},
-		}),
+		adapter: adapter(),
+		paths: {
+			base: dev ? '' : '/simpai',
+		},
 	},
 };
 
