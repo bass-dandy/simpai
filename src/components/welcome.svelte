@@ -3,7 +3,7 @@
 	import Button from './button.svelte';
 	import DropZone from './drop-zone.svelte';
 
-	const careerTemplate = 'TEMPLATE. Adult.package';
+	const careerTemplate = 'career.package';
 </script>
 
 <div class="welcome">
