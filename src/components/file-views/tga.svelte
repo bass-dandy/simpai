@@ -48,6 +48,6 @@
 		text-align: center;
 	}
 	img {
-		background: url('images/tile.png');
+		background: url('/images/tile.png');
 	}
 </style>
