@@ -1,5 +1,4 @@
-import {getFileType} from 'dbpf-transform';
-import type {SimsFile} from 'dbpf-transform/dist/types/types';
+import {getFileType, type SimsFile} from 'dbpf-transform';
 import type {SvelteComponent} from 'svelte';
 
 import BCON from './bcon.svelte';

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type {ObjfContent} from 'dbpf-transform/dist/types/types';
+	import type {ObjfContent} from 'dbpf-transform';
 	import produce from 'immer';
 	import Box from '../box.svelte';
 	import {formatHex} from '../../util';

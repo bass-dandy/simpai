@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type {BconContent} from 'dbpf-transform/dist/types/types';
+	import type {BconContent} from 'dbpf-transform';
 	import produce from 'immer';
 	import Box from '../box.svelte';
 	import Button from '../button.svelte';

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type {StrContent} from 'dbpf-transform/dist/types/types';
+	import type {StrContent} from 'dbpf-transform';
 	import produce from 'immer';
 	import {languages} from '../../consts';
 	import {getLanguage} from '../../util';

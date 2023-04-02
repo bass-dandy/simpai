@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type {SimsFileContent, SimsFileMeta} from 'dbpf-transform/dist/types/types';
+	import type {SimsFileContent, SimsFileMeta} from 'dbpf-transform';
 	import produce from 'immer';
 	import Button from './button.svelte';
 	import {activeResource, packages} from '../stores';

@@ -1,5 +1,4 @@
-import type {TYPE_ID} from 'dbpf-transform';
-import type {SimsFileContent} from 'dbpf-transform/dist/types/types';
+import type {TYPE_ID, SimsFileContent} from 'dbpf-transform';
 
 export const languages = [
 	'English (US)',

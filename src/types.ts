@@ -1,4 +1,4 @@
-import type {SimsFile, SimsFileContent, SimsFileMeta} from 'dbpf-transform/dist/types/types';
+import type {SimsFile, SimsFileContent, SimsFileMeta} from 'dbpf-transform';
 
 export type Resource = SimsFile & {
 	contentChanges?: SimsFileContent;

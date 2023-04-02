@@ -1,9 +1,15 @@
-import {deserialize, TYPE_ID, serialize} from 'dbpf-transform';
+import {
+	deserialize,
+	TYPE_ID,
+	serialize,
+	type SimsFile,
+	type SimsFileMeta,
+	type SimsFileContent
+} from 'dbpf-transform';
 import produce from 'immer';
 import {derived, get, writable} from 'svelte/store';
 import {v4 as uuid} from 'uuid';
 
-import type {SimsFile, SimsFileMeta, SimsFileContent} from 'dbpf-transform/dist/types/types';
 
 import {defaultFileData} from './consts';
 import {select} from './selectors';

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type {ComponentProps} from 'svelte';
-	import {getFileType} from 'dbpf-transform';
-	import type {SimsFileContent} from 'dbpf-transform/dist/types/types';
+	import {getFileType, type SimsFileContent} from 'dbpf-transform';
 	import Box from './box.svelte';
 	import FileMeta from './file-meta.svelte';
 	import {getViewForFileType} from './file-views';
