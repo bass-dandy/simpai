@@ -1,24 +1,13 @@
-# SimPAI (Sims 2 Package Alteration Interface)
+# Sims 2 Tools
 
-Powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+Tools for manipulating Sims 2 mod files on the web :computer:
 
-## Developing
+To run everything locally:
+- [install `pnpm`](https://pnpm.io/installation)
+- run `pnpm install`
+- run `pnpm build` (if it's your first time running the repo)
+- run `pnpm start`
 
-Once you've installed dependencies with `npm install`, start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create the production version of the app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
+Tools in this repo:
+- dbpf-transform: a library for serializing and deserializing .package files
+- SimPAI: a web interface for manipulating .package files

@@ -12,10 +12,14 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18.15.0'
-      - run: npm install
-      - run: npm run build
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8.1.0
+          run_install: true
+      - run: pnpm build
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
+          publish_dir: ./packages/simpai/build

@@ -1,0 +1,31 @@
+{
+  "name": "dbpf-transform",
+  "version": "0.0.2",
+  "author": "bass_dandy",
+  "license": "ISC",
+  "description": "Browser-friendly TypeScript library for serializing and deserializing DBPF package files used by The Sims 2",
+  "type": "module",
+  "module": "dist/esm/index.js",
+  "main": "dist/esm/index.js",
+  "types": "dist/types",
+  "files": [
+    "/dist"
+  ],
+  "scripts": {
+    "dev": "pnpm build --watch",
+    "build": "tsc --project ./tsconfig.esm.json",
+    "check": "tsc --noEmit",
+    "test": "jest"
+  },
+  "dependencies": {
+    "qfs-compression": "^0.2.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.0",
+    "@types/node": "^18.15.11",
+    "jest": "^29.5.0",
+    "jest-ts-webcompat-resolver": "^1.0.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.0.0"
+  }
+}
