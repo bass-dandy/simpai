@@ -13,16 +13,15 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="theme-color" content="#5773b8">
 		<meta http-equiv="content-security-policy" content="">
-		<link href="./_app/immutable/assets/_page.8163e317.css" rel="stylesheet">
-		<link rel="modulepreload" href="./_app/immutable/entry/start.cba9432e.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/index.c9ecda36.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/singletons.15ec7612.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/index.8c2b72a5.js">
-		<link rel="modulepreload" href="./_app/immutable/entry/app.ffd1b4e3.js">
-		<link rel="modulepreload" href="./_app/immutable/entry/layout.svelte.d4664223.js">
-		<link rel="modulepreload" href="./_app/immutable/entry/_page.svelte.588e703f.js">
-		<link rel="modulepreload" href="./_app/immutable/entry/_page.ts.9c5eea7e.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/_page.da46b06b.js">
+		<link href="./_app/immutable/assets/_page-8163e317.css" rel="stylesheet">
+		<link rel="modulepreload" href="./_app/immutable/start-21d7e145.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/index-f22f7921.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/singletons-bb2b7b21.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/index-c1818a6e.js">
+		<link rel="modulepreload" href="./_app/immutable/components/layout.svelte-aec15248.js">
+		<link rel="modulepreload" href="./_app/immutable/components/pages/_page.svelte-aeddaf89.js">
+		<link rel="modulepreload" href="./_app/immutable/modules/pages/_page.ts-dc85b7cd.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/_page-da46b06b.js">
 	</head>
 	<body>
 		<div id="svelte">
@@ -59,30 +58,22 @@
 </div>
 
 
-			
-			<script>
-				{
-					__sveltekit_1yzyx5m = {
-						env: {},
-						base: new URL(".", location).pathname.slice(0, -1),
-						element: document.currentScript.parentElement
-					};
+		<script type="module" data-sveltekit-hydrate="enm13f">
+			import { start } from "./_app/immutable/start-21d7e145.js";
 
-					const data = [null,null];
-
-					Promise.all([
-						import("./_app/immutable/entry/start.cba9432e.js"),
-						import("./_app/immutable/entry/app.ffd1b4e3.js")
-					]).then(([kit, app]) => {
-						kit.start(app, __sveltekit_1yzyx5m.element, {
-							node_ids: [0, 2],
-							data,
-							form: null,
-							error: null
-						});
-					});
+			start({
+				assets: "",
+				env: {},
+				target: document.querySelector('[data-sveltekit-hydrate="enm13f"]').parentNode,
+				version: "1680594817861",
+				hydrate: {
+					node_ids: [0, 2],
+					data: [null,null],
+					form: null,
+					error: null
 				}
-			</script>
-		</div>
+			});
+		</script>
+	</div>
 	</body>
 </html>
