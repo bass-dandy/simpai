@@ -12,6 +12,7 @@
     "/dist"
   ],
   "scripts": {
+    "prepublishOnly": "pnpm test && pnpm build",
     "dev": "pnpm build --watch",
     "build": "tsc --project ./tsconfig.esm.json",
     "check": "tsc --noEmit",

@@ -1,0 +1,24 @@
+name: npm publish
+on:
+  release:
+    types: [created]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.15.0'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8.1.0
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile]
+      - run: pnpm --filter "${{ github.event.release.name }}" publish --dry-run
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
