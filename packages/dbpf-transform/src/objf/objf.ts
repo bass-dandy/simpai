@@ -11,44 +11,44 @@
  */
 import BufferReader from '../buffer-reader.js';
 import BufferWriter from '../buffer-writer.js';
-import type {ObjfContent} from '../types.js';
+import type { ObjfContent } from '../types.js';
 
 export function deserialize(buf: ArrayBuffer) {
-	const reader = new BufferReader(buf);
+  const reader = new BufferReader(buf);
 
-	const objf: ObjfContent = {
-		filename: reader.readFileName(),
-		header: reader.readUint32Array(3),
-		count: reader.readUint32(),
-		functions: [],
-	};
+  const objf: ObjfContent = {
+    filename: reader.readFileName(),
+    header: reader.readUint32Array(3),
+    count: reader.readUint32(),
+    functions: [],
+  };
 
-	for(let i = 0; i < objf.count; i++) {
-		objf.functions.push({
-			guard: reader.readUint16(),
-			action: reader.readUint16(),
-		});
-	}
+  for (let i = 0; i < objf.count; i++) {
+    objf.functions.push({
+      guard: reader.readUint16(),
+      action: reader.readUint16(),
+    });
+  }
 
-	return objf;
-};
+  return objf;
+}
 
 export function serialize(data: ObjfContent) {
-	const writer = new BufferWriter();
-	const encoder = new TextEncoder();
+  const writer = new BufferWriter();
+  const encoder = new TextEncoder();
 
-	const encodedFilename = encoder.encode(data.filename);
-	writer.writeBuffer(encodedFilename);
-	writer.writeNulls(64 - encodedFilename.byteLength);
+  const encodedFilename = encoder.encode(data.filename);
+  writer.writeBuffer(encodedFilename);
+  writer.writeNulls(64 - encodedFilename.byteLength);
 
-	writer.writeUint32Array(data.header);
+  writer.writeUint32Array(data.header);
 
-	writer.writeUint32(data.count);
+  writer.writeUint32(data.functions.length);
 
-	for(let i = 0; i < data.count; i++) {
-		writer.writeUint16(data.functions[i].guard);
-		writer.writeUint16(data.functions[i].action);
-	}
+  data.functions.forEach((fn) => {
+    writer.writeUint16(fn.guard);
+    writer.writeUint16(fn.action);
+  });
 
-	return writer.buffer;
+  return writer.buffer;
 }

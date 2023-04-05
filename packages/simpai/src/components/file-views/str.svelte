@@ -53,7 +53,7 @@
 						value={stringSet.languageId}
 						on:input={(e) => handleLangChange(e, i)}
 					>
-					{#each languages as language, i}
+					{#each languages as _, i}
 						<option value={i + 1}>{getLanguage(i + 1)}</option>
 					{/each}
 					</select>

@@ -1,66 +1,75 @@
 @font-face {
-	font-family: 'benguiat-gothic-bold';
-	src: url('/fonts/benguiat-gothic-std-bold.otf');
+  font-family: 'benguiat-gothic-bold';
+  src: url('/fonts/benguiat-gothic-std-bold.otf');
 }
 
 @font-face {
-	font-family: 'sims-llhp';
-	src: url('/fonts/sims-llhp.ttf');
+  font-family: 'sims-llhp';
+  src: url('/fonts/sims-llhp.ttf');
 }
 
 :root {
-	--color-bg: rgba(87, 115, 184, 0.9);
-	--color-fg: rgb(150, 166, 217);
-	--color-accent: rgb(29, 47, 119);
-	--color-input: rgb(207, 215, 252);
-	--color-btn: rgb(176, 188, 249);
-	--color-green: rgb(132, 186, 117);
-	--color-white: rgb(255, 255, 255);
-	--color-black: rgb(0, 0, 0);
+  --color-bg: rgba(87, 115, 184, 0.9);
+  --color-fg: rgb(150, 166, 217);
+  --color-accent: rgb(29, 47, 119);
+  --color-input: rgb(207, 215, 252);
+  --color-btn: rgb(176, 188, 249);
+  --color-green: rgb(132, 186, 117);
+  --color-white: rgb(255, 255, 255);
+  --color-black: rgb(0, 0, 0);
 }
 
 * {
-	box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 *:focus {
-	outline-color: var(--color-green);
+  outline-color: var(--color-green);
 }
 
 html {
-	background: linear-gradient(0deg, rgba(66,79,126,1) 0%, rgba(153,183,236,1) 100%);
+  background: linear-gradient(0deg, rgba(66, 79, 126, 1) 0%, rgba(153, 183, 236, 1) 100%);
 }
 
-html, body {
-	padding: 0;
-	margin: 0;
+html,
+body {
+  padding: 0;
+  margin: 0;
 }
 
-body, button, input[type="text"], textarea, select {
-	font-family: 'benguiat-gothic-bold';
-	color: var(--color-accent);
+body,
+button,
+input[type='text'],
+textarea,
+select {
+  font-family: 'benguiat-gothic-bold';
+  color: var(--color-accent);
 }
 
-input[type="text"], textarea, select {
-	padding: 5px;
-	border: 1px solid var(--color-accent);
-	border-radius: 3px;
-	background-color: var(--color-input);
+input[type='text'],
+textarea,
+select {
+  padding: 5px;
+  border: 1px solid var(--color-accent);
+  border-radius: 3px;
+  background-color: var(--color-input);
 }
 
-input[type="text"], textarea {
-	box-shadow: inset 3px 3px 3px 0px rgba(0, 0, 0, 0.25);
+input[type='text'],
+textarea {
+  box-shadow: inset 3px 3px 3px 0px rgba(0, 0, 0, 0.25);
 }
 
 button:not(:disabled) {
-	cursor: pointer;
+  cursor: pointer;
 }
 
 a {
-	text-decoration: dotted underline;
-	text-underline-offset: 2px;
+  text-decoration: dotted underline;
+  text-underline-offset: 2px;
 }
 
-label, button {
-	font-size: 1rem;
+label,
+button {
+  font-size: 1rem;
 }
