@@ -24,6 +24,6 @@ jobs:
           release_name="${{ github.event.release.name }}"
           words=($release_name)
           echo "package_to_publish={ ${words[0]} }" >> $GITHUB_ENV
-      - run: pnpm --filter "{ env.package_to_publish }" publish --dry-run --no-git-checks
+      - run: pnpm --filter "${ env.package_to_publish }" publish --dry-run --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
