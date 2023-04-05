@@ -1,18 +1,9 @@
 {
-	"extends": "./.svelte-kit/tsconfig.json",
+	"extends": [
+		"./.svelte-kit/tsconfig.json",
+		"../../tsconfig.json"
+	],
 	"compilerOptions": {
-		"esModuleInterop": true,
-		"forceConsistentCasingInFileNames": true,
-		"resolveJsonModule": true,
-		"sourceMap": true,
-		"strict": true,
-		"allowUnreachableCode": false,
-		"noImplicitAny": true,
-		"noImplicitOverride": true,
-		"noImplicitReturns": true,
-		"noImplicitThis": true,
-		"noFallthroughCasesInSwitch": true,
-		"noUncheckedIndexedAccess": true,
 		"allowSyntheticDefaultImports": true // for svg plugin
 	}
 	// Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias
