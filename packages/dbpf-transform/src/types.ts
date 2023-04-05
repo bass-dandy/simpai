@@ -245,9 +245,3 @@ export type TrcnFile = SimsFile & {
 export function isTrcnFile(file: SimsFile): file is TrcnFile {
   return file.meta.typeId === TYPE_ID.TRCN;
 }
-
-export type BinFile = SimsFile & { content: ArrayBuffer };
-
-export function isBinFile(file: SimsFile): file is BinFile {
-  return !Object.values(TYPE_ID).some((typeId) => file.meta.typeId === typeId);
-}

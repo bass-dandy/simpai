@@ -13,7 +13,6 @@ import {
   isTrcnFile,
   isTtabFile,
   isNrefFile,
-  isBinFile,
 } from '../types.js';
 import type { SimsFile, SimsFileMeta } from '../types.js';
 
@@ -207,8 +206,8 @@ export function serialize(files: SimsFile[]) {
       serializedFile = TPRP.serialize(file.content);
     } else if (isTrcnFile(file)) {
       serializedFile = TRCN.serialize(file.content);
-    } else if (isBinFile(file)) {
-      serializedFile = file.content;
+    } else {
+      serializedFile = file.content as ArrayBuffer;
     }
 
     indexTable.push({
