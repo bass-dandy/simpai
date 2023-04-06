@@ -1,3 +1,5 @@
+import { browser } from "$app/environment"
+import { decode, encode } from 'base64-arraybuffer';
 import {
   deserialize,
   TYPE_ID,
@@ -13,6 +15,35 @@ import { v4 as uuid } from 'uuid';
 import { defaultFileData } from './consts';
 import { select } from './selectors';
 import type { PackagesStore } from './types';
+import { debounce } from './util';
+
+const localStorageKey = 'editorState';
+const base64Prefix = 'base64:';
+
+const saveToLocalStorage = debounce((state: PackagesStore) => {
+  if (!browser) return;
+
+  // ArrayBuffers are not stringable, so convert them to Base64
+  const json = JSON.stringify(state, (_, value) => {
+    return value instanceof ArrayBuffer ? `${base64Prefix}${encode(value)}` : value;
+  });
+
+  localStorage.setItem(localStorageKey, json);
+}, 1000);
+
+function hydrateFromLocalStorage() {
+  const defaultState = { activePackageId: '', packages: {} };
+
+  const savedStateRaw = browser ? localStorage.getItem(localStorageKey) :  null;
+
+  if (!savedStateRaw) return defaultState;
+
+  return JSON.parse(savedStateRaw, (_, value) =>
+    typeof value === 'string' && value.startsWith(base64Prefix)
+      ? decode(value.slice(base64Prefix.length))
+      : value
+  );
+}
 
 function getActiveTabIdAfterClose(tabIdToClose: string, tabIds: string[]): string {
   const newTabIds = tabIds.filter((tabId) => tabId !== tabIdToClose);
@@ -20,10 +51,9 @@ function getActiveTabIdAfterClose(tabIdToClose: string, tabIds: string[]): strin
   return newTabIds[Math.min(tabIds.indexOf(tabIdToClose), newTabIds.length - 1)] ?? '';
 }
 
-const packagesStore = writable<PackagesStore>({
-  activePackageId: '',
-  packages: {},
-});
+const packagesStore = writable<PackagesStore>(hydrateFromLocalStorage());
+
+packagesStore.subscribe(saveToLocalStorage);
 
 export const packages = {
   subscribe: packagesStore.subscribe,

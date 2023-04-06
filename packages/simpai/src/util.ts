@@ -37,7 +37,10 @@ export function without<T>(arr: T[], i: number): T[] {
   return [...arr.slice(0, i), ...arr.slice(i + 1)];
 }
 
-export function debounce(fn: () => void, delay: number): () => void {
+export function debounce<T extends any[]>(
+  fn: (...args: T) => void,
+  delay: number
+): (...args: T) => void {
   let timeout: NodeJS.Timeout | undefined;
 
   return (...args) => {
