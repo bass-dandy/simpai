@@ -73,10 +73,11 @@ export default class BufferWriter {
     this.buffer = newBuffer.buffer;
   }
 
-  writeString(str: string) {
+  writeString(str: string, opt?: { counted?: boolean }) {
     if (!this.encoder) {
       this.encoder = new TextEncoder();
     }
+    if (opt?.counted) this.writeUint32(str.length);
     this.writeBuffer(this.encoder.encode(str).buffer);
   }
 

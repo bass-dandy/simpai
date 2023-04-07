@@ -65,6 +65,11 @@ export default class BufferReader {
     return buf;
   }
 
+  readCountedString() {
+    const len = this.readUint32();
+    return new TextDecoder().decode(this.readBuffer(len));
+  }
+
   readFileName() {
     return new TextDecoder().decode(this.readBuffer(64)).replace(/\u0000/g, ''); // eslint-disable-line no-control-regex -- remove trailing null bytes
   }

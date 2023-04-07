@@ -1,3 +1,4 @@
+import { keyToWordLength } from './objd/consts.js';
 import { TYPE_ID } from './consts.js';
 
 export type BconContent = {
@@ -36,11 +37,9 @@ export type GlobContent = {
 
 export type ObjdContent = {
   filename: string;
-  type: number;
-  guid: number;
-  proxyGuid: number;
-  originalGuid: number;
-  data: number[];
+  data: {
+    [key in keyof typeof keyToWordLength]: number;
+  };
 };
 
 export type ObjfContent = {
