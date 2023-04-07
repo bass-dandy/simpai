@@ -25,7 +25,9 @@ export function deserialize(buf: ArrayBuffer) {
   const filename2 = reader.readCountedString();
 
   if (objd.filename !== filename2) {
-    console.error(`OBJD malformed: start filename (${objd.filename}) does not match end filename (${filename2})`);
+    console.error(
+      `OBJD malformed: start filename (${objd.filename}) does not match end filename (${filename2})`
+    );
   }
 
   return objd;

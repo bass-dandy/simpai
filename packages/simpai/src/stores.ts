@@ -1,4 +1,4 @@
-import { browser } from "$app/environment"
+import { browser } from '$app/environment';
 import { decode, encode } from 'base64-arraybuffer';
 import {
   deserialize,
@@ -34,7 +34,7 @@ const saveToLocalStorage = debounce((state: PackagesStore) => {
 function hydrateFromLocalStorage() {
   const defaultState = { activePackageId: '', packages: {} };
 
-  const savedStateRaw = browser ? localStorage.getItem(localStorageKey) :  null;
+  const savedStateRaw = browser ? localStorage.getItem(localStorageKey) : null;
 
   if (!savedStateRaw) return defaultState;
 
