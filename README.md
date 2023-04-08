@@ -3,8 +3,8 @@
 Tools for manipulating Sims 2 mod files on the web :computer:
 
 ## Tools in this repo
-- dbpf-transform: a library for serializing and deserializing .package files
 - SimPAI: a web interface for manipulating .package files
+- dbpf-transform: a library for serializing and deserializing .package files
 
 ## Local development
 
@@ -16,7 +16,7 @@ First-time setup:
 
 Running the app:
 - run `pnpm start` to run dev server with all packages in watch mode
-- run `pnpm simpai preview` to preview prod build
+- run `pnpm simpai preview` to preview prod build (after running `pnpm build`)
 
 ## Publishing packages to npm
 
