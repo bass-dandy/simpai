@@ -1,9 +1,13 @@
 <script lang="ts">
 	import tgaImage from 'tgaimage';
+	import Box from '../box.svelte';
+	import Button from '../button.svelte';
 
 	export let content: ArrayBuffer;
+	export let onChange: (newContent: ArrayBuffer | undefined) => void;
 
 	let src: string | undefined;
+	let fileInput: HTMLInputElement;
 
 	const knownHeaders = {
 		jpg: [0xFF, 0xD8],
@@ -18,7 +22,7 @@
 		const bytes = new Uint8Array(content);
 		let blob;
 
-		if (!content) {
+		if (!content || !bytes.length) {
 			src = '';
 		} else if (matchesHeader(bytes, knownHeaders.jpg)) {
 			blob = new Blob([bytes], {type: "image/jpeg"});
@@ -35,19 +39,51 @@
 	}
 </script>
 
-<div>
+<div class="tga-view">
+	<input
+		type="file"
+		accept="image/jpeg, image/png, .tga"
+		bind:this={fileInput}
+		on:change={async () => {
+			onChange(await fileInput.files?.[0]?.arrayBuffer());
+		}}
+	/>
+	<Box secondary>
+		<Button
+			variant="link"
+			style="font-size: 1.2rem;"
+			onClick={() => fileInput.click()}
+		>
+			Upload image file
+		</Button>
+	</Box>
 	{#if src}
-		<img {src} alt="" />
+		<Box
+			secondary
+			style={{
+				'margin-top': '5px',
+				overflow: 'hidden',
+			}}
+		>
+			<img {src} alt="" />
+		</Box>
 	{/if}
 </div>
 
 <style>
-	div {
+	.tga-view {
+		display: flex;
+		flex-direction: column;
 		height: 100%;
-		overflow: auto;
+		overflow: hidden;
 		text-align: center;
 	}
+	input[type="file"] {
+		display: none;
+	}
 	img {
+		max-width: 100%;
+		max-height: 100%;
 		background: url('/images/tile.png');
 	}
 </style>
