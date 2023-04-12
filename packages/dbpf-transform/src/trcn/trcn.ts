@@ -42,8 +42,10 @@ export function serialize(data: TrcnContent) {
   writer.writeBuffer(encodedFilename);
   writer.writeNulls(64 - encodedFilename.byteLength);
 
-  writer.writeUint32Array(data.header);
-  writer.writeUint32(data.itemCount);
+  writer.writeString('NCRT');
+  writer.writeUint32(data.version);
+  writer.writeUint32(0);
+  writer.writeUint32(data.items.length);
 
   data.items.forEach((item) => {
     writer.writeUint32(item.used);
@@ -51,7 +53,7 @@ export function serialize(data: TrcnContent) {
     writer.writeUint8(item.constName.length);
     writer.writeString(item.constName);
 
-    if (data.header[1] > 83) {
+    if (data.version > 83) {
       writer.writeUint8(item.desc.length);
       writer.writeString(item.desc);
       writer.writeUint8(item.value);
