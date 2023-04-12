@@ -106,12 +106,11 @@ export type TprpContent = {
 
 export type TrcnContent = {
   filename: string;
-  header: [number, number, number];
-  itemCount: number;
+  version: number,
   items: {
     used: number;
-    id: number;
-    name: string;
+    constId: number;
+    constName: string;
     desc: string;
     value: number;
     minValue: number;

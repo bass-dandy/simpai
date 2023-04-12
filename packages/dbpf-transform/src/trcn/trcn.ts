@@ -6,24 +6,26 @@ export function deserialize(buf: ArrayBuffer) {
   const reader = new BufferReader(buf);
   const decoder = new TextDecoder();
 
-  const filename = reader.readFileName();
-
   const trcn: TrcnContent = {
-    filename,
-    header: [reader.readUint32(), reader.readUint32(), reader.readUint32()],
-    itemCount: reader.readUint32(),
+    filename: reader.readFileName(),
+    version: 0,
     items: [],
   };
 
-  const version = trcn.header[1];
+  // read header
+  reader.readUint32();
+  trcn.version = reader.readUint32();
+  reader.readUint32();
 
-  while (trcn.items.length < trcn.itemCount) {
+  const itemCount = reader.readUint32();
+
+  while (trcn.items.length < itemCount) {
     trcn.items.push({
       used: reader.readUint32(),
-      id: reader.readUint32(),
-      name: decoder.decode(reader.readBuffer(reader.readUint8())),
-      desc: version > 83 ? decoder.decode(reader.readBuffer(reader.readUint8())) : '',
-      value: version > 83 ? reader.readUint8() : reader.readUint16(),
+      constId: reader.readUint32(),
+      constName: decoder.decode(reader.readBuffer(reader.readUint8())),
+      desc: trcn.version > 83 ? decoder.decode(reader.readBuffer(reader.readUint8())) : '',
+      value: trcn.version > 83 ? reader.readUint8() : reader.readUint16(),
       minValue: reader.readUint16(),
       maxValue: reader.readUint16(),
     });
@@ -45,9 +47,9 @@ export function serialize(data: TrcnContent) {
 
   data.items.forEach((item) => {
     writer.writeUint32(item.used);
-    writer.writeUint32(item.id);
-    writer.writeUint8(item.name.length);
-    writer.writeString(item.name);
+    writer.writeUint32(item.constId);
+    writer.writeUint8(item.constName.length);
+    writer.writeString(item.constName);
 
     if (data.header[1] > 83) {
       writer.writeUint8(item.desc.length);
