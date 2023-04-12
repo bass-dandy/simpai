@@ -5,7 +5,6 @@ describe('GLOB', () => {
   it('can serialize GLOB files', async () => {
     const serializedFile = serialize({
       filename: 'semi global file',
-      length: 14,
       semiglobal: 'JobDataGlobals',
     });
 

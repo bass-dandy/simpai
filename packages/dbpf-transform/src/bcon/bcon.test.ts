@@ -6,7 +6,6 @@ describe('BCON', () => {
     const serializedFile = serialize({
       filename: 'Tuning - Daily Wages',
       flag: false,
-      itemCount: 11,
       items: [0, 197, 302, 428, 505, 610, 736, 886, 1026, 1532, 2342],
     });
 

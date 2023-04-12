@@ -4,7 +4,6 @@ import { TYPE_ID } from './consts.js';
 export type BconContent = {
   filename: string;
   flag: boolean;
-  itemCount: number;
   items: number[];
 };
 
@@ -31,7 +30,6 @@ export type BhavContent = {
 
 export type GlobContent = {
   filename: string;
-  length: number;
   semiglobal: string;
 };
 
@@ -45,7 +43,6 @@ export type ObjdContent = {
 export type ObjfContent = {
   filename: string;
   header: number[];
-  count: number;
   functions: {
     guard: number;
     action: number;
@@ -55,7 +52,6 @@ export type ObjfContent = {
 export type StrContent = {
   filename: string;
   formatCode: number;
-  stringSetCount: number;
   stringSets: {
     languageId: number;
     value: string;
@@ -147,7 +143,7 @@ export type SimsFileContent =
 
 export type SimsFile = {
   meta: SimsFileMeta;
-  content?: SimsFileContent;
+  content: SimsFileContent;
 };
 
 export type BconFile = SimsFile & {

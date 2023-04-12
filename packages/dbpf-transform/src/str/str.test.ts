@@ -6,7 +6,6 @@ describe('STR#', () => {
     const serializedFile = serialize({
       filename: 'Attribute Labels',
       formatCode: 65533,
-      stringSetCount: 2,
       stringSets: [
         {
           languageId: 1,

@@ -16,7 +16,6 @@ describe('OBJF', () => {
     const serializedFile = serialize({
       filename: '',
       header: [0, 0, 1329744486],
-      count: 55,
       functions,
     });
 

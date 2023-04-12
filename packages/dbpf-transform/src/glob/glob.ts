@@ -14,11 +14,12 @@ export function deserialize(buf: ArrayBuffer) {
 
   const glob: GlobContent = {
     filename: reader.readFileName(),
-    length: reader.readUint8(),
     semiglobal: '',
   };
 
-  glob.semiglobal = new TextDecoder().decode(reader.readBuffer(glob.length));
+  const length = reader.readUint8();
+
+  glob.semiglobal = new TextDecoder().decode(reader.readBuffer(length));
 
   return glob;
 }
@@ -31,7 +32,7 @@ export function serialize(data: GlobContent) {
   writer.writeBuffer(encodedFilename);
   writer.writeNulls(64 - encodedFilename.byteLength);
 
-  writer.writeUint8(data.length);
+  writer.writeUint8(data.semiglobal.length);
 
   writer.writeBuffer(encoder.encode(data.semiglobal).buffer);
 

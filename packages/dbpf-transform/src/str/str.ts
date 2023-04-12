@@ -21,11 +21,12 @@ export function deserialize(buf: ArrayBuffer) {
   const str: StrContent = {
     filename: reader.readFileName(),
     formatCode: reader.readUint16(),
-    stringSetCount: reader.readUint16(),
     stringSets: [],
   };
 
-  for (let i = 0; i < str.stringSetCount; i++) {
+  const count = reader.readUint16();
+
+  for (let i = 0; i < count; i++) {
     str.stringSets.push({
       languageId: reader.readUint8(),
       value: decoder.decode(reader.readUntilNull()),

@@ -18,15 +18,14 @@ export function deserialize(buf: ArrayBuffer) {
   const bcon: BconContent = {
     filename: reader.readFileName(),
     flag: false,
-    itemCount: 0,
     items: [],
   };
 
   const flagAndCount = reader.readUint16();
   bcon.flag = (flagAndCount & 0b1000000000000000) !== 0;
-  bcon.itemCount = flagAndCount & 0b0111111111111111;
+  const count = flagAndCount & 0b0111111111111111;
 
-  for (let i = 0; i < bcon.itemCount; i++) {
+  for (let i = 0; i < count; i++) {
     bcon.items.push(reader.readUint16());
   }
 
@@ -41,7 +40,7 @@ export function serialize(data: BconContent) {
   writer.writeBuffer(encodedFilename);
   writer.writeNulls(64 - encodedFilename.byteLength);
 
-  let flagAndCount = data.itemCount;
+  let flagAndCount = data.items.length;
 
   if (data.flag) {
     flagAndCount |= 0b1000000000000000;

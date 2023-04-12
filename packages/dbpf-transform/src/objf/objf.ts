@@ -19,11 +19,12 @@ export function deserialize(buf: ArrayBuffer) {
   const objf: ObjfContent = {
     filename: reader.readFileName(),
     header: reader.readUint32Array(3),
-    count: reader.readUint32(),
     functions: [],
   };
 
-  for (let i = 0; i < objf.count; i++) {
+  const count = reader.readUint32();
+
+  for (let i = 0; i < count; i++) {
     objf.functions.push({
       guard: reader.readUint16(),
       action: reader.readUint16(),
