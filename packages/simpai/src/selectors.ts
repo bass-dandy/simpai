@@ -1,3 +1,4 @@
+import { TYPE_ID } from 'dbpf-transform';
 import type { PackagesStore, Resource } from './types';
 
 function isDirty(resource?: Resource): boolean {
@@ -26,8 +27,8 @@ export function select(store: PackagesStore) {
       return resources ? Object.keys(resources).filter((key) => resources[key]?.isOpen) : [];
     },
 
-    resourceById(resourceId: string) {
-      return this.activePackage()?.resources[resourceId];
+    resourceById(resourceId?: string) {
+      return resourceId ? this.activePackage()?.resources[resourceId] : undefined;
     },
 
     isDirty(resourceId?: string) {
@@ -38,6 +39,18 @@ export function select(store: PackagesStore) {
     isPackageDirty(packageId?: string) {
       const pkg = store.packages[packageId ?? store.activePackageId];
       return Object.values(pkg?.resources ?? {}).some(isDirty);
+    },
+
+    linkedResourceId(fileType: keyof typeof TYPE_ID) {
+      const activePackage = select(store).activePackage();
+      const activeResource = select(store).activeResource();
+
+      return Object.entries(activePackage?.resources ?? {})
+        .find(([, resource]) =>
+          resource.meta.typeId === TYPE_ID[fileType]
+            && resource.meta.instanceId === activeResource?.meta.instanceId
+            && resource.meta.instanceId2 === activeResource?.meta.instanceId2
+        )?.[0];
     },
   };
 }

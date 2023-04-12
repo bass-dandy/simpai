@@ -1,9 +1,14 @@
 <script lang="ts">
-	import type {BconContent} from 'dbpf-transform';
+	import type { BconContent, TrcnContent } from 'dbpf-transform';
 	import produce from 'immer';
 	import Box from '../box.svelte';
 	import Button from '../button.svelte';
 	import CloseButton from '../close-button.svelte';
+	import Table from '../table.svelte';
+	import TextInput from '../text-input.svelte';
+	import {defaultFileData} from '../../consts';
+	import {select} from '../../selectors';
+	import {packages} from '../../stores';
 	import {formatHex, formatSignedInt, without} from '../../util';
 
 	export let content: BconContent;
@@ -32,6 +37,35 @@
 
 	$: ({format, parse} = displayOptions[selectedDisplayOption]);
 
+	let trcnId: string | undefined;
+	let labels: TrcnContent['items'] | undefined;
+
+	$: {
+		trcnId = select($packages).linkedResourceId('TRCN');
+		const trcn = select($packages).resourceById(trcnId);
+		labels = (trcn?.contentChanges as TrcnContent)?.items ?? (trcn?.content as TrcnContent)?.items;
+	};
+
+	const handleCreateLabelClick = () => {
+		packages.createLinkedResource('TRCN', {
+			...defaultFileData.TRCN,
+			filename: content.filename,
+			items: content.items.map((_, i) => ({
+				...((defaultFileData.TRCN as TrcnContent).items[0] as TrcnContent['items'][number]),
+				constName: `Label ${i}`,
+				constId: i + 1,
+			})),
+		});
+	};
+
+	const handleAppendClick = () => {
+		onChange(
+			produce(content, (draft) => {
+				draft.items.push(0);
+			})
+		);
+	};
+
 	const handleFlagChange = (e: Event) => onChange(
 		produce(content, (draft) => {
 			draft.flag = (e.target as HTMLInputElement).checked;
@@ -41,114 +75,120 @@
 	const handleDisplayChange = (e: Event) => {
 		selectedDisplayOption = (e.target as HTMLInputElement).value as DisplayOption;
 	};
-
-	const handleValueChange = (e: Event, i: number) => onChange(
-		produce(content, (draft) => {
-			draft.items[i] = parse(
-				(e.target as HTMLInputElement).value
-			) ?? 0;
-		})
-	);
 </script>
 
-<div>
+<div class="bcon-view">
 	<Box
+		secondary
 		style={{
 			display: 'flex',
 			'justify-content': 'space-between',
+			'margin-bottom': '5px',
 		}}
-		secondary
 	>
-		<label>
-			Flag
-			<input
-				type="checkbox"
-				checked={content.flag}
-				on:input={handleFlagChange}
-			/>
-		</label>
-		<label>
-			Display as
-			<select
-				class="display-as"
-				value={selectedDisplayOption}
-				on:input={handleDisplayChange}
-			>
-			{#each Object.keys(displayOptions) as key (key)}
-				<option value={key}>
-					{key}
-				</option>
-			{/each}
-			</select>
-		</label>
+		<div class="control-group">
+			{#if trcnId}
+				<Button onClick={() => trcnId ? packages.openResource(trcnId) : null}>
+					Edit TRCN
+				</Button>
+			{:else}
+				<Button onClick={handleCreateLabelClick}>
+					Create TRCN
+				</Button>
+			{/if}
+			<Button onClick={handleAppendClick}>
+				Append new value
+			</Button>
+		</div>
+		<div class="control-group">
+			<label>
+				Display as
+				<select
+					class="display-as"
+					value={selectedDisplayOption}
+					on:input={handleDisplayChange}
+				>
+				{#each Object.keys(displayOptions) as key (key)}
+					<option value={key}>
+						{key}
+					</option>
+				{/each}
+				</select>
+			</label>
+			<label>
+				Flag
+				<input
+					type="checkbox"
+					checked={content.flag}
+					on:input={handleFlagChange}
+				/>
+			</label>
+		</div>
 	</Box>
-	<Box secondary style={{ 'margin-top': '5px' }}>
-		<table>
-			<thead>
-				<td/>
-				<td>Line</td>
-				<td>Value</td>
-				<td>Label</td>
-			</thead>
-			<tbody>
-			{#each content.items as item, i}
-				<tr>
-					<td>
-						<CloseButton
-							onClick={() => {
-								onChange(
-									produce(content, (draft) => {
-										draft.items = without(draft.items, i);
-									})
-								)
-							}}
-							aria-label="remove value"
-						/>
-					</td>
-					<td>{format(i)}</td>
-					<td>
-						<input
-							type="text"
-							value={format(item)}
-							on:input={(e) => handleValueChange(e, i)}
-						/>
-					</td>
-					<td>-</td>
-				</tr>
-			{/each}
-			</tbody>
-		</table>
-		<Button
-			onClick={() => {
-				onChange(
-					produce(content, (draft) => {
-						draft.items.push(0);
-					})
-				);
-			}}
-		>
-			Add new value
-		</Button>
-	</Box>
+	<Table
+		columns={[
+			'',
+			'Line',
+			'Value',
+			...(labels ? ['Label', 'ID', 'Default', 'Min', 'Max', 'Used'] : [])
+		]}
+		rows={content.items.map((item, i) => ({
+			'': {
+				component: CloseButton,
+				props: {
+					onClick: () => {
+						onChange(
+							produce(content, (draft) => {
+								draft.items = without(draft.items, i);
+							})
+						);
+					},
+					'aria-label': `delete line ${i}`,
+				},
+			},
+			Line: i,
+			Value: {
+				component: TextInput,
+				props: {
+					onChange: (newValue) => onChange(
+						produce(content, (draft) => {
+							draft.items[i] = parse(newValue) ?? 0;
+						})
+					),
+					value: format(item),
+					style: 'width: 100%; min-width: 75px;',
+				},
+			},
+			Label: labels?.[i]?.constName,
+			ID: format(labels?.[i]?.constId ?? 0),
+			Default: format(labels?.[i]?.value ?? 0),
+			Min: format(labels?.[i]?.minValue ?? 0),
+			Max: format(labels?.[i]?.maxValue ?? 0),
+			Used: {
+				element: 'input',
+				props: {
+					type: 'checkbox',
+					checked: labels?.[i]?.used,
+					disabled: true,
+				},
+			},
+		}))}
+	/>
 </div>
 
 <style>
-	div {
+	.bcon-view {
+		display: flex;
+		flex-direction: column;
 		height: 100%;
 		overflow: auto;
 	}
+	.control-group {
+		display: flex;
+		align-items: center;
+		gap: 15px;
+	}
 	.display-as {
 		margin-left: 5px;
-	}
-	table {
-		border-collapse: collapse;
-		font-size: 1rem;
-		margin-bottom: 10px;
-	}
-	td {
-		padding: 2px 0;
-	}
-	td:not(:last-of-type) {
-		padding-right: 10px;
 	}
 </style>

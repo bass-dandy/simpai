@@ -283,6 +283,26 @@ export const packages = {
     );
   },
 
+  createLinkedResource(fileType: keyof typeof TYPE_ID, content?: SimsFileContent) {
+    packagesStore.update((store) =>
+      produce(store, (draft) => {
+        const activePkg = select(draft).activePackage();
+        const activeResource = select(draft).activeResource();
+        const newResourceId = uuid();
+
+        if (activePkg && activeResource) {
+          activePkg.resources[newResourceId] = {
+            meta: {
+              ...activeResource.meta,
+              typeId: TYPE_ID[fileType],
+            },
+            content: content ?? defaultFileData[fileType],
+          };
+        }
+      })
+    );
+  },
+
   setActiveResource(resourceId: string): void {
     packagesStore.update((store) =>
       produce(store, (draft) => {

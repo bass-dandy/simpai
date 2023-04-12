@@ -7,6 +7,7 @@ import NREF from './nref.svelte';
 import OBJF from './objf.svelte';
 import STR from './str.svelte';
 import TGA from './tga.svelte';
+import TRCN from './trcn.svelte';
 import UNK from './unk.svelte';
 
 export const views = {
@@ -18,6 +19,7 @@ export const views = {
   OBJF,
   STR,
   TGA,
+  TRCN,
   TTAS: STR,
 };
 
