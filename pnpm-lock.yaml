@@ -65,6 +65,9 @@ importers:
       tgaimage:
         specifier: 1.1.0
         version: 1.1.0
+      ts-essentials:
+        specifier: ^9.3.1
+        version: 9.3.1(typescript@5.0.2)
       uuid:
         specifier: ^8.3.2
         version: 8.3.2
@@ -3643,6 +3646,14 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
+  /ts-essentials@9.3.1(typescript@5.0.2):
+    resolution: {integrity: sha512-9CChSvQMyVRo29Vb1A2jbs+LKo3d/bAf+ndSaX0T8cEiy/HChVaRN/HY5DqUryZ8hZ6uol9bEgCnGmnDbwBR9Q==}
+    peerDependencies:
+      typescript: '>=4.1.0'
+    dependencies:
+      typescript: 5.0.2
+    dev: false
+
   /ts-jest@29.1.0(@babel/core@7.21.4)(jest@29.5.0)(typescript@5.0.2):
     resolution: {integrity: sha512-ZhNr7Z4PcYa+JjMl62ir+zPiNJfXJN6E8hSLnaUKhOgqcn8vb3e537cpkd0FuAfRK3sR1LSqM1MOhliXNgOFPA==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -3727,7 +3738,6 @@ packages:
     resolution: {integrity: sha512-wVORMBGO/FAs/++blGNeAVdbNKtIh1rbBL2EyQ1+J9lClJ93KiiKe8PmFIVdXhHcyv44SL9oglmfeSsndo0jRw==}
     engines: {node: '>=12.20'}
     hasBin: true
-    dev: true
 
   /undici@5.18.0:
     resolution: {integrity: sha512-1iVwbhonhFytNdg0P4PqyIAXbdlVZVebtPDvuM36m66mRw4OGrCm2MYynJv/UENFLdP13J1nPVQzVE2zTs1OeA==}

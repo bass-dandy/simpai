@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { BconContent, TrcnContent } from 'dbpf-transform';
+	import type { BconContent, TrcnContent, TrcnFile } from 'dbpf-transform';
 	import produce from 'immer';
 	import Box from '../box.svelte';
 	import Button from '../button.svelte';
@@ -42,8 +42,8 @@
 
 	$: {
 		trcnId = select($packages).linkedResourceId('TRCN');
-		const trcn = select($packages).resourceById(trcnId);
-		labels = (trcn?.contentChanges as TrcnContent)?.items ?? (trcn?.content as TrcnContent)?.items;
+		const trcn = select($packages).resourceById<TrcnFile>(trcnId);
+		labels = trcn?.contentChanges?.items ?? trcn?.content?.items;
 	};
 
 	const handleCreateLabelClick = () => {
@@ -51,20 +51,18 @@
 			...defaultFileData.TRCN,
 			filename: content.filename,
 			items: content.items.map((_, i) => ({
-				...((defaultFileData.TRCN as TrcnContent).items[0] as TrcnContent['items'][number]),
+				...(defaultFileData.TRCN.items[0] as typeof defaultFileData['TRCN']['items'][number]),
 				constName: `Label ${i}`,
 				constId: i + 1,
 			})),
 		});
 	};
 
-	const handleAppendClick = () => {
-		onChange(
-			produce(content, (draft) => {
-				draft.items.push(0);
-			})
-		);
-	};
+	const handleAppendClick = () => onChange(
+		produce(content, (draft) => {
+			draft.items.push(0);
+		})
+	);
 
 	const handleFlagChange = (e: Event) => onChange(
 		produce(content, (draft) => {

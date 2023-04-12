@@ -1,8 +1,10 @@
-import type { SimsFile, SimsFileContent, SimsFileMeta } from 'dbpf-transform';
+import type { SimsFile } from 'dbpf-transform';
 
-export type Resource = SimsFile & {
-  contentChanges?: SimsFileContent;
-  metaChanges?: SimsFileMeta;
+export type Resource<T extends SimsFile = SimsFile> = SimsFile & {
+  content: T['content'];
+  meta: T['meta'];
+  contentChanges?: T['content'];
+  metaChanges?: T['meta'];
   isOpen?: boolean;
 };
 

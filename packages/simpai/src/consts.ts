@@ -1,4 +1,13 @@
-import type { TYPE_ID, SimsFileContent } from 'dbpf-transform';
+import type {
+  TYPE_ID,
+  BconContent,
+  GlobContent,
+  NrefContent,
+  ObjfContent,
+  TrcnContent,
+  StrContent,
+} from 'dbpf-transform';
+import type { DeepReadonly } from 'ts-essentials';
 
 export const languages = [
   'English (US)',
@@ -36,8 +45,9 @@ export const defaultFileName: Partial<Record<keyof typeof TYPE_ID, string>> = {
   STR: '[text lists]',
 };
 
-const defaultStrData = {
+const defaultStrData: StrContent = {
   filename: '',
+  formatCode: 3,
   stringSets: [
     {
       languageId: 1,
@@ -47,7 +57,18 @@ const defaultStrData = {
   ],
 };
 
-export const defaultFileData: Partial<Record<keyof typeof TYPE_ID, SimsFileContent>> = {
+export const defaultFileData: DeepReadonly<{
+  BCON: BconContent;
+  GLOB: GlobContent;
+  NREF: NrefContent;
+  OBJF: ObjfContent;
+  TRCN: TrcnContent;
+  STR: StrContent;
+  CTSS: StrContent;
+  TTAS: StrContent;
+  TGA: ArrayBuffer;
+  JFIF: ArrayBuffer;
+}> = {
   BCON: {
     filename: '',
     flag: false,
@@ -62,6 +83,7 @@ export const defaultFileData: Partial<Record<keyof typeof TYPE_ID, SimsFileConte
   },
   OBJF: {
     filename: '',
+    header: [0, 0, 0],
     functions: Array.from(Array(55)).map(() => ({
       action: 0,
       guard: 0,
@@ -78,11 +100,11 @@ export const defaultFileData: Partial<Record<keyof typeof TYPE_ID, SimsFileConte
       value: 0,
       minValue: 0,
       maxValue: 0,
-    }],
+    }] as const,
   },
-  TGA: new ArrayBuffer(0),
-  JFIF: new ArrayBuffer(0),
   STR: defaultStrData,
   CTSS: defaultStrData,
   TTAS: defaultStrData,
-};
+  TGA: new ArrayBuffer(0),
+  JFIF: new ArrayBuffer(0),
+} as const;

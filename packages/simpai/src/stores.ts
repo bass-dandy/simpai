@@ -45,7 +45,7 @@ function hydrateFromLocalStorage() {
   );
 }
 
-function getActiveTabIdAfterClose(tabIdToClose: string, tabIds: string[]): string {
+function getActiveTabIdAfterClose(tabIdToClose: string, tabIds: string[]) {
   const newTabIds = tabIds.filter((tabId) => tabId !== tabIdToClose);
 
   return newTabIds[Math.min(tabIds.indexOf(tabIdToClose), newTabIds.length - 1)] ?? '';
@@ -58,7 +58,7 @@ packagesStore.subscribe(saveToLocalStorage);
 export const packages = {
   subscribe: packagesStore.subscribe,
 
-  async addPackage(file: File): Promise<void> {
+  async addPackage(file: File) {
     // key files in package by uuid
     const keyedFiles = deserialize(await file.arrayBuffer()).reduce(
       (acc: Record<string, SimsFile>, file) => {
@@ -82,7 +82,7 @@ export const packages = {
     );
   },
 
-  removePackage(idToRemove: string): void {
+  removePackage(idToRemove: string) {
     if (!window.confirm("Close this package? You'll lose all changes.")) {
       return;
     }
@@ -96,7 +96,7 @@ export const packages = {
     );
   },
 
-  setActivePackage(packageId: string): void {
+  setActivePackage(packageId: string) {
     packagesStore.update((store) =>
       produce(store, (draft) => {
         draft.activePackageId = packageId;
@@ -104,7 +104,7 @@ export const packages = {
     );
   },
 
-  downloadActivePackage(): void {
+  downloadActivePackage() {
     const store = get(packagesStore);
     if (
       select(store).isPackageDirty() &&
@@ -128,7 +128,7 @@ export const packages = {
     window.URL.revokeObjectURL(url);
   },
 
-  openResource(resourceId: string): void {
+  openResource(resourceId: string) {
     packagesStore.update((store) =>
       produce(store, (draft) => {
         const resource = select(draft).resourceById(resourceId);
@@ -145,7 +145,7 @@ export const packages = {
     );
   },
 
-  closeResource(resourceIdToClose: string): void {
+  closeResource(resourceIdToClose: string) {
     packagesStore.update((store) =>
       produce(store, (draft) => {
         const activeResourceId = select(store).activePackage()?.activeResourceId;
@@ -175,7 +175,7 @@ export const packages = {
     );
   },
 
-  editActiveResource(contentChanges: SimsFileContent): void {
+  editActiveResource(contentChanges: SimsFileContent) {
     packagesStore.update((store) =>
       produce(store, (draft) => {
         const activeResource = select(draft).activeResource();
@@ -184,7 +184,7 @@ export const packages = {
     );
   },
 
-  editActiveResourceMeta(metaChanges: SimsFileMeta): void {
+  editActiveResourceMeta(metaChanges: SimsFileMeta) {
     packagesStore.update((store) =>
       produce(store, (draft) => {
         const activeResource = select(draft).activeResource();
@@ -193,7 +193,7 @@ export const packages = {
     );
   },
 
-  resetActiveResource(): void {
+  resetActiveResource() {
     if (!window.confirm('Undo all unsaved changes to this resource? This cannot be undone.')) {
       return;
     }
@@ -208,7 +208,7 @@ export const packages = {
     );
   },
 
-  saveActiveResource(): void {
+  saveActiveResource() {
     packagesStore.update((store) =>
       produce(store, (draft) => {
         const activeResource = select(draft).activeResource();
@@ -225,7 +225,7 @@ export const packages = {
     );
   },
 
-  copyActiveResource(): void {
+  copyActiveResource() {
     packagesStore.update((store) =>
       produce(store, (draft) => {
         const activePackage = select(draft).activePackage();
@@ -240,7 +240,7 @@ export const packages = {
     );
   },
 
-  deleteActiveResource(): void {
+  deleteActiveResource() {
     if (!window.confirm('Remove this resource from the package file? This cannot be undone.')) {
       return;
     }
@@ -258,7 +258,7 @@ export const packages = {
     );
   },
 
-  createNewResource(fileType: keyof typeof TYPE_ID): void {
+  createNewResource(fileType: keyof typeof defaultFileData) {
     packagesStore.update((store) =>
       produce(store, (draft) => {
         const activePkg = select(draft).activePackage();
@@ -283,7 +283,7 @@ export const packages = {
     );
   },
 
-  createLinkedResource(fileType: keyof typeof TYPE_ID, content?: SimsFileContent) {
+  createLinkedResource(fileType: keyof typeof defaultFileData, content?: SimsFileContent) {
     packagesStore.update((store) =>
       produce(store, (draft) => {
         const activePkg = select(draft).activePackage();
@@ -303,7 +303,7 @@ export const packages = {
     );
   },
 
-  setActiveResource(resourceId: string): void {
+  setActiveResource(resourceId: string) {
     packagesStore.update((store) =>
       produce(store, (draft) => {
         const activePkg = select(draft).activePackage();

@@ -21,27 +21,27 @@
 		bconId = select($packages).linkedResourceId('BCON');
 	};
 
-	function getTextInput(field: keyof TrcnContent['items'][number], i: number) {
-		return {
-			component: TextInput,
-			props: {
-				onChange: (newValue) => onChange(
-					produce(content, (draft: TrcnContent) => {
-						const item = draft.items[i];
-						if (item) item[field] = newValue;
-					})
-				),
-				value: content.items[i]?.[field],
-				style: 'width: 100%; min-width: 75px;',
-			},
-		};
-	}
+	const getTextInput = (field: keyof TrcnContent['items'][number], i: number) => ({
+		component: TextInput,
+		props: {
+			onChange: (newValue: string) => onChange(
+				produce(content, (draft) => {
+					const item = draft.items[i];
+					if (item) {
+						item[field] = (field === 'constName' || field === 'desc') ? newValue : parseInt(newValue);
+					}
+				})
+			),
+			value: content.items[i]?.[field],
+			style: 'width: 100%; min-width: 75px;',
+		},
+	});
 
 	const handleAppendClick = () => {
 		onChange(
 			produce(content, (draft) => {
 				draft.items.push({
-					...((defaultFileData.TRCN as TrcnContent).items[0] as TrcnContent['items'][number]),
+					...(defaultFileData.TRCN.items[0] as typeof defaultFileData['TRCN']['items'][number]),
 					constName: `Label ${draft.items.length}`,
 					constId: draft.items.length + 1,
 				});

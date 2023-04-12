@@ -16,6 +16,7 @@
     "immer": "^9.0.12",
     "svelte-portal": "^2.2.0",
     "tgaimage": "1.1.0",
+    "ts-essentials": "^9.3.1",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

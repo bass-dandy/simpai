@@ -1,7 +1,7 @@
-import { TYPE_ID } from 'dbpf-transform';
+import { TYPE_ID, type SimsFile } from 'dbpf-transform';
 import type { PackagesStore, Resource } from './types';
 
-function isDirty(resource?: Resource): boolean {
+function isDirty<T extends SimsFile>(resource?: Resource<T>): boolean {
   return resource?.contentChanges !== undefined || resource?.metaChanges !== undefined;
 }
 
@@ -27,7 +27,7 @@ export function select(store: PackagesStore) {
       return resources ? Object.keys(resources).filter((key) => resources[key]?.isOpen) : [];
     },
 
-    resourceById(resourceId?: string) {
+    resourceById<T extends SimsFile>(resourceId?: string): Resource<T> | undefined {
       return resourceId ? this.activePackage()?.resources[resourceId] : undefined;
     },
 
