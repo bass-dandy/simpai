@@ -4,6 +4,7 @@ import type { SvelteComponent } from 'svelte';
 import BCON from './bcon.svelte';
 import GLOB from './glob.svelte';
 import NREF from './nref.svelte';
+import OBJD from './objd.svelte';
 import OBJF from './objf.svelte';
 import STR from './str.svelte';
 import TGA from './tga.svelte';
@@ -16,6 +17,7 @@ export const views = {
   GLOB,
   JFIF: TGA,
   NREF,
+  OBJD,
   OBJF,
   STR,
   TGA,
