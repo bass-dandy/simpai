@@ -53,3 +53,16 @@ export function debounce<T extends any[]>(
     }, delay);
   };
 }
+
+export function times<T>(
+  count: number,
+  fn: (i: number) => T
+): T[] {
+  const ret = [];
+
+  for (let i = 0; i < count; i++) {
+    ret.push(fn(i));
+  }
+
+  return ret;
+}

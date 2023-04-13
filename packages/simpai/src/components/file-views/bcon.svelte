@@ -9,41 +9,18 @@
 	import {defaultFileData} from '../../consts';
 	import {select} from '../../selectors';
 	import {packages} from '../../stores';
-	import {formatHex, formatSignedInt, without} from '../../util';
+	import {formatHex, without} from '../../util';
 
 	export let content: BconContent;
 	export let onChange: (newContent: BconContent) => void;
 
-	const displayOptions = {
-		Hex: {
-			format: (val: number) => formatHex(val, 4),
-			parse: (val: string) => parseInt(val, 16),
-		},
-		Int: {
-			format: (val: number) => formatSignedInt(val),
-			parse: (val: string) => new Uint16Array([parseInt(val, 10)])[0],
-		},
-		uInt: {
-			format: (val: number) => val >>> 0,
-			parse: (val: string) => parseInt(val, 10),
-		},
-	};
-
-	type DisplayOption = keyof typeof displayOptions;
-
-	let selectedDisplayOption: DisplayOption = 'Hex';
-	let format: (typeof displayOptions)[DisplayOption]['format'];
-	let parse: (typeof displayOptions)[DisplayOption]['parse'];
-
-	$: ({format, parse} = displayOptions[selectedDisplayOption]);
-
 	let trcnId: string | undefined;
-	let labels: TrcnContent['items'] | undefined;
+	let trcnLabels: TrcnContent['items'] | undefined;
 
 	$: {
 		trcnId = select($packages).linkedResourceId('TRCN');
 		const trcn = select($packages).resourceById<TrcnFile>(trcnId);
-		labels = trcn?.contentChanges?.items ?? trcn?.content?.items;
+		trcnLabels = trcn?.contentChanges?.items ?? trcn?.content?.items;
 	};
 
 	const handleCreateLabelClick = () => {
@@ -52,7 +29,6 @@
 			filename: content.filename,
 			items: content.items.map((_, i) => ({
 				...(defaultFileData.TRCN.items[0] as typeof defaultFileData['TRCN']['items'][number]),
-				constName: `Label ${i}`,
 				constId: i + 1,
 			})),
 		});
@@ -69,10 +45,6 @@
 			draft.flag = (e.target as HTMLInputElement).checked;
 		})
 	);
-
-	const handleDisplayChange = (e: Event) => {
-		selectedDisplayOption = (e.target as HTMLInputElement).value as DisplayOption;
-	};
 </script>
 
 <div class="bcon-view">
@@ -80,6 +52,7 @@
 		secondary
 		style={{
 			display: 'flex',
+			gap: '15px',
 			'justify-content': 'space-between',
 			'margin-bottom': '5px',
 		}}
@@ -100,20 +73,6 @@
 		</div>
 		<div class="control-group">
 			<label>
-				Display as
-				<select
-					class="display-as"
-					value={selectedDisplayOption}
-					on:input={handleDisplayChange}
-				>
-				{#each Object.keys(displayOptions) as key (key)}
-					<option value={key}>
-						{key}
-					</option>
-				{/each}
-				</select>
-			</label>
-			<label>
 				Flag
 				<input
 					type="checkbox"
@@ -126,10 +85,12 @@
 	<Table
 		columns={[
 			'',
-			'Line',
 			'Value',
-			...(labels ? ['Label', 'ID', 'Default', 'Min', 'Max', 'Used'] : [])
+			...(trcnLabels ? ['Label', 'Default', 'Min', 'Max', 'Used'] : [])
 		]}
+		columnConfig={{
+			'': { shrink: true },
+		}}
 		rows={content.items.map((item, i) => ({
 			'': {
 				component: CloseButton,
@@ -144,32 +105,30 @@
 					'aria-label': `delete line ${i}`,
 				},
 			},
-			Line: i,
 			Value: {
 				component: TextInput,
 				props: {
 					onChange: (newValue) => onChange(
 						produce(content, (draft) => {
-							draft.items[i] = parse(newValue) ?? 0;
+							draft.items[i] = parseInt(newValue, 16) ?? 0;
 						})
 					),
-					value: format(item),
+					value: formatHex(item, 4),
 					style: 'width: 100%; min-width: 75px;',
 				},
 			},
-			Label: labels?.[i]?.constName,
-			ID: format(labels?.[i]?.constId ?? 0),
-			Default: format(labels?.[i]?.value ?? 0),
-			Min: format(labels?.[i]?.minValue ?? 0),
-			Max: format(labels?.[i]?.maxValue ?? 0),
-			Used: {
+			Label: trcnLabels?.[i]?.constName,
+			Default: formatHex(trcnLabels?.[i]?.value, 4) || '-',
+			Min: formatHex(trcnLabels?.[i]?.minValue, 4) || '-',
+			Max: formatHex(trcnLabels?.[i]?.maxValue, 4) || '-',
+			Used: trcnLabels?.[i] ? {
 				element: 'input',
 				props: {
 					type: 'checkbox',
-					checked: labels?.[i]?.used,
+					checked: trcnLabels?.[i]?.used,
 					disabled: true,
 				},
-			},
+			} : undefined,
 		}))}
 	/>
 </div>
@@ -185,8 +144,5 @@
 		display: flex;
 		align-items: center;
 		gap: 15px;
-	}
-	.display-as {
-		margin-left: 5px;
 	}
 </style>

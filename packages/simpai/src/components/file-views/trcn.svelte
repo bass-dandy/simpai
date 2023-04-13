@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { TrcnContent } from 'dbpf-transform';
+	import type { BconContent, BconFile, TrcnContent } from 'dbpf-transform';
 	import produce from 'immer';
 	import Box from '../box.svelte';
 	import Button from '../button.svelte';
@@ -10,41 +10,53 @@
 	import {defaultFileData} from '../../consts';
 	import {select} from '../../selectors';
 	import {packages} from '../../stores';
-	import {without} from '../../util';
+	import {formatHex, times, without} from '../../util';
 
 	export let content: TrcnContent;
 	export let onChange: (newContent: TrcnContent) => void;
 
 	let bconId: string | undefined;
+	let bconValues: BconContent['items'] | undefined;
 
 	$: {
 		bconId = select($packages).linkedResourceId('BCON');
+		const bcon = select($packages).resourceById<BconFile>(bconId);
+		bconValues = bcon?.contentChanges?.items ?? bcon?.content.items;
 	};
 
-	const getTextInput = (field: keyof TrcnContent['items'][number], i: number) => ({
-		component: TextInput,
-		props: {
-			onChange: (newValue: string) => onChange(
-				produce(content, (draft) => {
-					const item = draft.items[i];
-					if (item) {
-						item[field] = (field === 'constName' || field === 'desc') ? newValue : parseInt(newValue);
-					}
-				})
-			),
-			value: content.items[i]?.[field],
-			style: 'width: 100%; min-width: 75px;',
-		},
-	});
+	const getTextInput = (field: keyof TrcnContent['items'][number], i: number) => {
+		const item = content.items[i];
+
+		return item ? {
+			component: TextInput,
+			props: {
+				onChange: (newValue: string) => onChange(
+					produce(content, (draft) => {
+						const updateItem = draft.items[i];
+						if (updateItem) {
+							updateItem[field] = (field === 'constName' || field === 'desc') ? newValue : parseInt(newValue);
+						}
+					})
+				),
+				value: item[field],
+				style: 'width: 100%; min-width: 75px;',
+			},
+		} : undefined;
+	};
+
+	const updateIds = (items: TrcnContent['items']) => {
+		items.forEach((item, i) => {
+			item.constId = i + 1;
+		});
+	};
 
 	const handleAppendClick = () => {
 		onChange(
 			produce(content, (draft) => {
 				draft.items.push({
 					...(defaultFileData.TRCN.items[0] as typeof defaultFileData['TRCN']['items'][number]),
-					constName: `Label ${draft.items.length}`,
-					constId: draft.items.length + 1,
 				});
+				updateIds(draft.items);
 			})
 		);
 	};
@@ -69,40 +81,47 @@
 		</Button>
 	</Box>
 	<Table
-		columns={['', 'Line', 'Label', 'ID', 'Default', 'Min', 'Max', 'Used']}
-		rows={content.items.map((item, i) => ({
-			'': {
-				component: CloseButton,
-				props: {
-					onClick: () => {
-						onChange(
-							produce(content, (draft) => {
-								draft.items = without(draft.items, i);
-							})
-						);
+		columns={['', 'Value', 'Label', 'Default', 'Min', 'Max', 'Used']}
+		columnConfig={{
+			'': { shrink: true }
+		}}
+		rows={times(Math.max(content.items.length, bconValues?.length ?? 0), (i) => {
+			const item = content.items[i];
+
+			return {
+				'': item ? {
+					component: CloseButton,
+					props: {
+						onClick: () => {
+							onChange(
+								produce(content, (draft) => {
+									draft.items = without(draft.items, i);
+									updateIds(draft.items);
+								})
+							);
+						},
+						'aria-label': `delete line ${i}`,
 					},
-					'aria-label': `delete line ${i}`,
-				},
-			},
-			Line: i,
-			Label: getTextInput('constName', i),
-			ID: getTextInput('constId', i),
-			Default: getTextInput('value', i),
-			Min: getTextInput('minValue', i),
-			Max: getTextInput('maxValue', i),
-			Used: {
-				component: Checkbox,
-				props: {
-					checked: !!item.used,
-					onClick: () => onChange(
-						produce(content, (draft) => {
-							const item = draft.items[i];
-							if (item) item.used = item.used ? 0 : 1;
-						})
-					),
-				},
-			},
-		}))}
+				} : '',
+				Value: bconValues?.[i] !== undefined ? formatHex(bconValues[i], 4) : undefined,
+				Label: getTextInput('constName', i),
+				Default: getTextInput('value', i),
+				Min: getTextInput('minValue', i),
+				Max: getTextInput('maxValue', i),
+				Used: item ? {
+					component: Checkbox,
+					props: {
+						checked: !!item?.used,
+						onClick: () => onChange(
+							produce(content, (draft) => {
+								const item = draft.items[i];
+								if (item) item.used = item.used ? 0 : 1;
+							})
+						),
+					},
+				} : '',
+			};
+		})}
 	/>
 </div>
 

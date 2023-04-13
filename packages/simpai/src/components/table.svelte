@@ -2,8 +2,6 @@
 	import type { ComponentType } from 'svelte';
 	import Box from './box.svelte';
 
-	export let columns: string[];
-
 	interface ComponentProp {
 		component: ComponentType;
 		props: any;
@@ -13,6 +11,15 @@
 		element: string;
 		props: any;
 	};
+
+	export let columns: string[];
+
+	export let columnConfig: {
+		[key: string]: {
+			stretch?: boolean;
+			shrink?: boolean;
+		};
+	} | undefined;
 
 	export let rows: {
 		[key: string]: string | number | undefined | ComponentProp | ElementProp;
@@ -38,7 +45,12 @@
 	<table>
 		<thead>
 			{#each columns as column}
-				<th>{column}</th>
+				<th
+					class:stretch="{columnConfig?.[column]?.stretch}"
+					class:shrink="{columnConfig?.[column]?.shrink}"
+				>
+					{column}
+				</th>
 			{/each}
 		</thead>
 		<tbody>
@@ -89,6 +101,12 @@
 		background-color: var(--color-fg);
 		padding-top: 15px;
 		padding-bottom: 10px;
+	}
+	.stretch {
+		width: 100%;
+	}
+	.shrink {
+		width: 0;
 	}
 	td:not(:last-of-type) {
 		padding-right: 10px;
