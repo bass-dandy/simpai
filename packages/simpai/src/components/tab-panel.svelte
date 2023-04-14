@@ -6,6 +6,7 @@
 	export let tabs: Record<string, {
 		title: string;
 		hideClose?: boolean;
+		props?: Record<string, any>;
 		content: typeof SvelteComponent;
 	}>;
 	export let activeTab: string;
@@ -55,7 +56,10 @@
 		secondary
 		style={{ flex: '1', ...contentStyle }}
 	>
-		<svelte:component this={tabs[activeTab]?.content} />
+		<svelte:component
+			this={tabs[activeTab]?.content}
+			{...(tabs[activeTab]?.props ?? {})}
+		/>
 	</Box>
 </Box>
 

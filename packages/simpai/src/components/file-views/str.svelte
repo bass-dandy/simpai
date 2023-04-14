@@ -96,7 +96,7 @@
 	input {
 		width: 100%;
 	}
-	select {
+	.language {
 		display: block;
 	}
 	.value {
