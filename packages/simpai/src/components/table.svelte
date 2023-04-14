@@ -19,7 +19,7 @@
 			stretch?: boolean;
 			shrink?: boolean;
 		};
-	} | undefined;
+	} | undefined = undefined;
 
 	export let rows: {
 		[key: string]: string | number | undefined | ComponentProp | ElementProp;

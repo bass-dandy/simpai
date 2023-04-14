@@ -1,8 +1,8 @@
 <script lang="ts">
 	export let value: string;
 	export let onChange: (value: string) => void;
-	export let label: string | undefined;
-	export let style: string | undefined;
+	export let label: string | undefined = undefined;
+	export let style: string | undefined = undefined;
 
 	const handleChange = (e: Event) => {
 		onChange((e.target as HTMLInputElement).value)

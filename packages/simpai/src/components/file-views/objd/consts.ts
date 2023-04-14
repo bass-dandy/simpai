@@ -1,3 +1,5 @@
+import type { ObjdContent } from 'dbpf-transform';
+
 // ordered by bit offset
 export const roomSortFlags = [
   'Kitchen',
@@ -159,4 +161,124 @@ export const objectTypes = [
   null,
   null,
   'Tiles',
-];
+] as const;
+
+type ObjdProperty = keyof ObjdContent['data'];
+
+export const rawDataGroups = {
+  'OBJD File': [
+    'version',
+  ] as ObjdProperty[],
+  'Catalog price': [
+    'price',
+    'isSalePriceDifferent', // salePrice?
+    'initialSaleDepreciation',
+    'dailySaleDepreciation',
+    'isSelfDepreciating',
+    'depreciationLimit',
+  ] as ObjdProperty[],
+  'Catalog sort': [
+    'catalogUseFlags',
+    'roomSortFlags',
+    'functionSortFlags',
+    'expansionFlag',
+    'buildModeType',
+    'buildModeSubSort',
+    'functionSubSort',
+    'downtownSort',
+    'vacationSort',
+    'communitySort',
+  ] as ObjdProperty[],
+  'Catalog ratings': [
+    'hungerRating',
+    'comfortRating',
+    'hygieneRating',
+    'bladderRating',
+    'energyRating',
+    'funRating',
+    'roomRating',
+    'skillFlags',
+    // scratchRating
+    // chewRating
+  ] as ObjdProperty[],
+  'User placement': [
+    'defaultWallAdjacentFlags',
+    'defaultPlacementFlags',
+    'defaultWallPlacementFlags',
+    'defaultAllowedHeightFlags',
+    'useDefaultPlacementFlags',
+    'noDuplicateOnPlacement',
+    'keepBuying',
+  ] as ObjdProperty[],
+  'Mesh and graphics': [
+    'multiTileMasterId',
+    'multiTileSubIndex',
+    'levelOffset',
+    'hasShadow', //shadowType?
+    'frontDirection',
+    'multiTileLeadObject',
+    'chairEntryFlags',
+    'tileWidth',
+    'footprintMask',
+    // extendFootprint
+    // objectSize (qty per shelf)
+    '3dObjectType',
+  ] as ObjdProperty[],
+  'Resource cross-refs': [
+    'ttabId',
+    'interactionGroup',
+    'strId',
+    'slotId',
+    'slotGroup',
+    'ctssId',
+    'defaultThumbnailId',
+    'motiveEffectsId',
+    'catalogPopupId',
+    // defaultGraphic
+  ] as ObjdProperty[],
+  'GUIDs': [
+    'guid',
+    'diagonalSelectorGuid',
+    'gridSelectorGuid',
+    'proxyGuid',
+    'jobObjectGuid',
+    'originalGuid',
+  ] as ObjdProperty[],
+  'Data space': [
+    'initialStackSize',
+    'attributeCount',
+    'objectArrayCount',
+    'numTypeAttributes',
+  ] as ObjdProperty[],
+  'Memories & wants': [
+    'aspirationFlags',
+    'memoryNiceOrBad',
+    'wantCategory',
+  ] as ObjdProperty[],
+  'Miscellaneous': [
+    'objectType',
+    'lookAtScore',
+    'isUnlockable',
+    'objectOwnership',
+    'ignoreGlobalSimInCAS',
+    'cannotMoveOutWith',
+    'hauntable',
+    'isGlobalSimObject',
+    'tooltipNameType',
+    'templateVersion',
+    'nicenessMultiplier',
+    'noNewNameFromTemplate',
+    'objectVersion',
+    'ignoreCurrentModelIndexInIcons',
+    // forSaleFlags
+    'inhibitSuitCopying',
+    // not sure anymore
+    // selectorCategory
+    // selectorSubcategory
+    'miscFlags',
+    'resetLotAction',
+    'dreamFlags',
+    // thumbnailFlags
+    // requirements
+  ] as ObjdProperty[],
+} as const;
