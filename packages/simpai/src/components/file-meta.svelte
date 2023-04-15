@@ -2,6 +2,7 @@
 	import type {SimsFileContent, SimsFileMeta} from 'dbpf-transform';
 	import produce from 'immer';
 	import Button from './button.svelte';
+	import TextInput from './text-input.svelte';
 	import {activeResource, packages} from '../stores';
 	import {select} from '../selectors';
 
@@ -21,22 +22,22 @@
 		meta = $activeResource?.metaChanges ?? $activeResource?.meta;
 	}
 
-	const handleFilenameChange = (e: Event) => {
+	const handleFilenameChange = (val: string | number) => {
 		if (!content || content instanceof ArrayBuffer) return;
 
 		packages.editActiveResource(
 			produce(content, (draft) => {
-				draft.filename = (e.target as HTMLInputElement).value;
+				draft.filename = val as string;
 			})
 		);
 	};
 
-	const getMetaChangeHandler = (key: 'groupId' | 'instanceId' | 'instanceId2') => (e: Event) => {
+	const getMetaChangeHandler = (key: 'groupId' | 'instanceId' | 'instanceId2') => (val: string | number) => {
 		if (!meta) return;
 
 		packages.editActiveResourceMeta(
 			produce(meta, (draft) => {
-				draft[key] = parseInt((e.target as HTMLInputElement).value, 10);
+				draft[key] = val as number;
 			})
 		);
 	};
@@ -44,40 +45,42 @@
 
 <div>
 	{#if content && !(content instanceof ArrayBuffer) && Object.hasOwn(content, 'filename')}
-		<label for="filename-input">File name</label>
-		<input
-			id="filename-input"
-			type="text"
+		<TextInput
+			label="File name"
 			value={content?.filename}
-			on:input={handleFilenameChange}
+			onChange={handleFilenameChange}
+			style="margin-bottom: 15px; width: 100%;"
 		/>
 	{/if}
 	<div class="meta">
 		<div class="input-wrapper">
-			<label for="group-id-input">Group ID</label>
-			<input
-				id="group-id-input"
-				type="text"
-				value={meta?.groupId}
-				on:input={getMetaChangeHandler('groupId')}
+			<TextInput
+				variant="hex"
+				maxLength={8}
+				label="Group ID"
+				value={meta?.groupId ?? 0}
+				onChange={getMetaChangeHandler('groupId')}
+				style="width: 100%"
 			/>
 		</div>
 		<div class="input-wrapper">
-			<label for="instance-id2-input">Instance ID (High)</label>
-			<input
-				id="instance-id2-input"
-				type="text"
-				value={meta?.instanceId2}
-				on:input={getMetaChangeHandler('instanceId2')}
+			<TextInput
+				variant="hex"
+				maxLength={8}
+				label="Instance ID (High)"
+				value={meta?.instanceId2 ?? 0}
+				onChange={getMetaChangeHandler('instanceId2')}
+				style="width: 100%"
 			/>
 		</div>
 		<div class="input-wrapper">
-			<label for="instance-id-input">Instance ID</label>
-			<input
-				id="instance-id-input"
-				type="text"
-				value={meta?.instanceId}
-				on:input={getMetaChangeHandler('instanceId')}
+			<TextInput
+				variant="hex"
+				maxLength={8}
+				label="Instance ID"
+				value={meta?.instanceId ?? 0}
+				onChange={getMetaChangeHandler('instanceId')}
+				style="width: 100%"
 			/>
 		</div>
 	</div>
@@ -137,11 +140,5 @@
 	}
 	.input-wrapper:not(:last-child) {
 		margin-right: 15px;
-	}
-	input {
-		width: 100%;
-	}
-	#filename-input {
-		margin-bottom: 15px;
 	}
 </style>

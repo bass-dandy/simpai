@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type {ObjdContent} from 'dbpf-transform';
 	import produce from 'immer';
-	import { formatHex } from '../../../util';
 	import TextInput from '../../text-input.svelte';
 	import { rawDataGroups } from './consts';
 
@@ -20,6 +19,15 @@
 		originalGuid: true,
 		objectModelGuid: true,
 	};
+
+	const handleChange = (
+		key: keyof ObjdContent['data'],
+		val: number | string
+	) => onChange(
+		produce(content, (draft) => {
+			draft.data[key] = val as number;
+		})
+	);
 </script>
 
 <div class="raw-data-wrapper">
@@ -38,12 +46,10 @@
 						</td>
 						<td>
 							<TextInput
-								value={formatHex(content.data[key], dwordKeys[key] ? 8 : 4)}
-								onChange={(val) => onChange(
-									produce(content, (draft) => {
-										draft.data[key] = parseInt(val, 16);
-									})
-								)}
+								variant="hex"
+								maxLength={dwordKeys[key] ? 8 : 4}
+								value={content.data[key]}
+								onChange={(val) => handleChange(key, val)}
 							/>
 						</td>
 					</tr>

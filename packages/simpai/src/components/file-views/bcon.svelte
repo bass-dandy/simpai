@@ -110,10 +110,12 @@
 				props: {
 					onChange: (newValue) => onChange(
 						produce(content, (draft) => {
-							draft.items[i] = parseInt(newValue, 16) ?? 0;
+							draft.items[i] = newValue;
 						})
 					),
-					value: formatHex(item, 4),
+					value: item,
+					variant: 'hex',
+					maxLength: 4,
 					style: 'width: 100%; min-width: 75px;',
 				},
 			},

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type {ObjdContent} from 'dbpf-transform';
 	import produce from 'immer';
-	import { formatHex } from '../../../util';
 	import TextInput from '../../text-input.svelte';
 	import {
 		roomSortFlags,
@@ -45,9 +44,9 @@
 		'gridSelectorGuid',
 	];
 
-	const handleGuidChange = (key: keyof ObjdContent['data'], value: string) => onChange(
+	const handleGuidChange = (key: keyof ObjdContent['data'], value: number | string) => onChange(
 		produce(content, (draft) => {
-			draft.data[key] = parseInt(value, 16);
+			draft.data[key] = value as number;
 		})
 	);
 
@@ -84,8 +83,10 @@
 		</label>
 		{#each guids as field}
 			<TextInput
+				variant="hex"
+				maxLength={8}
 				label={field}
-				value={formatHex(content.data[field], 8)}
+				value={content.data[field]}
 				onChange={(val) => handleGuidChange(field, val)}
 				style="display: block; width: 100%;"
 			/>

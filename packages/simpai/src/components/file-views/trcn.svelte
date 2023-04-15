@@ -24,17 +24,23 @@
 		bconValues = bcon?.contentChanges?.items ?? bcon?.content.items;
 	};
 
-	const getTextInput = (field: keyof TrcnContent['items'][number], i: number) => {
+	const getTextInput = (
+		field: keyof TrcnContent['items'][number],
+		variant: 'text' | 'hex',
+		i: number
+	) => {
 		const item = content.items[i];
 
 		return item ? {
 			component: TextInput,
 			props: {
-				onChange: (newValue: string) => onChange(
+				variant,
+				maxLength: variant === 'hex' ? 4 : undefined,
+				onChange: (newValue: string | number) => onChange(
 					produce(content, (draft) => {
 						const updateItem = draft.items[i];
 						if (updateItem) {
-							updateItem[field] = (field === 'constName' || field === 'desc') ? newValue : parseInt(newValue);
+							updateItem[field] = newValue;
 						}
 					})
 				),
@@ -104,10 +110,10 @@
 					},
 				} : '',
 				Value: bconValues?.[i] !== undefined ? formatHex(bconValues[i], 4) : undefined,
-				Label: getTextInput('constName', i),
-				Default: getTextInput('value', i),
-				Min: getTextInput('minValue', i),
-				Max: getTextInput('maxValue', i),
+				Label: getTextInput('constName', 'text', i),
+				Default: getTextInput('value', 'hex', i),
+				Min: getTextInput('minValue', 'hex', i),
+				Max: getTextInput('maxValue', 'hex', i),
 				Used: item ? {
 					component: Checkbox,
 					props: {

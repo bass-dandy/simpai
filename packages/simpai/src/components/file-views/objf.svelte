@@ -2,7 +2,7 @@
 	import type {ObjfContent} from 'dbpf-transform';
 	import produce from 'immer';
 	import Box from '../box.svelte';
-	import {formatHex} from '../../util';
+	import TextInput from '../text-input.svelte';
 
 	export let content: ObjfContent;
 	export let onChange: (newContent: ObjfContent) => void;
@@ -65,14 +65,10 @@
 		'object updated by design mode',
 	];
 
-	const getInputHandler = (key: 'action' | 'guard', i: number) => (e: Event) => onChange(
+	const getInputHandler = (key: 'action' | 'guard', i: number) => (value: number | string) => onChange(
 		produce(content, (draft) => {
 			const tgt = draft.functions[i];
-
-			if (tgt) {
-				const val = (e.target as HTMLInputElement).value;
-				tgt[key] = parseInt(val, 16);
-			}
+			if (tgt) tgt[key] = value as number;
 		})
 	);
 </script>
@@ -90,19 +86,21 @@
 				<tr>
 					<td>{FNS[i]}</td>
 					<td>
-						<input
-							type="text"
-							placeholder="none"
-							value={formatHex(fn.action || undefined, 4)}
-							on:input={getInputHandler('action', i)}
+						<TextInput
+							variant="hex"
+							maxLength={4}
+							value={fn.action}
+							onChange={getInputHandler('action', i)}
+							style="width: 100%"
 						/>
 					</td>
 					<td>
-						<input
-							type="text"
-							placeholder="none"
-							value={formatHex(fn.guard || undefined, 4)}
-							on:input={getInputHandler('guard', i)}
+						<TextInput
+							variant="hex"
+							maxLength={4}
+							value={fn.guard}
+							onChange={getInputHandler('guard', i)}
+							style="width: 100%"
 						/>
 					</td>
 				</tr>
@@ -133,8 +131,5 @@
 	}
 	td:not(:last-child) {
 		padding-right: 10px;
-	}
-	input {
-		width: 100%;
 	}
 </style>
