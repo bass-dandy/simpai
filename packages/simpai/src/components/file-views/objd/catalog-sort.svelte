@@ -96,7 +96,7 @@
 	</div>
 
 	<div class="radio-group">
-		<h3>Room sort</h3>
+		<h4>Room sort</h4>
 		{#each roomSortFlags as flag, i}
 			<label>
 				<input
@@ -111,7 +111,7 @@
 	</div>
 
 	<div class="radio-group">
-		<h3>Function sort</h3>
+		<h4>Function sort</h4>
 		{#each functionSortFlags as flag, i}
 			<label>
 				<input
@@ -127,7 +127,7 @@
 
 	{#if currentFunctionSubSort?.length}
 		<div class="radio-group">
-			<h3>Function subsort</h3>
+			<h4>Function subsort</h4>
 			{#each currentFunctionSubSort as flag, i}
 				{#if flag !== null}
 					<label>
@@ -145,7 +145,7 @@
 	{/if}
 
 	<div class="radio-group">
-		<h3>Skill flags</h3>
+		<h4>Skill flags</h4>
 		{#each skillFlags as flag, i}
 			<label>
 				<input
@@ -175,7 +175,7 @@
 			grid-template-columns: repeat(3, 1fr);
 		}
 	}
-	h3 {
+	h4 {
 		position: absolute;
 		top: 0;
 		left: 20px;

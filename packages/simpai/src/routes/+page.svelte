@@ -35,6 +35,7 @@
 			activeTab={$packages.activePackageId}
 			onChange={(packageId) => packages.setActivePackage(packageId)}
 			onClose={(packageId) => packages.removePackage(packageId)}
+			headingLevel="h1"
 			style={{ width: '100%', flex: '1', 'min-height': '0' }}
 			contentStyle={{ 'min-height': '0', padding: '15px 0' }}
 			hideSingleTab

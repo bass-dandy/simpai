@@ -37,6 +37,7 @@
 		activeTab={activeTab}
 		onChange={(id) => activeTab = id}
 		onClose={() => null}
+		headingLevel="h3"
 		style={{ height: '100%', 'background': 'transparent', border: '0' }}
 		contentStyle={{ overflow: 'auto' }}
 	/>

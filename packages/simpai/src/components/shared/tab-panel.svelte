@@ -13,6 +13,8 @@
 	export let activeTab: string;
 	export let onChange: (id: string) => void;
 	export let onClose: (id: string) => void;
+
+	export let headingLevel: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | undefined = undefined;
 	export let hideSingleTab = false;
 	export let style: Record<string, string> = {};
 	export let contentStyle: Record<string, string> = {};
@@ -35,7 +37,13 @@
 					on:click={() => onChange(id)}
 					disabled={activeTab === id}
 				>
-					<span class="tab-text">{tab.title}</span>
+					{#if activeTab === id && headingLevel}
+						<svelte:element this={headingLevel} class="tab-text">
+							{tab.title}
+						</svelte:element>
+					{:else}
+						<div class="tab-text">{tab.title}</div>
+					{/if}
 				</button>
 				{#if !tab.hideClose}
 					<CloseButton
@@ -101,6 +109,9 @@
 		background-color: rgba(0, 0, 0, 0.1);
 	}
 	.tab-text {
+		margin: 0;
+		padding: 0;
+		font-size: 1rem;
 		vertical-align: sub;
 	}
 </style>
