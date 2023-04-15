@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {formatStyle} from '../util';
+	import {formatStyle} from '$lib/util';
 
 	export let onClick: () => void;
 	export let style: Record<string, string> | undefined = undefined;

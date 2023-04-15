@@ -12,9 +12,9 @@ import produce from 'immer';
 import { derived, get, writable } from 'svelte/store';
 import { v4 as uuid } from 'uuid';
 
+import type { PackagesStore } from '../types';
 import { defaultFileData } from './consts';
 import { select } from './selectors';
-import type { PackagesStore } from './types';
 import { debounce } from './util';
 
 const localStorageKey = 'editorState';

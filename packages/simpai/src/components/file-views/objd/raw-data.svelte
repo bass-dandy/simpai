@@ -1,7 +1,9 @@
 <script lang="ts">
 	import type {ObjdContent} from 'dbpf-transform';
 	import produce from 'immer';
-	import TextInput from '../../text-input.svelte';
+
+	import TextInput from '$components/shared/text-input.svelte';
+
 	import { rawDataGroups } from './consts';
 
 	export let content: ObjdContent;

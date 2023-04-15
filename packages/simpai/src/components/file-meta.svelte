@@ -1,16 +1,18 @@
 <script lang="ts">
 	import type {SimsFileContent, SimsFileMeta} from 'dbpf-transform';
 	import produce from 'immer';
-	import Button from './button.svelte';
-	import TextInput from './text-input.svelte';
-	import {activeResource, packages} from '../stores';
-	import {select} from '../selectors';
 
-	import Copy from '../svg/copy.svg?component';
-	import Save from '../svg/save.svg?component';
-	import SaveOutline from '../svg/save-outline.svg?component';
-	import Trash from '../svg/trash.svg?component';
-	import Undo from '../svg/undo.svg?component';
+	import Button from '$components/shared/button.svelte';
+	import TextInput from '$components/shared/text-input.svelte';
+
+	import {select} from '$lib/selectors';
+	import {activeResource, packages} from '$lib/stores';
+
+	import Copy from '$svg/copy.svg?component';
+	import Save from '$svg/save.svg?component';
+	import SaveOutline from '$svg/save-outline.svg?component';
+	import Trash from '$svg/trash.svg?component';
+	import Undo from '$svg/undo.svg?component';
 
 	let dirty: boolean;
 	let content: SimsFileContent | undefined;

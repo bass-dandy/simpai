@@ -7,6 +7,13 @@ const config = {
 
 	kit: {
 		adapter: adapter(),
+		alias: {
+			'$components': 'src/components',
+			'$svg': 'src/svg',
+		},
+		files: {
+			lib: 'src/lib',
+		},
 	},
 };
 

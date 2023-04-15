@@ -1,7 +1,8 @@
 <script lang="ts">
 	import type {GlobContent} from 'dbpf-transform';
 	import produce from 'immer';
-	import Box from '../box.svelte';
+
+	import Box from '$components/shared/box.svelte';
 
 	export let content: GlobContent;
 	export let onChange: (newContent: GlobContent) => void;

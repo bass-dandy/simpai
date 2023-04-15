@@ -1,11 +1,13 @@
 <script lang="ts">
 	import {getFileType} from 'dbpf-transform';
-	import Button from './button.svelte';
-	import FileListActions from './file-list-actions.svelte';
-	import {defaultFileName} from '../consts';
-	import {packages, activePackage} from '../stores';
+
+	import {defaultFileName} from '$lib/consts';
+	import {packages, activePackage} from '$lib/stores';
+	import {formatHex} from '$lib/util';
+
 	import type {Resource} from '../types';
-	import {formatHex} from '../util';
+	import Button from './shared/button.svelte';
+	import FileListActions from './file-list-actions.svelte';
 
 	let search = '';
 	let resources: [string, Resource][];

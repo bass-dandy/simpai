@@ -1,9 +1,11 @@
 <script lang="ts">
 	import type {StrContent} from 'dbpf-transform';
 	import produce from 'immer';
-	import {languages} from '../../consts';
-	import {getLanguage} from '../../util';
-	import Box from '../box.svelte';
+
+	import Box from '$components/shared/box.svelte';
+
+	import {getLanguage} from '$lib/util';
+	import {languages} from '$lib/consts';
 
 	export let content: StrContent;
 	export let onChange: (newContent: StrContent) => void;

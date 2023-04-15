@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { SvelteComponent } from 'svelte';
+
 	import Box from './box.svelte';
 	import CloseButton from './close-button.svelte';
 

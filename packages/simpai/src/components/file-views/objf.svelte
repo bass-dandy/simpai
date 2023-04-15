@@ -1,8 +1,9 @@
 <script lang="ts">
 	import type {ObjfContent} from 'dbpf-transform';
 	import produce from 'immer';
-	import Box from '../box.svelte';
-	import TextInput from '../text-input.svelte';
+
+	import Box from '$components/shared/box.svelte';
+	import TextInput from '$components/shared/text-input.svelte';
 
 	export let content: ObjfContent;
 	export let onChange: (newContent: ObjfContent) => void;

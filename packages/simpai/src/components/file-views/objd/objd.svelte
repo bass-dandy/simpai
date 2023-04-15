@@ -1,6 +1,8 @@
 <script lang="ts">
 	import type {ObjdContent} from 'dbpf-transform';
-	import TabPanel from '../../tab-panel.svelte';
+
+	import TabPanel from '$components/shared/tab-panel.svelte';
+
 	import CatalogSort from './catalog-sort.svelte';
 	import RawData from './raw-data.svelte';
 

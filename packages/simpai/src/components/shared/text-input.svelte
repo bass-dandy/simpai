@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { formatHex } from '../util';
+	import { formatHex } from '$lib/util';
 
 	// svelte does not seem to have a way to express discriminated union prop types
 	// if variant = hex, value is a number

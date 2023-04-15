@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { ComponentType } from 'svelte';
+
 	import Box from './box.svelte';
 
 	interface ComponentProp {

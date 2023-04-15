@@ -1,13 +1,14 @@
 <script lang="ts">
-	import {packages} from '../stores';
-	import Button from './button.svelte';
-	import Modal from './modal.svelte';
-	import {views} from './file-views';
+	import {packages} from '$lib/stores';
 
-	import PlusIcon from '../svg/plus.svg?component';
-	import DownloadIcon from '../svg/file-arrow-down.svg?component';
-	import CheckIcon from '../svg/check.svg?component';
-	import XIcon from '../svg/x.svg?component';
+	import PlusIcon from '$svg/plus.svg?component';
+	import DownloadIcon from '$svg/file-arrow-down.svg?component';
+	import CheckIcon from '$svg/check.svg?component';
+	import XIcon from '$svg/x.svg?component';
+
+	import Button from './shared/button.svelte';
+	import Modal from './shared/modal.svelte';
+	import {views} from './file-views';
 
 	export let search = '';
 

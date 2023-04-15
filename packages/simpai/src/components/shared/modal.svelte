@@ -1,6 +1,7 @@
 <script lang="ts">
 	import {fade, fly} from 'svelte/transition';
 	import Portal from 'svelte-portal/src/Portal.svelte';
+
 	import Box from './box.svelte';
 
 	export let title: string | undefined = undefined;

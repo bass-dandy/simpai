@@ -1,6 +1,7 @@
 <script lang="ts">
-	import {packages} from '../stores';
-	import Button from './button.svelte';
+	import Button from '$components/shared/button.svelte';
+	import {packages} from '$lib/stores';
+
 	import DropZone from './drop-zone.svelte';
 
 	const careerTemplate = 'career.package';

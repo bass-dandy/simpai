@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Box from '../box.svelte';
+	import Box from '$components/shared/box.svelte';
 </script>
 
 <Box secondary>No view for this resource type</Box>

@@ -1,7 +1,8 @@
 <script lang="ts">
 	import tgaImage from 'tgaimage';
-	import Box from '../box.svelte';
-	import Button from '../button.svelte';
+
+	import Box from '$components/shared/box.svelte';
+	import Button from '$components/shared/button.svelte';
 
 	export let content: ArrayBuffer;
 	export let onChange: (newContent: ArrayBuffer | undefined) => void;

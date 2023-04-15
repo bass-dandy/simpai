@@ -1,18 +1,21 @@
 <script lang="ts">
 	import type {ComponentProps} from 'svelte';
 	import {getFileType, type SimsFileContent} from 'dbpf-transform';
-	import Box from './box.svelte';
+
+	import Box from '$components/shared/box.svelte';
+	import TabPanel  from '$components/shared/tab-panel.svelte';
+
+	import {select} from '$lib/selectors';
+	import {activePackage, activeResource, packages} from '$lib/stores';
+
 	import FileMeta from './file-meta.svelte';
 	import {getViewForFileType} from './file-views';
-	import TabPanel  from './tab-panel.svelte';
-	import {select} from '../selectors';
-	import {activePackage, activeResource, packages} from '../stores';
 
 	let tabs: ComponentProps<TabPanel>['tabs'];
 
 	$: tabs = {
 		...Object.entries($activePackage?.resources ?? {})
-		.reduce((acc: ComponentProps<TabPanel>['tabs'], [resourceId, resource]) => {
+			.reduce((acc: ComponentProps<TabPanel>['tabs'], [resourceId, resource]) => {
 				if (resource.isOpen) {
 					acc[resourceId] = {
 						title: `${

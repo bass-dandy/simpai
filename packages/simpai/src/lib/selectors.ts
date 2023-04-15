@@ -1,5 +1,6 @@
 import { TYPE_ID, type SimsFile } from 'dbpf-transform';
-import type { PackagesStore, Resource } from './types';
+
+import type { PackagesStore, Resource } from '../types';
 
 function isDirty<T extends SimsFile>(resource?: Resource<T>): boolean {
   return resource?.contentChanges !== undefined || resource?.metaChanges !== undefined;

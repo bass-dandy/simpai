@@ -1,7 +1,8 @@
 <script lang="ts">
-	import {packages} from '../stores';
-	import Button from './button.svelte';
-	import Plumbob from './plumbob.svelte';
+	import {packages} from '$lib/stores';
+
+	import Button from './shared/button.svelte';
+	import Plumbob from './shared/plumbob.svelte';
 
 	let fileInput: HTMLInputElement; // hidden file input ref
 </script>

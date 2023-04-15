@@ -1,10 +1,12 @@
 <script lang="ts">
 	import type {ComponentProps} from 'svelte';
-	import FileList from '../components/file-list.svelte';
-	import FileViewer from '../components/file-viewer.svelte';
-	import TabPanel  from '../components/tab-panel.svelte';
-	import Welcome from '../components/welcome.svelte';
-	import {packages} from '../stores';
+
+	import TabPanel  from '$components/shared/tab-panel.svelte';
+	import FileList from '$components/file-list.svelte';
+	import FileViewer from '$components/file-viewer.svelte';
+	import Welcome from '$components/welcome.svelte';
+	import {packages} from '$lib/stores';
+
 	import '../global.css';
 
 	let tabs: ComponentProps<TabPanel>['tabs'];

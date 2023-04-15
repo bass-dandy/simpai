@@ -1,15 +1,17 @@
 <script lang="ts">
 	import type { BconContent, TrcnContent, TrcnFile } from 'dbpf-transform';
 	import produce from 'immer';
-	import Box from '../box.svelte';
-	import Button from '../button.svelte';
-	import CloseButton from '../close-button.svelte';
-	import Table from '../table.svelte';
-	import TextInput from '../text-input.svelte';
-	import {defaultFileData} from '../../consts';
-	import {select} from '../../selectors';
-	import {packages} from '../../stores';
-	import {formatHex, without} from '../../util';
+
+	import Box from '$components/shared//box.svelte';
+	import Button from '$components/shared/button.svelte';
+	import CloseButton from '$components/shared/close-button.svelte';
+	import Table from '$components/shared/table.svelte';
+	import TextInput from '$components/shared/text-input.svelte';
+
+	import {defaultFileData} from '$lib/consts';
+	import {select} from '$lib/selectors';
+	import {packages} from '$lib/stores';
+	import {formatHex, without} from '$lib/util';
 
 	export let content: BconContent;
 	export let onChange: (newContent: BconContent) => void;
