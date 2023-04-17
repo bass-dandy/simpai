@@ -21,10 +21,9 @@ export function deserialize(buf: ArrayBuffer) {
 
   const tprp: TprpContent = {
     filename: reader.readFileName(),
-    header: [reader.readUint8(), reader.readUint8(), reader.readUint8()],
+    header: [reader.readUint32(), reader.readUint32(), reader.readUint32()],
     params: [],
     locals: [],
-    trailer: [],
   };
 
   const paramCount = reader.readUint32();
@@ -47,8 +46,7 @@ export function deserialize(buf: ArrayBuffer) {
     param.pdata = reader.readUint8();
   });
 
-  tprp.trailer.push(reader.readUint32());
-  tprp.trailer.push(reader.readUint32());
+  // ignore 64 byte footer
 
   return tprp;
 }
@@ -77,7 +75,9 @@ export function serialize(data: TprpContent) {
     writer.writeUint8(param.pdata);
   });
 
-  writer.writeUint32Array(data.trailer);
+  // constant footer
+  writer.writeUint32(5);
+  writer.writeUint32(0);
 
   return writer.buffer;
 }

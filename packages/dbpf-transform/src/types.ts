@@ -61,7 +61,11 @@ export type StrContent = {
 
 export type TtabMotiveTable = {
   groups: {
-    items: (number | { values: number[] })[];
+    items: {
+      min: number;
+      delta: number;
+      type: number;
+    }[];
   }[];
 };
 
@@ -97,7 +101,6 @@ export type TprpContent = {
     pdata: number;
   }[];
   locals: string[];
-  trailer: number[];
 };
 
 export type TrcnContent = {

@@ -8,33 +8,38 @@ function readFloat(reader: BufferReader) {
 
 function readMotiveTable(
   format: number,
-  counts: number[] | null,
+  motiveCounts: number[] | null,
   type: 'human' | 'animal',
   reader: BufferReader
 ) {
-  const tableLength =
-    counts === null ? Math.max(type === 'human' ? 5 : 8, reader.readUint32()) : counts.length;
+  const tableLength = motiveCounts === null ? reader.readUint32() : motiveCounts.length;
 
   const table: TtabMotiveTable = { groups: [] };
 
-  // add groups to table
+  // add groups (eg adult, child, etc) to table
   for (let i = 0; i < tableLength; i++) {
-    const groupLength = format < 84 ? Math.max(counts?.[i] ?? 0, 16) : reader.readUint32();
+    const groupLength = format < 84 ? (motiveCounts?.[i] ?? 0) : reader.readUint32();
 
     const group: TtabMotiveTable['groups'][number] = { items: [] };
 
-    // add items to group
+    // add items (eg energy, scratch/chew, etc) to group
     for (let j = 0; j < groupLength; j++) {
       if (type === 'human') {
-        group.items.push(reader.readUint16());
+        group.items.push({
+          min: reader.readUint16(),
+          delta: reader.readUint16(),
+          type: reader.readUint16(),
+        });
       } else {
         const itemLength = reader.readUint32();
-        const values = [];
 
         for (let k = 0; k < itemLength; k++) {
-          values.push(reader.readUint16());
+          group.items.push({
+            min: reader.readUint16(),
+            delta: reader.readUint16(),
+            type: reader.readUint16(),
+          });
         }
-        group.items.push({ values });
       }
     }
     table.groups.push(group);
@@ -52,20 +57,22 @@ export function deserialize(buf: ArrayBuffer) {
   };
 
   const format = ttab.header[1];
-  const count = reader.readUint16();
+  const itemCount = reader.readUint16();
 
-  for (let i = 0; i < count; i++) {
-    let counts = null;
+  for (let i = 0; i < itemCount; i++) {
+    const action = reader.readUint16();
+    const guard = reader.readUint16();
+    let motiveCounts: number[] | null = null;
+
     if (format < 68) {
-      counts = [16];
+      motiveCounts = [reader.readUint32()];
     } else if (format < 84) {
-      counts = [16, 16, 16, 16, 16, 16, 16];
+      motiveCounts = [0, 0, 0, 0, 0, 0, 0].map(() => reader.readUint32());
     }
 
     ttab.items.push({
-      action: reader.readUint16(),
-      guard: reader.readUint16(),
-      counts: counts?.map(() => reader.readUint32()),
+      action,
+      guard,
       flags: reader.readUint16(),
       flags2: reader.readUint16(),
       strIndex: reader.readUint32(),
@@ -78,8 +85,8 @@ export function deserialize(buf: ArrayBuffer) {
       memoryIterMult: format > 76 ? readFloat(reader) : 0,
       objectType: format > 76 ? reader.readUint32() : 0,
       modelTableId: format > 70 ? reader.readUint32() : 0,
-      humanGroups: readMotiveTable(format, counts, 'human', reader),
-      animalGroups: format > 84 ? readMotiveTable(format, counts, 'animal', reader) : null,
+      humanGroups: readMotiveTable(format, motiveCounts, 'human', reader),
+      animalGroups: format > 84 ? readMotiveTable(format, motiveCounts, 'animal', reader) : null,
     });
   }
   return ttab;
