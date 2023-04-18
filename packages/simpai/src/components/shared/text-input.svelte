@@ -53,6 +53,7 @@
 			value={currentValue}
 			on:input|preventDefault={handleChange}
 			on:blur={commitValue}
+			class="labeled"
 			style={style}
 		/>
 	</label>
@@ -65,3 +66,9 @@
 		style={style}
 	/>
 {/if}
+
+<style>
+	.labeled {
+		display: block;
+	}
+</style>

@@ -32,6 +32,20 @@ export function select(store: PackagesStore) {
       return resourceId ? this.activePackage()?.resources[resourceId] : undefined;
     },
 
+    resourcesByType<T extends SimsFile>(fileType: keyof typeof TYPE_ID): Resource<T>[] {
+      return Object
+        .values(this.activePackage()?.resources ?? {})
+        .filter((resource) => resource.meta.typeId === TYPE_ID[fileType]);
+    },
+
+    resourceIdByTypeAndInstanceId(fileType: keyof typeof TYPE_ID, instanceId: number) {
+      const entry = Object
+        .entries(this.activePackage()?.resources ?? {})
+        .find(([, resource]) => resource.meta.typeId === TYPE_ID[fileType] && resource.meta.instanceId === instanceId);
+
+      return entry?.[0];
+    },
+
     isDirty(resourceId?: string) {
       const tgt = resourceId ?? this.activeResourceId();
       return tgt ? isDirty(this.resourceById(tgt)) : false;

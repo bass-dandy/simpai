@@ -2,6 +2,7 @@
 	import type {ObjdContent} from 'dbpf-transform';
 	import produce from 'immer';
 
+	import Subsection from '$components/shared/subsection.svelte';
 	import TextInput from '$components/shared/text-input.svelte';
 
 	import {
@@ -61,7 +62,7 @@
 	};
 </script>
 
-<div>
+<div class="catalog-sort">
 	<div class="input-group">
 		<label>
 			Object type
@@ -95,72 +96,81 @@
 		{/each}
 	</div>
 
-	<div class="radio-group">
-		<h4>Room sort</h4>
-		{#each roomSortFlags as flag, i}
-			<label>
-				<input
-					type="radio"
-					bind:group={currentRoomSortFlags}
-					value={1 << i}
-					on:change|preventDefault={() => toggleFlag('roomSortFlags', i)}
-				/>
-				{flag}
-			</label>
-		{/each}
-	</div>
-
-	<div class="radio-group">
-		<h4>Function sort</h4>
-		{#each functionSortFlags as flag, i}
-			<label>
-				<input
-					type="radio"
-					bind:group={currentFunctionSortFlags}
-					value={1 << i}
-					on:change|preventDefault={() => toggleFlag('functionSortFlags', i)}
-				/>
-				{flag}
-			</label>
-		{/each}
-	</div>
-
-	{#if currentFunctionSubSort?.length}
+	<Subsection title="Room sort" headingLevel="h4">
 		<div class="radio-group">
-			<h4>Function subsort</h4>
-			{#each currentFunctionSubSort as flag, i}
-				{#if flag !== null}
-					<label>
-						<input
-							type="radio"
-							bind:group={currentFunctionSubSortFlags}
-							value={1 << i}
-							on:change|preventDefault={() => toggleFlag('functionSubSort', i)}
-						/>
-						{flag}
-					</label>
-				{/if}
+			{#each roomSortFlags as flag, i}
+				<label>
+					<input
+						type="radio"
+						bind:group={currentRoomSortFlags}
+						value={1 << i}
+						on:change|preventDefault={() => toggleFlag('roomSortFlags', i)}
+					/>
+					{flag}
+				</label>
 			{/each}
 		</div>
+	</Subsection>
+
+	<Subsection title="Function sort" headingLevel="h4">
+		<div class="radio-group">
+			{#each functionSortFlags as flag, i}
+				<label>
+					<input
+						type="radio"
+						bind:group={currentFunctionSortFlags}
+						value={1 << i}
+						on:change|preventDefault={() => toggleFlag('functionSortFlags', i)}
+					/>
+					{flag}
+				</label>
+			{/each}
+		</div>
+	</Subsection>
+
+	{#if currentFunctionSubSort?.length}
+		<Subsection title="Function subsort" headingLevel="h4">
+			<div class="radio-group">
+				{#each currentFunctionSubSort as flag, i}
+					{#if flag !== null}
+						<label>
+							<input
+								type="radio"
+								bind:group={currentFunctionSubSortFlags}
+								value={1 << i}
+								on:change|preventDefault={() => toggleFlag('functionSubSort', i)}
+							/>
+							{flag}
+						</label>
+					{/if}
+				{/each}
+			</div>
+		</Subsection>
 	{/if}
 
-	<div class="radio-group">
-		<h4>Skill flags</h4>
-		{#each skillFlags as flag, i}
-			<label>
-				<input
-					type="radio"
-					bind:group={currentSkillFlags}
-					value={1 << i}
-					on:change|preventDefault={() => toggleFlag('skillFlags', i)}
-				/>
-				{flag}
-			</label>
-		{/each}
-	</div>
+	<Subsection title="Skill flags" headingLevel="h4">
+		<div class="radio-group">
+			{#each skillFlags as flag, i}
+				<label>
+					<input
+						type="radio"
+						bind:group={currentSkillFlags}
+						value={1 << i}
+						on:change|preventDefault={() => toggleFlag('skillFlags', i)}
+					/>
+					{flag}
+				</label>
+			{/each}
+		</div>
+	</Subsection>
 </div>
 
 <style>
+	.catalog-sort {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+	}
 	.type-select {
 		display: block;
 		width: 100%;
@@ -175,25 +185,9 @@
 			grid-template-columns: repeat(3, 1fr);
 		}
 	}
-	h4 {
-		position: absolute;
-		top: 0;
-		left: 20px;
-		transform: translateY(-50%);
-		margin: 0;
-		padding: 0 10px;
-		background-color: var(--color-fg);
-		font-size: 1rem;
-		font-weight: normal;
-	}
 	.radio-group {
-		position: relative;
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		padding: 15px 5px 5px;
-		margin-top: 20px;
-		border: 1px solid var(--color-accent);
-		border-radius: 5px;
 	}
 	@media screen and (min-width: 1075px) {
 		.radio-group {
