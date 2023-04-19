@@ -26,6 +26,12 @@
 			ttas?.contentChanges?.stringSets ?? ttas?.content?.stringSets ?? []
 		).map((item) => item.value);
 	};
+
+	const handleFormatChange = (val: string | number) => onChange(
+		produce(content, (draft) => {
+			draft.format = val as number;
+		})
+	);
 </script>
 
 <div class="ttab-view">
@@ -51,11 +57,7 @@
 				label="Format"
 				variant="hex"
 				maxLength={8}
-				onChange={(val) => onChange(
-					produce(content, (draft) => {
-						draft.format = val;
-					})
-				)}
+				onChange={handleFormatChange}
 				value={content.format}
 				style="width: 100%"
 			/>

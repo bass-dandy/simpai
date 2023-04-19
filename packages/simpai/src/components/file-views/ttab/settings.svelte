@@ -10,7 +10,7 @@
 	import { packages } from '$lib/stores';
 	import { formatHex } from '$lib/util';
 
-	import { flags, flags2 } from './consts';
+	import { flags, flags2, flagsAlt, flags2Alt } from './consts';
 
 	export let content: TtabContent;
 	export let onChange: (newContent: TtabContent) => void;
@@ -87,6 +87,16 @@
 	$: bhavItems = select($packages).resourcesByType<BhavFile>('BHAV');
 	$: actionBhavId = select($packages).resourceIdByTypeAndInstanceId('BHAV', ttabItem?.action ?? 0);
 	$: guardBhavId = select($packages).resourceIdByTypeAndInstanceId('BHAV', ttabItem?.guard ?? 0);
+
+	$: isFlagChecked = (i: number) => {
+		const bitStatus = ((ttabItem?.flags ?? 0) & (1 << i)) > 0;
+
+		// for some reason these 3 bits are flipped
+		return (i === 4 || i === 5 || i === 6) ? !bitStatus : bitStatus;
+	};
+
+	$: flagLabels = content.format > 84 ? flagsAlt : flags;
+	$: flag2Labels = content.format > 84 ? flags2Alt : flags2;
 
 	const handleChange = (key: GeneratedInputField, val: number | string) => onChange(
 		produce(content, (draft) => {
@@ -188,11 +198,11 @@
 			style="flex: 1"
 		>
 			<div class="checkbox-grid">
-				{#each flags as flag, i}
+				{#each flagLabels as flag, i}
 					<label>
 						<input
 							type="checkbox"
-							checked={((ttabItem?.flags ?? 0) & (1 << i)) > 0}
+							checked={isFlagChecked(i)}
 							on:change|preventDefault={() => toggleFlag('flags', i)}
 						/>
 						{flag}
@@ -206,7 +216,7 @@
 			style="flex: 1"
 		>
 			<div class="checkbox-grid">
-				{#each flags2 as flag, i}
+				{#each flag2Labels as flag, i}
 					<label>
 						<input
 							type="checkbox"
