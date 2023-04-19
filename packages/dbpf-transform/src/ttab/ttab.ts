@@ -52,11 +52,14 @@ export function deserialize(buf: ArrayBuffer) {
 
   const ttab: TtabContent = {
     filename: reader.readFileName(),
-    header: [reader.readUint32(), reader.readUint32(), reader.readUint32()],
+    format: 0,
     items: [],
   };
 
-  const format = ttab.header[1];
+  reader.readUint32()
+  ttab.format = reader.readUint32();
+  reader.readUint32();
+
   const itemCount = reader.readUint16();
 
   for (let i = 0; i < itemCount; i++) {
@@ -64,9 +67,9 @@ export function deserialize(buf: ArrayBuffer) {
     const guard = reader.readUint16();
     let motiveCounts: number[] | null = null;
 
-    if (format < 68) {
+    if (ttab.format < 68) {
       motiveCounts = [reader.readUint32()];
-    } else if (format < 84) {
+    } else if (ttab.format < 84) {
       motiveCounts = [0, 0, 0, 0, 0, 0, 0].map(() => reader.readUint32());
     }
 
@@ -80,13 +83,13 @@ export function deserialize(buf: ArrayBuffer) {
       attenuationValue: readFloat(reader),
       autonomy: reader.readUint32(),
       joinIndex: reader.readUint32(),
-      uiDisplayType: format > 69 ? reader.readUint16() : 0,
-      facialAnimation: format > 74 ? reader.readUint32() : 0,
-      memoryIterMult: format > 76 ? readFloat(reader) : 0,
-      objectType: format > 76 ? reader.readUint32() : 0,
-      modelTableId: format > 70 ? reader.readUint32() : 0,
-      humanGroups: readMotiveTable(format, motiveCounts, 'human', reader),
-      animalGroups: format > 84 ? readMotiveTable(format, motiveCounts, 'animal', reader) : null,
+      uiDisplayType: ttab.format > 69 ? reader.readUint16() : 0,
+      facialAnimation: ttab.format > 74 ? reader.readUint32() : 0,
+      memoryIterMult: ttab.format > 76 ? readFloat(reader) : 0,
+      objectType: ttab.format > 76 ? reader.readUint32() : 0,
+      modelTableId: ttab.format > 70 ? reader.readUint32() : 0,
+      humanGroups: readMotiveTable(ttab.format, motiveCounts, 'human', reader),
+      animalGroups: ttab.format > 84 ? readMotiveTable(ttab.format, motiveCounts, 'animal', reader) : null,
     });
   }
   return ttab;

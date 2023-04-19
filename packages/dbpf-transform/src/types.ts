@@ -71,7 +71,7 @@ export type TtabMotiveTable = {
 
 export type TtabContent = {
   filename: string;
-  header: [number, number, number];
+  format: number;
   items: {
     action: number;
     guard: number;
