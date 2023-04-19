@@ -6,7 +6,6 @@
 	import Button from '$components/shared/button.svelte';
 	import Subsection from '$components/shared/subsection.svelte';
 	import TextInput from '$components/shared/text-input.svelte';
-
 	import { select } from '$lib/selectors';
 	import { packages } from '$lib/stores';
 	import { formatHex } from '$lib/util';
