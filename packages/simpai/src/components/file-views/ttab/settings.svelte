@@ -124,9 +124,15 @@
 				<label for="pie-string-select">
 					Pie string ID
 				</label>
-				<Button onClick={() => ttasId ? packages.openResource(ttasId) : null}>
-					Edit TTAS
-				</Button>
+				{#if ttasId}
+					<Button onClick={() => ttasId ? packages.openResource(ttasId) : null}>
+						Edit TTAS
+					</Button>
+				{:else}
+					<Button onClick={() => packages.createNewResource('TTAS')}>
+						Create TTAS
+					</Button>
+				{/if}
 			</div>
 			<select
 				value={ttabItem?.strIndex ?? 0}
