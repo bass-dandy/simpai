@@ -4,6 +4,7 @@ import type {
   GlobContent,
   NrefContent,
   ObjfContent,
+  TprpContent,
   TrcnContent,
   TtabContent,
   StrContent,
@@ -63,6 +64,7 @@ export const defaultFileData: DeepReadonly<{
   GLOB: GlobContent;
   NREF: NrefContent;
   OBJF: ObjfContent;
+  TPRP: TprpContent;
   TRCN: TrcnContent;
   TTAB: TtabContent;
   STR: StrContent;
@@ -90,6 +92,15 @@ export const defaultFileData: DeepReadonly<{
       action: 0,
       guard: 0,
     })),
+  },
+  TPRP: {
+    filename: '',
+    header: [0, 0, 0],
+    params: [{
+      label: '',
+      pdata: 0,
+    }],
+    locals: [''],
   },
   TRCN: {
     filename: '',
