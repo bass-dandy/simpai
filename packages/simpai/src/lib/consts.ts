@@ -5,6 +5,7 @@ import type {
   NrefContent,
   ObjfContent,
   TrcnContent,
+  TtabContent,
   StrContent,
 } from 'dbpf-transform';
 import type { DeepReadonly } from 'ts-essentials';
@@ -63,6 +64,7 @@ export const defaultFileData: DeepReadonly<{
   NREF: NrefContent;
   OBJF: ObjfContent;
   TRCN: TrcnContent;
+  TTAB: TtabContent;
   STR: StrContent;
   CTSS: StrContent;
   TTAS: StrContent;
@@ -101,6 +103,32 @@ export const defaultFileData: DeepReadonly<{
       minValue: 0,
       maxValue: 0,
     }] as const,
+  },
+  TTAB: {
+    filename: '',
+    format: 0,
+    items: [{
+      action: 0,
+      guard: 0,
+      flags: 0,
+      flags2: 0,
+      strIndex: 0,
+      attenuationCode: 0,
+      attenuationValue: 0,
+      autonomy: 0,
+      joinIndex: 0,
+      uiDisplayType: 0,
+      facialAnimation: 0,
+      memoryIterMult: 0,
+      objectType: 0,
+      modelTableId: 0,
+      humanGroups: {
+        groups: [{
+          items: [],
+        }],
+      },
+      animalGroups: null,
+    }],
   },
   STR: defaultStrData,
   CTSS: defaultStrData,

@@ -1,8 +1,9 @@
 <script lang="ts">
-	import type { TtabContent, BhavFile, StrFile } from 'dbpf-transform';
+	import type { TtabContent, StrFile } from 'dbpf-transform';
 	import produce from 'immer';
 	import type { ComponentProps } from 'svelte';
 
+	import BhavSelect from '$components/shared/bhav-select.svelte';
 	import Button from '$components/shared/button.svelte';
 	import Subsection from '$components/shared/subsection.svelte';
 	import TextInput from '$components/shared/text-input.svelte';
@@ -18,9 +19,11 @@
 
 	type GeneratedInputField = keyof Omit<TtabContent['items'][number], 'counts' | 'humanGroups' | 'animalGroups'>;
 
-	const inputConfigs: (
-		Pick<ComponentProps<TextInput>, 'variant' | 'maxLength' | 'label'> & { key: GeneratedInputField }
-	)[] = [
+	let inputConfigs: (
+		Pick<ComponentProps<TextInput>, 'variant' | 'maxLength' | 'label' | 'disabled'> & { key: GeneratedInputField }
+	)[] = [];
+
+	$: inputConfigs = [
 		{
 			key: 'attenuationValue',
 			variant: 'hex',
@@ -44,30 +47,35 @@
 			variant: 'hex',
 			maxLength: 4,
 			label: 'UI display type',
+			disabled: content.format <= 69,
 		},
 		{
 			key: 'objectType',
 			variant: 'hex',
 			maxLength: 8,
 			label: 'Object type',
+			disabled: content.format <= 76,
 		},
 		{
 			key: 'facialAnimation',
 			variant: 'hex',
 			maxLength: 8,
 			label: 'Facial animation ID',
+			disabled: content.format <= 74,
 		},
 		{
 			key: 'modelTableId',
 			variant: 'hex',
 			maxLength: 8,
 			label: 'Model table ID',
+			disabled: content.format <= 70,
 		},
 		{
 			key: 'memoryIterMult',
 			variant: 'hex',
 			maxLength: 8,
 			label: 'Memory iterative multiplier',
+			disabled: content.format <= 76,
 		},
 	];
 
@@ -83,10 +91,6 @@
 			ttas?.contentChanges?.stringSets ?? ttas?.content?.stringSets ?? []
 		).map((item) => item.value);
 	};
-
-	$: bhavItems = select($packages).resourcesByType<BhavFile>('BHAV');
-	$: actionBhavId = select($packages).resourceIdByTypeAndInstanceId('BHAV', ttabItem?.action ?? 0);
-	$: guardBhavId = select($packages).resourceIdByTypeAndInstanceId('BHAV', ttabItem?.guard ?? 0);
 
 	$: isFlagChecked = (i: number) => {
 		const bitStatus = ((ttabItem?.flags ?? 0) & (1 << i)) > 0;
@@ -141,54 +145,16 @@
 
 		<div />
 
-		<div>
-			<div class="label-with-edit">
-				<label for="action-select">
-					Action BHAV
-				</label>
-				<Button onClick={() => actionBhavId ? packages.openResource(actionBhavId) : null}>
-					Edit BHAV
-				</Button>
-			</div>
-			<select
-				value={ttabItem?.action ?? 0}
-				on:change={(e) => {
-					handleChange('action', parseInt(e.currentTarget.value));
-				}}
-				id="action-select"
-			>
-				{#each bhavItems as bhavItem}
-					<option value={bhavItem.meta.instanceId}>
-						({formatHex(bhavItem.meta.instanceId, 4)}) {bhavItem.content.filename}
-					</option>
-				{/each}
-			</select>
-		</div>
-
-		<div>
-			<div class="label-with-edit">
-				<label for="guard-select">
-					Guardian BHAV
-				</label>
-				<Button onClick={() => guardBhavId ? packages.openResource(guardBhavId) : null}>
-					Edit BHAV
-				</Button>
-			</div>
-			<select
-				value={ttabItem?.guard ?? 0}
-				on:change={(e) => {
-					handleChange('guard', parseInt(e.currentTarget.value));
-				}}
-				id="guard-select"
-			>
-				{#each bhavItems as bhavItem}
-					<option value={bhavItem.meta.instanceId}>
-						({formatHex(bhavItem.meta.instanceId, 4)}) {bhavItem.content.filename}
-					</option>
-				{/each}
-			</select>
-		</div>
-
+		<BhavSelect
+			value={ttabItem?.action ?? 0}
+			onChange={(instanceId) => handleChange('action', instanceId)}
+			label="Action BHAV"
+		/>
+		<BhavSelect
+			value={ttabItem?.guard ?? 0}
+			onChange={(instanceId) => handleChange('guard', instanceId)}
+			label="Guardian BHAV"
+		/>
 	</div>
 
 	<div class="flags-wrapper">

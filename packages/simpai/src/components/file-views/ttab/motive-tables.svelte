@@ -98,8 +98,6 @@
 			}
 		})
 	);
-
-	$: console.log(content)
 </script>
 
 <div class="motive-tables">

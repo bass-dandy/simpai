@@ -17,6 +17,10 @@
   --color-green: rgb(132, 186, 117);
   --color-white: rgb(255, 255, 255);
   --color-black: rgb(0, 0, 0);
+  --spacing-xs: 2px;
+  --spacing-sm: 5px;
+  --spacing-md: 15px;
+  --spacing-lg: 30px;
 }
 
 * {
@@ -58,6 +62,12 @@ select {
 input[type='text'],
 textarea {
   box-shadow: inset 3px 3px 3px 0px rgba(0, 0, 0, 0.25);
+}
+
+input[type='text']:disabled {
+  color: var(--color-fg);
+  border-color: var(--color-fg);
+  box-shadow: none;
 }
 
 button:not(:disabled) {

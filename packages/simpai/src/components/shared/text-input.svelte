@@ -11,6 +11,7 @@
 
 	export let label = '';
 	export let maxLength: number | undefined = undefined;
+	export let disabled: boolean = false;
 	export let style: string | undefined = undefined;
 
 	// update display value when input value is committed
@@ -53,6 +54,7 @@
 			value={currentValue}
 			on:input|preventDefault={handleChange}
 			on:blur={commitValue}
+			disabled={disabled}
 			class="labeled"
 			style={style}
 		/>
@@ -63,6 +65,7 @@
 		value={currentValue}
 		on:input|preventDefault={handleChange}
 		on:blur={commitValue}
+		disabled={disabled}
 		style={style}
 	/>
 {/if}
