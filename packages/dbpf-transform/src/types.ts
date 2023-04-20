@@ -75,7 +75,6 @@ export type TtabContent = {
   items: {
     action: number;
     guard: number;
-    counts?: number[];
     flags: number;
     flags2: number;
     strIndex: number;
