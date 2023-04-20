@@ -8,24 +8,26 @@
 
 	export let onChange: (instanceId: number) => void;
 	export let value: number;
-	export let label: string;
+	export let label: string = '';
 	export let style: string = '';
 
 	$: bhavs = select($packages).resourcesByType<BhavFile>('BHAV');
 	$: bhavId = select($packages).resourceIdByTypeAndInstanceId('BHAV', value);
 </script>
 
-<div style={style}>
-	<div class="label-with-edit">
-		<label for="bhav-select">
-			{label}
-		</label>
-		{#if bhavId}
-			<Button onClick={() => bhavId ? packages.openResource(bhavId) : null}>
-				Edit BHAV
-			</Button>
-		{/if}
-	</div>
+<div class="bhav-select" class:stacked={!!label} style={style}>
+	{#if label}
+		<div class="label-with-edit">
+			<label for="bhav-select">
+				{label}
+			</label>
+			{#if bhavId}
+				<Button onClick={() => bhavId ? packages.openResource(bhavId) : null}>
+					Edit BHAV
+				</Button>
+			{/if}
+		</div>
+	{/if}
 	<select
 		value={value}
 		on:change={(e) => onChange(parseInt(e.currentTarget.value))}
@@ -37,16 +39,39 @@
 			</option>
 		{/each}
 	</select>
+	{#if !label && bhavId}
+		<Button
+			onClick={() => bhavId ? packages.openResource(bhavId) : null}
+			style="margin-left: 5px; white-space: nowrap;"
+		>
+			Edit BHAV
+		</Button>
+	{/if}
 </div>
 
 <style>
+	.bhav-select {
+		display: flex;
+		align-items: center;
+		overflow: hidden;
+	}
+	.stacked {
+		flex-direction: column;
+		align-items: flex-start;
+	}
 	.label-with-edit {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		width: 100%;
+	}
+	.stacked select {
+		width: 100%;
 	}
 	select {
 		display: block;
-		width: 100%;
+		flex: 1;
+		min-width: 0;
+		text-overflow: ellipsis;
 	}
 </style>

@@ -3,7 +3,7 @@
 	import produce from 'immer';
 
 	import Box from '$components/shared/box.svelte';
-	import TextInput from '$components/shared/text-input.svelte';
+	import BhavSelect from '$components/shared/bhav-select.svelte';
 
 	export let content: ObjfContent;
 	export let onChange: (newContent: ObjfContent) => void;
@@ -66,7 +66,7 @@
 		'object updated by design mode',
 	];
 
-	const getInputHandler = (key: 'action' | 'guard', i: number) => (value: number | string) => onChange(
+	const getInputHandler = (key: 'action' | 'guard', i: number) => (value: number) => onChange(
 		produce(content, (draft) => {
 			const tgt = draft.functions[i];
 			if (tgt) tgt[key] = value as number;
@@ -74,31 +74,30 @@
 	);
 </script>
 
-<div>
-	<Box secondary>
+<div class="objf-view">
+	<Box
+		secondary
+		style={{ width: '100%', height: '100%', overflow: 'auto', 'padding-top': '0' }}
+	>
 		<table>
 			<thead>
-				<td>Function</td>
-				<td>Action BHAV</td>
-				<td>Guardian BHAV</td>
+				<th>Function</th>
+				<th>Action BHAV</th>
+				<th>Guardian BHAV</th>
 			</thead>
 			<tbody>
 			{#each content.functions as fn, i}
 				<tr>
 					<td>{FNS[i]}</td>
 					<td>
-						<TextInput
-							variant="hex"
-							maxLength={4}
+						<BhavSelect
 							value={fn.action}
 							onChange={getInputHandler('action', i)}
 							style="width: 100%"
 						/>
 					</td>
 					<td>
-						<TextInput
-							variant="hex"
-							maxLength={4}
+						<BhavSelect
 							value={fn.guard}
 							onChange={getInputHandler('guard', i)}
 							style="width: 100%"
@@ -112,23 +111,30 @@
 </div>
 
 <style>
-	div {
+	.objf-view {
 		height: 100%;
-		overflow: auto;
 	}
 	table {
 		width: 100%;
-		border-collapse: collapse;
+		position: relative;
+		border-spacing: 0;
 	}
-	thead {
+	thead th {
+		text-align: left;
+		padding-bottom: 10px;
+	}
+	th {
+		position: sticky;
+		top: 0;
+		padding-top: var(--spacing-md);
+		background-color: var(--color-fg);
 		border-bottom: 1px solid var(--color-accent);
 	}
-	thead td {
-		padding-bottom: 10px;
+	th, td {
+		font-size: 1rem;
 	}
 	td {
 		padding-top: 10px;
-		font-size: 1rem;
 	}
 	td:not(:last-child) {
 		padding-right: 10px;
