@@ -12,18 +12,18 @@ function readMotiveTable(
   type: 'human' | 'animal',
   reader: BufferReader
 ) {
-  const tableLength = motiveCounts === null ? reader.readUint32() : motiveCounts.length;
+  const groupCount = motiveCounts === null ? reader.readUint32() : motiveCounts.length;
 
   const table: TtabMotiveTable = { groups: [] };
 
   // add groups (eg adult, child, etc) to table
-  for (let i = 0; i < tableLength; i++) {
-    const groupLength = format < 84 ? (motiveCounts?.[i] ?? 0) : reader.readUint32();
+  for (let i = 0; i < groupCount ; i++) {
+    const motiveCount = format < 84 ? (motiveCounts?.[i] ?? 0) : reader.readUint32();
 
     const group: TtabMotiveTable['groups'][number] = { items: [] };
 
     // add items (eg energy, scratch/chew, etc) to group
-    for (let j = 0; j < groupLength; j++) {
+    for (let j = 0; j < motiveCount; j++) {
       if (type === 'human') {
         group.items.push({
           min: reader.readUint16(),
@@ -34,6 +34,7 @@ function readMotiveTable(
         const itemLength = reader.readUint32();
 
         for (let k = 0; k < itemLength; k++) {
+          // TODO: this is incorrect
           group.items.push({
             min: reader.readUint16(),
             delta: reader.readUint16(),
@@ -97,21 +98,22 @@ export function deserialize(buf: ArrayBuffer) {
 
 function writeMotiveTable(
   format: number,
-  counts: number[] | undefined,
   table: TtabMotiveTable,
+  tableType: 'human' | 'animal',
   writer: BufferWriter
 ) {
-  if (counts === null) writer.writeUint32(table.groups.length);
+  if (format >= 84) writer.writeUint32(table.groups.length);
 
   table.groups.forEach((group) => {
-    if (format < 84) writer.writeUint32(group.items.length);
+    if (format >= 85) writer.writeUint32(group.items.length);
 
     group.items.forEach((item) => {
-      if (typeof item === 'number') {
-        writer.writeUint16(item);
+      if (tableType === 'human') {
+        writer.writeUint16(item.min);
+        writer.writeUint16(item.delta);
+        writer.writeUint16(item.type);
       } else {
-        writer.writeUint32(item.values.length);
-        item.values.forEach((value) => writer.writeUint16(value));
+        // TODO: update when animal tables are parsed correctly
       }
     });
   });
@@ -120,19 +122,26 @@ function writeMotiveTable(
 export function serialize(data: TtabContent) {
   const writer = new BufferWriter();
   const encoder = new TextEncoder();
-  const format = data.header[1];
 
   const encodedFilename = encoder.encode(data.filename);
   writer.writeBuffer(encodedFilename);
   writer.writeNulls(64 - encodedFilename.byteLength);
 
-  writer.writeUint32Array(data.header);
+  writer.writeUint32(-1);
+  writer.writeUint32(data.format);
+  writer.writeUint32(0);
   writer.writeUint16(data.items.length);
 
   data.items.forEach((item) => {
     writer.writeUint16(item.action);
     writer.writeUint16(item.guard);
-    writer.writeUint32Array(item.counts || []);
+
+    if (data.format < 84) {
+      item.humanGroups.groups.forEach((group) => {
+        writer.writeUint32(group.items.length);
+      });
+    }
+
     writer.writeUint16(item.flags);
     writer.writeUint16(item.flags2);
     writer.writeUint32(item.strIndex);
@@ -141,18 +150,18 @@ export function serialize(data: TtabContent) {
     writer.writeUint32(item.autonomy);
     writer.writeUint32(item.joinIndex);
 
-    if (format > 69) writer.writeUint16(item.uiDisplayType);
-    if (format > 74) writer.writeUint32(item.facialAnimation);
-    if (format > 76) {
+    if (data.format > 69) writer.writeUint16(item.uiDisplayType);
+    if (data.format > 74) writer.writeUint32(item.facialAnimation);
+    if (data.format > 76) {
       writer.writeUint32(item.memoryIterMult);
       writer.writeUint32(item.objectType);
     }
-    if (format > 70) writer.writeUint32(item.modelTableId);
+    if (data.format > 70) writer.writeUint32(item.modelTableId);
 
-    writeMotiveTable(format, item.counts, item.humanGroups, writer);
+    writeMotiveTable(data.format, item.humanGroups, 'human', writer);
 
-    if (format > 84 && item.animalGroups) {
-      writeMotiveTable(format, item.counts, item.animalGroups, writer);
+    if (data.format > 84 && item.animalGroups) {
+      writeMotiveTable(data.format, item.animalGroups, 'animal', writer);
     }
   });
   return writer.buffer;

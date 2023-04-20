@@ -59,7 +59,9 @@ export function serialize(data: TprpContent) {
   writer.writeBuffer(encodedFilename);
   writer.writeNulls(64 - encodedFilename.byteLength);
 
-  writer.writeUint8Array(data.header);
+  writer.writeUint32Array(data.header);
+  writer.writeUint32(data.params.length);
+  writer.writeUint32(data.locals.length);
 
   data.params.forEach((param) => {
     writeValue(writer, param.label);
