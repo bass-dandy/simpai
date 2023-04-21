@@ -88,49 +88,58 @@
 			Append new value
 		</Button>
 	</Box>
-	<Table
-		columns={['', 'Value', 'Label', 'Default', 'Min', 'Max', 'Used']}
-		columnConfig={{
-			'': { shrink: true }
+	<Box
+		secondary
+		style={{
+			overflow: 'auto',
+			flex: '1',
+			'padding-top': '0',
 		}}
-		rows={times(Math.max(content.items.length, bconValues?.length ?? 0), (i) => {
-			const item = content.items[i];
+	>
+		<Table
+			columns={['', 'Value', 'Label', 'Default', 'Min', 'Max', 'Used']}
+			columnConfig={{
+				'': { shrink: true }
+			}}
+			rows={times(Math.max(content.items.length, bconValues?.length ?? 0), (i) => {
+				const item = content.items[i];
 
-			return {
-				'': item ? {
-					component: CloseButton,
-					props: {
-						onClick: () => {
-							onChange(
-								produce(content, (draft) => {
-									draft.items = without(draft.items, i);
-									updateIds(draft.items);
-								})
-							);
+				return {
+					'': item ? {
+						component: CloseButton,
+						props: {
+							onClick: () => {
+								onChange(
+									produce(content, (draft) => {
+										draft.items = without(draft.items, i);
+										updateIds(draft.items);
+									})
+								);
+							},
+							'aria-label': `delete line ${i}`,
 						},
-						'aria-label': `delete line ${i}`,
-					},
-				} : '',
-				Value: bconValues?.[i] !== undefined ? formatHex(bconValues[i], 4) : undefined,
-				Label: getTextInput('constName', 'text', i),
-				Default: getTextInput('value', 'hex', i),
-				Min: getTextInput('minValue', 'hex', i),
-				Max: getTextInput('maxValue', 'hex', i),
-				Used: item ? {
-					component: Checkbox,
-					props: {
-						checked: !!item?.used,
-						onClick: () => onChange(
-							produce(content, (draft) => {
-								const item = draft.items[i];
-								if (item) item.used = item.used ? 0 : 1;
-							})
-						),
-					},
-				} : '',
-			};
-		})}
-	/>
+					} : '',
+					Value: bconValues?.[i] !== undefined ? formatHex(bconValues[i], 4) : undefined,
+					Label: getTextInput('constName', 'text', i),
+					Default: getTextInput('value', 'hex', i),
+					Min: getTextInput('minValue', 'hex', i),
+					Max: getTextInput('maxValue', 'hex', i),
+					Used: item ? {
+						component: Checkbox,
+						props: {
+							checked: !!item?.used,
+							onClick: () => onChange(
+								produce(content, (draft) => {
+									const item = draft.items[i];
+									if (item) item.used = item.used ? 0 : 1;
+								})
+							),
+						},
+					} : '',
+				};
+			})}
+		/>
+	</Box>
 </div>
 
 <style>

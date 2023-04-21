@@ -1,8 +1,6 @@
 <script lang="ts">
 	import type { ComponentType } from 'svelte';
 
-	import Box from './box.svelte';
-
 	interface ComponentProp {
 		component: ComponentType;
 		props: any;
@@ -26,6 +24,8 @@
 		[key: string]: string | number | undefined | ComponentProp | ElementProp;
 	}[];
 
+	export let style: string = '';
+
 	const isComponentProp = (prop: any): prop is ComponentProp => {
 		return prop && typeof prop !== 'string' && typeof prop !== 'number' && prop.component;
 	};
@@ -35,51 +35,42 @@
 	};
 </script>
 
-<Box
-	secondary
-	style={{
-		overflow: 'auto',
-		flex: '1',
-		'padding-top': '0',
-	}}
->
-	<table>
-		<thead>
-			{#each columns as column}
-				<th
-					class:stretch="{columnConfig?.[column]?.stretch}"
-					class:shrink="{columnConfig?.[column]?.shrink}"
-				>
-					{column}
-				</th>
-			{/each}
-		</thead>
-		<tbody>
-			{#each rows as row}
-				<tr>
-					{#each columns as column}
-						{@const cellData = row[column]}
-						<td>
-							{#if isComponentProp(cellData)}
-								<svelte:component
-									this={cellData.component}
-									{...(cellData.props ?? {})}
-								/>
-							{:else if isElementProp(cellData)}
-								<svelte:element
-									this={cellData.element}
-									{...(cellData.props ?? {})}
-								/>
-							{:else}
-								{cellData ?? '-'}
-							{/if}
-						</td>
-					{/each}
-				</tr>
-			{/each}
-		</tbody>
-	</table>
-</Box>
+<table {style}>
+	<thead>
+		{#each columns as column}
+			<th
+				class:stretch="{columnConfig?.[column]?.stretch}"
+				class:shrink="{columnConfig?.[column]?.shrink}"
+			>
+				{column}
+			</th>
+		{/each}
+	</thead>
+	<tbody>
+		{#each rows as row}
+			<tr>
+				{#each columns as column}
+					{@const cellData = row[column]}
+					<td>
+						{#if isComponentProp(cellData)}
+							<svelte:component
+								this={cellData.component}
+								{...(cellData.props ?? {})}
+							/>
+						{:else if isElementProp(cellData)}
+							<svelte:element
+								this={cellData.element}
+								{...(cellData.props ?? {})}
+							/>
+						{:else}
+							{cellData ?? '-'}
+						{/if}
+					</td>
+				{/each}
+			</tr>
+		{/each}
+	</tbody>
+</table>
 
 <style>
 	table {

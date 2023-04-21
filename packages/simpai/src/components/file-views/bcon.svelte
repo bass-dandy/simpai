@@ -84,57 +84,66 @@
 			</label>
 		</div>
 	</Box>
-	<Table
-		columns={[
-			'',
-			'Value',
-			...(trcnLabels ? ['Label', 'Default', 'Min', 'Max', 'Used'] : [])
-		]}
-		columnConfig={{
-			'': { shrink: true },
+	<Box
+		secondary
+		style={{
+			overflow: 'auto',
+			flex: '1',
+			'padding-top': '0',
 		}}
-		rows={content.items.map((item, i) => ({
-			'': {
-				component: CloseButton,
-				props: {
-					onClick: () => {
-						onChange(
-							produce(content, (draft) => {
-								draft.items = without(draft.items, i);
-							})
-						);
+	>
+		<Table
+			columns={[
+				'',
+				'Value',
+				...(trcnLabels ? ['Label', 'Default', 'Min', 'Max', 'Used'] : [])
+			]}
+			columnConfig={{
+				'': { shrink: true },
+			}}
+			rows={content.items.map((item, i) => ({
+				'': {
+					component: CloseButton,
+					props: {
+						onClick: () => {
+							onChange(
+								produce(content, (draft) => {
+									draft.items = without(draft.items, i);
+								})
+							);
+						},
+						'aria-label': `delete line ${i}`,
 					},
-					'aria-label': `delete line ${i}`,
 				},
-			},
-			Value: {
-				component: TextInput,
-				props: {
-					onChange: (newValue) => onChange(
-						produce(content, (draft) => {
-							draft.items[i] = newValue;
-						})
-					),
-					value: item,
-					variant: 'hex',
-					maxLength: 4,
-					style: 'width: 100%; min-width: 75px;',
+				Value: {
+					component: TextInput,
+					props: {
+						onChange: (newValue) => onChange(
+							produce(content, (draft) => {
+								draft.items[i] = newValue;
+							})
+						),
+						value: item,
+						variant: 'hex',
+						maxLength: 4,
+						style: 'width: 100%; min-width: 75px;',
+					},
 				},
-			},
-			Label: trcnLabels?.[i]?.constName,
-			Default: formatHex(trcnLabels?.[i]?.value, 4) || '-',
-			Min: formatHex(trcnLabels?.[i]?.minValue, 4) || '-',
-			Max: formatHex(trcnLabels?.[i]?.maxValue, 4) || '-',
-			Used: trcnLabels?.[i] ? {
-				element: 'input',
-				props: {
-					type: 'checkbox',
-					checked: trcnLabels?.[i]?.used,
-					disabled: true,
-				},
-			} : undefined,
-		}))}
-	/>
+				Label: trcnLabels?.[i]?.constName,
+				Default: formatHex(trcnLabels?.[i]?.value, 4) || '-',
+				Min: formatHex(trcnLabels?.[i]?.minValue, 4) || '-',
+				Max: formatHex(trcnLabels?.[i]?.maxValue, 4) || '-',
+				Used: trcnLabels?.[i] ? {
+					element: 'input',
+					props: {
+						type: 'checkbox',
+						checked: trcnLabels?.[i]?.used,
+						disabled: true,
+					},
+				} : undefined,
+			}))}
+		/>
+	</Box>
 </div>
 
 <style>
