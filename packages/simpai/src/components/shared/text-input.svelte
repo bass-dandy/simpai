@@ -38,11 +38,18 @@
 	};
 
 	const commitValue = () => {
-		if (variant === 'hex') {
-			onChange(parseInt(currentValue, 16));
-		} else {
-			onChange(currentValue);
-		}
+			if (variant === 'hex') {
+				const numValue = parseInt(currentValue, 16);
+
+				if (numValue !== value) {
+					onChange(numValue);
+				} else {
+					// 0x02 === 0x002 for example, so just reformat without committing a change
+					currentValue = formatHex(value, maxLength);
+				}
+			} else if (currentValue !== value) {
+				onChange(currentValue);
+			}
 	};
 </script>
 
