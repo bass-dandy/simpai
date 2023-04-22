@@ -2,10 +2,10 @@
 	import { formatHex } from '$lib/util';
 
 	// svelte does not seem to have a way to express discriminated union prop types
-	// if variant = hex, value is a number
+	// if variant = hex or float, value is a number
 	// if variant = text, value is a string
-	// unfortunately, this means consumers will have to cast
-	export let variant: 'hex' | 'text' = 'text';
+	// unfortunately, this means consumers will have to cast in onChange
+	export let variant: 'hex' | 'float' | 'text' = 'text';
 	export let value: string | number;
 	export let onChange: (value: string | number) => void;
 
@@ -14,15 +14,30 @@
 	export let disabled: boolean = false;
 	export let style: string | undefined = undefined;
 
+	$: formatValue = () => {
+		switch (variant) {
+			case 'hex':
+				return formatHex(value as number, maxLength);
+			case 'float':
+				const formattedValue = (value as number).toString(); 
+				return formattedValue !== 'NaN' ? formattedValue : '0';
+			default:
+				return value as string;
+		}
+	};
+
 	// update display value when input value is committed
-	$: currentValue = variant === 'hex' ? formatHex(value as number, maxLength) : value as string;
+	$: currentValue = formatValue();
 
 	const validate = (val: string) => {
-		const validationPattern = variant === 'hex' 
-			? `^(0x|0X)?[a-fA-F0-9]{0,${maxLength ?? ''}}$`
-			: '';
-
-		return RegExp(validationPattern).test(val);
+		switch (variant) {
+			case 'hex':
+				return RegExp(`^(0x|0X)?[a-fA-F0-9]{0,${maxLength ?? ''}}$`).test(val);
+			case 'float':
+				return RegExp('^-?(\\d*)?\\.?(\\d*)?$').test(val);
+			default:
+				return true;
+		}
 	};
 
 	const handleChange = (e: Event) => {
@@ -38,18 +53,29 @@
 	};
 
 	const commitValue = () => {
-			if (variant === 'hex') {
-				const numValue = parseInt(currentValue, 16);
+		if (variant === 'text') {
+			if (currentValue !== value) onChange(currentValue);
+		} else {
+			let numValue = 0;
 
-				if (numValue !== value) {
-					onChange(numValue);
-				} else {
-					// 0x02 === 0x002 for example, so just reformat without committing a change
-					currentValue = formatHex(value, maxLength);
-				}
-			} else if (currentValue !== value) {
-				onChange(currentValue);
+			switch (variant) {
+				case 'hex':
+					numValue = parseInt(currentValue, 16);
+					break;
+				case 'float':
+					numValue = parseFloat(currentValue);
+					break;
 			}
+
+			if (Number.isNaN(numValue)) numValue = 0;
+
+			if (numValue !== value) {
+				onChange(numValue);
+			} else {
+				// 0x02 === 0x002 for example, so just reformat without committing a change
+				currentValue = formatValue();
+			}
+		}
 	};
 </script>
 

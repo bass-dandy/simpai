@@ -26,8 +26,7 @@
 	$: inputConfigs = [
 		{
 			key: 'attenuationValue',
-			variant: 'hex',
-			maxLength: 8,
+			variant: 'float',
 			label: 'Attenuation value',
 		},
 		{
@@ -72,8 +71,7 @@
 		},
 		{
 			key: 'memoryIterMult',
-			variant: 'hex',
-			maxLength: 8,
+			variant: 'float',
 			label: 'Memory iterative multiplier',
 			disabled: content.format <= 76,
 		},
