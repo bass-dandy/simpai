@@ -4,7 +4,13 @@
 
 	import DropZone from './drop-zone.svelte';
 
-	const careerTemplate = 'career.package';
+	const openTemplate = async (filename: string) => {
+		const res = await fetch(`/simpai/templates/${filename}`);
+
+		await packages.addPackage(
+			new File([await res.arrayBuffer()], filename)
+		);
+	};
 </script>
 
 <div class="welcome">
@@ -14,19 +20,25 @@
 	</div>
 	<DropZone />
 	<div class="help">
-		Not sure where to start?<br />
-		<Button
-			onClick={async () => {
-				const res = await fetch(`/simpai/templates/${careerTemplate}`);
-
-				await packages.addPackage(
-					new File([await res.arrayBuffer()], careerTemplate)
-				);
-			}}
-			style="font-size: 1.2rem"
-		>
-			Try the custom career template!
-		</Button>
+		Or start from one of these templates:<br />
+		<ul class="template-list">
+			<li>
+				<Button
+					onClick={() => packages.addEmptyPackage('empty.package')}
+					style="font-size: 1.2rem"
+				>
+					Empty package
+				</Button>
+			</li>
+			<li>
+				<Button
+					onClick={() => openTemplate('career.package')}
+					style="font-size: 1.2rem"
+				>
+					Custom career
+				</Button>
+			</li>
+		</ul>
 	</div>
 </div>
 
@@ -52,5 +64,11 @@
 	.help {
 		margin-top: 15px;
 		text-align: center;
+	}
+	.template-list {
+		width: max-content;
+		margin: auto;
+		padding: 0;
+		text-align: left;
 	}
 </style>

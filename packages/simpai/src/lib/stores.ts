@@ -58,6 +58,21 @@ packagesStore.subscribe(saveToLocalStorage);
 export const packages = {
   subscribe: packagesStore.subscribe,
 
+  addEmptyPackage(filename: string) {
+    const packageId = uuid();
+
+    packagesStore.update((store) =>
+      produce(store, (draft) => {
+        draft.packages[packageId] = {
+          filename,
+          resources: {},
+          activeResourceId: '',
+        };
+        draft.activePackageId = packageId;
+      })
+    );
+  },
+
   async addPackage(file: File) {
     // key files in package by uuid
     const keyedFiles = deserialize(await file.arrayBuffer()).reduce(
