@@ -28,6 +28,7 @@
 			key: 'attenuationValue',
 			variant: 'float',
 			label: 'Attenuation value',
+			disabled: content.items[index]?.attenuationCode !== 0,
 		},
 		{
 			key: 'autonomy',
@@ -201,13 +202,22 @@
 	</div>
 
 	<div class="input-grid">
-		<TextInput
-			variant="hex"
-			value={ttabItem?.attenuationCode ?? 0}
-			onChange={(val) => handleChange('attenuationCode', val)}
-			label="Attenuation code"
-			style="width: 100%"
-		/>
+		<label>
+			Attenuation code
+			<select
+				value={ttabItem?.attenuationCode ?? 0}
+				on:change={(e) => {
+					handleChange('attenuationCode', parseInt(e.currentTarget.value));
+				}}
+				style="width: 100%"
+			>
+				{#each ['Custom', 'None', 'Low', 'Moderate', 'High'] as code, i}
+					<option value={i}>
+						({formatHex(i)}) {code}
+					</option>
+				{/each}
+			</select>
+		</label>
 		{#each inputConfigs as config}
 			<TextInput
 				{...config}
