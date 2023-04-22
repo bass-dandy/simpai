@@ -59,6 +59,9 @@ importers:
       immer:
         specifier: ^9.0.12
         version: 9.0.12
+      polycrc:
+        specifier: 1.1.1
+        version: 1.1.1
       svelte-portal:
         specifier: ^2.2.0
         version: 2.2.0
@@ -3165,6 +3168,10 @@ packages:
     dependencies:
       find-up: 4.1.0
     dev: true
+
+  /polycrc@1.1.1:
+    resolution: {integrity: sha512-bfvt5BA/1e3e5RhBmmYVYED3PRddGN0j+lAed5PmnLWrVCkYEsltsfZLuKgtmUz1OEvPBAZlgWfoEpUTN/po6Q==}
+    dev: false
 
   /postcss@8.4.21:
     resolution: {integrity: sha512-tP7u/Sn/dVxK2NnruI4H9BG+x+Wxz6oeZ1cJ8P6G/PZY0IKk4k/63TDsQf2kQq3+qoJeLm2kIBUNlZe3zgb4Zg==}
