@@ -6,10 +6,9 @@ describe('BHAV', () => {
     const serializedFile = serialize({
       filename: 'Init',
       format: 32775,
-      count: 2,
       type: 0,
-      argc: 0,
-      locals: 0,
+      argCount: 0,
+      localCount: 0,
       headerFlag: 0,
       treeVersion: 4294934536,
       instructions: [

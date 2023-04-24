@@ -19,10 +19,9 @@ export type BhavInstruction = {
 export type BhavContent = {
   filename: string;
   format: number;
-  count: number;
   type: number;
-  argc: number;
-  locals: number;
+  argCount: number;
+  localCount: number;
   headerFlag: number;
   treeVersion: number;
   instructions: BhavInstruction[];

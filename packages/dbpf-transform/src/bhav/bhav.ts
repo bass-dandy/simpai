@@ -21,19 +21,22 @@ import type { BhavContent, BhavInstruction } from '../types.js';
 export function deserialize(buf: ArrayBuffer) {
   const reader = new BufferReader(buf);
 
+  const filename = reader.readFileName();
+  const format = reader.readUint16();
+  const count = reader.readUint16();
+
   const bhav: BhavContent = {
-    filename: reader.readFileName(),
-    format: reader.readUint16(),
-    count: reader.readUint16(),
+    filename,
+    format,
     type: reader.readUint8(),
-    argc: reader.readUint8(),
-    locals: reader.readUint8(),
+    argCount: reader.readUint8(),
+    localCount: reader.readUint8(),
     headerFlag: reader.readUint8(),
     treeVersion: reader.readUint32(),
     instructions: [],
   };
 
-  while (bhav.instructions.length < bhav.count) {
+  while (bhav.instructions.length < count) {
     const instruction: BhavInstruction = {
       opcode: reader.readUint16(),
       gotoOnTrue: 0,
@@ -43,15 +46,15 @@ export function deserialize(buf: ArrayBuffer) {
       operands: [],
     };
 
-    if (bhav.format < 0x8003) {
+    if (format < 0x8003) {
       instruction.gotoOnTrue = reader.readUint8();
       instruction.gotoOnFalse = reader.readUint8();
       instruction.operands = reader.readUint8Array(8);
-    } else if (bhav.format < 0x8005) {
+    } else if (format < 0x8005) {
       instruction.gotoOnTrue = reader.readUint8();
       instruction.gotoOnFalse = reader.readUint8();
       instruction.operands = reader.readUint8Array(16);
-    } else if (bhav.format < 0x8007) {
+    } else if (format < 0x8007) {
       instruction.gotoOnTrue = reader.readUint8();
       instruction.gotoOnFalse = reader.readUint8();
       instruction.nodeVersion = reader.readUint8();
@@ -82,8 +85,8 @@ export function serialize(data: BhavContent) {
   writer.writeUint16(data.format);
   writer.writeUint16(data.instructions.length);
   writer.writeUint8(data.type);
-  writer.writeUint8(data.argc);
-  writer.writeUint8(data.locals);
+  writer.writeUint8(data.argCount);
+  writer.writeUint8(data.localCount);
   writer.writeUint8(data.headerFlag);
   writer.writeUint32(data.treeVersion);
 
