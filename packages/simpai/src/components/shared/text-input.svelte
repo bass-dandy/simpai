@@ -13,6 +13,7 @@
 	export let maxLength: number | undefined = undefined;
 	export let disabled: boolean = false;
 	export let style: string | undefined = undefined;
+	export let labelStyle: string | undefined = undefined;
 
 	$: formatValue = () => {
 		switch (variant) {
@@ -80,7 +81,7 @@
 </script>
 
 {#if label}
-	<label>
+	<label style={labelStyle}>
 		{label}
 		<input
 			type="text"

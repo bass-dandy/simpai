@@ -6,7 +6,7 @@
 	import {formatHex} from '$lib/util';
 
 	import type {Resource} from '../types';
-	import Button from './shared/button.svelte';
+	import Card from './shared/card.svelte';
 	import FileListActions from './file-list-actions.svelte';
 
 	let search = '';
@@ -40,11 +40,7 @@
 	<ul>
 	{#each resources as [resourceId, resource] (resourceId)}
 		<li>
-			<Button
-				variant="block"
-				onClick={() => packages.openResource(resourceId)}
-				style="padding: 5px 15px;"
-			>
+			<Card onClick={() => packages.openResource(resourceId)}>
 				<div class="file-info">
 					<div class="filename">
 						{getFileName(resource)}
@@ -67,7 +63,7 @@
 						<dd>{formatHex(resource.meta.instanceId, 8)}</dd>
 					</div>
 				</dl>
-			</Button>
+			</Card>
 		</li>
 	{/each}
 	</ul>
@@ -88,16 +84,9 @@
 	}
 	li {
 		width: 100%;
-		background-color: var(--color-input);
-		border: 1px solid var(--color-accent);
-		transition: transform 0.1s ease-out;
 	}
 	li:not(:first-child) {
 		margin-top: 5px;
-	}
-	li:hover, li:focus-within {
-		cursor: pointer;
-		transform: scale(1.02, 1.02);
 	}
 	.file-info {
 		display: flex;
@@ -125,6 +114,7 @@
 	}
 	.file-meta:nth-child(2) {
 		margin: 0 15px;
+		text-align: center;
 	}
 	.file-meta:last-child {
 		text-align: right;

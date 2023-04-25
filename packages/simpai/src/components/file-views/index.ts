@@ -1,6 +1,7 @@
 import { getFileType, type SimsFile } from 'dbpf-transform';
 import type { SvelteComponent } from 'svelte';
 
+import BHAV from './bhav/bhav.svelte';
 import GLOB from './glob/glob.svelte';
 import OBJD from './objd/objd.svelte';
 import TPRP from './tprp/tprp.svelte';
@@ -15,6 +16,7 @@ import UNK from './unk.svelte';
 
 export const views = {
   BCON,
+  BHAV,
   CTSS: STR,
   GLOB,
   JFIF: TGA,

@@ -20,7 +20,7 @@
 	<div class="bevel" {style}>
 		<button
 			class={variant}
-			on:click={onClick}
+			on:click|stopPropagation={onClick}
 			bind:this={buttonRef}
 			style={`height: ${size}px; width: ${size}px;`}
 			{...$$restProps}
@@ -34,7 +34,7 @@
 {:else}
 	<button
 		class={variant}
-		on:click={onClick}
+		on:click|stopPropagation={onClick}
 		bind:this={buttonRef}
 		{style}
 		{...$$restProps}
