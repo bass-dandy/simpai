@@ -1,21 +1,18 @@
 <script lang="ts">
-	import type { BhavContent, BhavFile } from 'dbpf-transform';
+	import type { BhavContent } from 'dbpf-transform';
 
 	import Button from '$components/shared/button.svelte';
 	import Card from '$components/shared/card.svelte';
-	import {select} from '$lib/selectors';
-	import {packages} from '$lib/stores';
+	import { getBhavName } from '$lib/bhav';
 	import { formatHex } from '$lib/util';
 	import ArrowRightIcon from '$svg/arrow-right.svg?component';
 
-	export let instructions: BhavContent['instructions'];
+	export let content: BhavContent;
 	export let onChange: (i: number) => void;
 	export let activeIndex: number;
 
-	$: labelsByOpcode = instructions.reduce((acc, inst) => {
-		const bhavId = select($packages).resourceIdByTypeAndInstanceId('BHAV', inst.opcode);
-		const bhav = select($packages).resourceById<BhavFile>(bhavId);
-		acc[inst.opcode.toString(16)] = bhav?.content.filename ?? '';
+	$: labelsByOpcode = content.instructions.reduce((acc, inst) => {
+		acc[inst.opcode] = getBhavName(inst.opcode);
 		return acc;
 	}, {} as Record<string, string>);
 
@@ -26,10 +23,23 @@
 		if (opcode <= 0x2FFF) return 'semi-global';
 		return 'unk';
 	};
+
+	const getSpecialReturn = (opcode: number) => {
+		if (content.format < 0x8007) {
+			if (opcode === 0xFD) return 'Error';
+			if (opcode === 0xFE) return 'True';
+			if (opcode === 0xFF) return 'False';
+		} else {
+			if (opcode === 0xFFFC) return 'Error';
+			if (opcode === 0xFFFD) return 'True';
+			if (opcode === 0xFFFE) return 'False';
+		}
+		return '';
+	};
 </script>
 
 <ul class="instructions">
-	{#each instructions as instruction, i}
+	{#each content.instructions as instruction, i}
 		<li>
 			<Card
 				onClick={() => onChange(i)}
@@ -42,19 +52,15 @@
 							{formatHex(i, 4)} [{getOpcodeRegion(instruction.opcode)} {formatHex(instruction.opcode, 4)}]
 						</div>
 						<div>
-							{labelsByOpcode[instruction.opcode.toString(16)]}
+							{labelsByOpcode[instruction.opcode]}
 						</div>
 					</div>
 
 					<div class="right">
 						<div class="case">True</div>
 						<ArrowRightIcon height={12} />
-						{#if instruction.gotoOnTrue === 0xFFFC}
-							Error
-						{:else if instruction.gotoOnTrue === 0xFFFD}
-							True
-						{:else if instruction.gotoOnTrue === 0xFFFE}
-							False
+						{#if getSpecialReturn(instruction.gotoOnTrue)}
+							{getSpecialReturn(instruction.gotoOnTrue)}
 						{:else}
 							<Button
 								onClick={() => onChange(instruction.gotoOnTrue)}
@@ -66,12 +72,8 @@
 
 						<div class="case">False</div>
 						<ArrowRightIcon height={12} />
-						{#if instruction.gotoOnFalse === 0xFFFC}
-							Error
-						{:else if instruction.gotoOnFalse === 0xFFFD}
-							True
-						{:else if instruction.gotoOnFalse === 0xFFFE}
-							False
+						{#if getSpecialReturn(instruction.gotoOnFalse)}
+							{getSpecialReturn(instruction.gotoOnFalse)}
 						{:else}
 							<Button
 								onClick={() => onChange(instruction.gotoOnFalse)}
@@ -102,6 +104,7 @@
 	}
 	.left {
 		flex: 1;
+		display: flex;
 		flex-direction: column;
 		gap: var(--spacing-sm);
 	}

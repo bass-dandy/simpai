@@ -27,11 +27,11 @@
 		0x8009,
 	];
 
-	const keyToLabel = {
-		treeVersion: 'Tree version',
-		argCount: 'Arg count',
-		localCount: 'Local count',
-	};
+	const keyToLabel = [
+		['treeVersion', 'Tree version'],
+		['argCount', 'Arg count'],
+		['localCount', 'Local count'],
+	] as const;
 
 	const handleFormatChange = (e: Event) => onChange(
 		produce(content, (draft) => {
@@ -40,7 +40,7 @@
 	);
 
 	const handleChange = (
-		key: keyof typeof keyToLabel,
+		key: typeof keyToLabel[number][0],
 		val: string | number
 	) => onChange(
 		produce(content, (draft) => {
@@ -65,7 +65,7 @@
 					{/each}
 				</select>
 			</label>
-			{#each Object.entries(keyToLabel) as [key, label]}
+			{#each keyToLabel as [key, label]}
 				<TextInput
 					variant="hex"
 					maxLength={8}
@@ -87,8 +87,8 @@
 	</Box>
 	<Box secondary style={{ flex: '1', overflow: 'auto' }}>
 		<Instructions
-			instructions={content.instructions}
 			onChange={(i) => { activeIndex = i; }}
+			{content}
 			{activeIndex}
 		/>
 	</Box>

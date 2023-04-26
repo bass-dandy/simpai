@@ -1,11 +1,10 @@
 <script lang="ts">
-	import type { BhavContent, BhavFile } from 'dbpf-transform';
+	import type { BhavContent } from 'dbpf-transform';
 	import produce from 'immer';
 
 	import BhavSelect from '$components/shared/bhav-select.svelte';
 	import TextInput from '$components/shared/text-input.svelte';
-	import {select} from '$lib/selectors';
-	import {packages} from '$lib/stores';
+	import { getBhavName } from '$lib/bhav';
 	import { formatHex } from '$lib/util';
 
 	export let content: BhavContent;
@@ -14,15 +13,10 @@
 
 	$: instruction = content.instructions[index];
 
-	$: targets = content.instructions.map((inst, i) => {
-		const bhavId = select($packages).resourceIdByTypeAndInstanceId('BHAV', inst.opcode);
-		const bhav = select($packages).resourceById<BhavFile>(bhavId);
-
-		return {
-			label: `(${formatHex(i, 4)}) ${bhav?.content.filename ?? ''}`,
-			opcode: i,
-		};
-	});
+	$: targets = content.instructions.map((inst, i) => ({
+		label: `(${formatHex(i, 4)}) ${getBhavName(inst.opcode)}`,
+		opcode: i,
+	}));
 
 	// key:label tuple instead of object because Object.entries fucks up key types
 	const tgtInputs = [
@@ -62,13 +56,13 @@
 					value={instruction[key]}
 					on:change={(e) => handleChange(key, parseInt(e.target.value))}
 				>
-					<option value={0xFFFC}>
+					<option value={content.format < 0x8007 ? 0xFD : 0xFFFC}>
 						Throw error
 					</option>
-					<option value={0xFFFD}>
+					<option value={content.format < 0x8007 ? 0xFE : 0xFFFD}>
 						Return true
 					</option>
-					<option value={0xFFFE}>
+					<option value={content.format < 0x8007 ? 0xFF : 0xFFFE}>
 						Return false
 					</option>
 					{#each targets as tgt}
