@@ -62,6 +62,9 @@ importers:
       polycrc:
         specifier: 1.1.1
         version: 1.1.1
+      svelte-easy-popover:
+        specifier: ^1.0.0
+        version: 1.0.0
       svelte-portal:
         specifier: ^2.2.0
         version: 2.2.0
@@ -986,6 +989,10 @@ packages:
       svgo: 3.0.2
       vite: 4.2.0(@types/node@18.15.11)
     dev: true
+
+  /@popperjs/core@2.11.7:
+    resolution: {integrity: sha512-Cr4OjIkipTtcXKjAsm8agyleBuDHvxzeBoa1v543lbv1YaIwQjESsVcmjiWiPEbC1FIeHOG/Op9kdCmAmiS3Kw==}
+    dev: false
 
   /@sinclair/typebox@0.25.24:
     resolution: {integrity: sha512-XJfwUVUKDHF5ugKwIcxEgc9k8b7HbznCp6eUfWgu710hMPNIO4aw4/zB5RogDQz8nd6gyCDpU9O/m6qYEWY6yQ==}
@@ -3529,6 +3536,12 @@ packages:
       - stylus
       - sugarss
     dev: true
+
+  /svelte-easy-popover@1.0.0:
+    resolution: {integrity: sha512-3PFWhKYaGwd18ww7F/gX6VjFgZjABqQY385T0FduWz5WKFx+eTSF2k0x2ZcWIZ5RGuOMPqdHcGCqjLgrvtEZRg==}
+    dependencies:
+      '@popperjs/core': 2.11.7
+    dev: false
 
   /svelte-hmr@0.15.1(svelte@3.54.0):
     resolution: {integrity: sha512-BiKB4RZ8YSwRKCNVdNxK/GfY+r4Kjgp9jCLEy0DuqAKfmQtpL38cQK3afdpjw4sqSs4PLi3jIPJIFp259NkZtA==}

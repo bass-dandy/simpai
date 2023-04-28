@@ -39,3 +39,5 @@ export function getBhavName(opcode: number) {
 
   return '<unknown>';
 }
+
+export { globals, primitives };

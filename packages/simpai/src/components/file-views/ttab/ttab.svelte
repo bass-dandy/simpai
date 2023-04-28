@@ -116,7 +116,7 @@
 				padding: '0',
 				'margin-top': '5px',
 			}}
-			contentStyle={{ overflow: 'auto' }}
+			contentStyle={{ 'overflow-y': 'auto' }}
 		/>
 	{:else}
 		<Box secondary style={{ 'margin-top': 'var(--spacing-sm)' }}>

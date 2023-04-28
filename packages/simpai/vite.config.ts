@@ -26,9 +26,12 @@ export default defineConfig({
 	},
 	optimizeDeps: {
 		exclude: ['dbpf-transform'],
-		// should be 'dbpf-transform > qfs-compression', but there's some issue with optimizing cjs sub deps
-		// for now, this is re-declared in simpai as a dev dep
-		// see https://github.com/vitejs/vite/issues/9710#issuecomment-1448516591
-		include: ['qfs-compression'],
+		include: [
+			'@popperjs/core/dist/esm/popper',
+			// should be 'dbpf-transform > qfs-compression', but there's some issue with optimizing cjs sub deps
+			// for now, this is re-declared in simpai as a dev dep
+			// see https://github.com/vitejs/vite/issues/9710#issuecomment-1448516591
+			'qfs-compression',
+		],
 	},
 });

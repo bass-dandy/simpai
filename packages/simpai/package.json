@@ -15,6 +15,7 @@
     "dbpf-transform": "workspace:*",
     "immer": "^9.0.12",
     "polycrc": "1.1.1",
+    "svelte-easy-popover": "^1.0.0",
     "svelte-portal": "^2.2.0",
     "tgaimage": "1.1.0",
     "ts-essentials": "^9.3.1",
