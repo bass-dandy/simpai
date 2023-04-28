@@ -2,29 +2,27 @@
 	import {fade, fly} from 'svelte/transition';
 	import Portal from 'svelte-portal/src/Portal.svelte';
 
+	import { globalEsc, clickOutside } from '$lib/actions';
 	import Box from './box.svelte';
 
 	export let title: string | undefined = undefined;
 	export let isOpen: boolean;
 	export let onClose: () => void;
-
-	let backgroundRef: HTMLDivElement;
 </script>
 
 {#if isOpen}
 <Portal>
 	<div
 		class="background"
-		on:click={(e) => {
-			if(e.target === backgroundRef) onClose();
-		}}
-		on:keydown={(e) => {
-			if (e.key === 'Escape') onClose();
-		}}
 		transition:fade={{ duration: 100 }}
-		bind:this={backgroundRef}
 	>
-		<div transition:fly={{ y: -200, duration: 100 }}>
+		<div
+			transition:fly={{ y: -200, duration: 100 }}
+			use:globalEsc
+			use:clickOutside
+			on:globalEsc={onClose}
+			on:outclick={onClose}
+		>
 			<Box
 				secondary
 				style={{ position: 'relative' }}

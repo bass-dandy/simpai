@@ -4,7 +4,7 @@
 
 	import Button from '$components/shared/button.svelte';
 	import TextInput from '$components/shared/text-input.svelte';
-	import { clickOutside } from '$lib/actions';
+	import { clickOutside, globalEsc } from '$lib/actions';
 	import { globals, primitives } from '$lib/bhav';
 	import { select } from '$lib/selectors';
 	import { packages } from '$lib/stores';
@@ -23,6 +23,7 @@
 	let search = '';
 	let options: Record<string, string> = {};
 	let popoverTgt: HTMLDivElement;
+	let popoverToggle: HTMLButtonElement;
 
 	$: localBhavs = select($packages).resourcesByType<BhavFile>('BHAV');
 	$: activeLocalBhavId = select($packages).resourceIdByTypeAndInstanceId('BHAV', value);
@@ -52,9 +53,14 @@
 		}
 	}
 
+	const handleClose = () => {
+		isOpen = false;
+		popoverToggle.focus();
+	};
+
 	const handleChange = (opcode: number) => {
 		onChange(opcode);
-		isOpen = false;
+		handleClose();
 	};
 </script>
 
@@ -85,6 +91,7 @@
 			class:open={isOpen}
 			on:click={() => { isOpen = !isOpen }}
 			aria-label="open bhav selector"
+			bind:this={popoverToggle}
 		>
 			<ChevronIcon height={8} />
 		</button>
@@ -97,7 +104,9 @@
 			<div
 				class="popup"
 				use:clickOutside
-				on:outclick={() => ( isOpen = false )}
+				use:globalEsc
+				on:outclick={handleClose}
+				on:globalEsc={handleClose}
 			>
 				<input
 					type="text"
