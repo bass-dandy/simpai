@@ -112,25 +112,30 @@ export function deserialize(buf: ArrayBuffer) {
 
       console.log(`DIR found with ${dirEntryCount} entries`);
 
+      reader.seekTo(meta.location);
+
       for (let i = 0; i < dirEntryCount; i++) {
-        reader.seekTo(meta.location);
         const typeId = reader.readUint32().toString(16);
         const groupId = reader.readUint32();
         const instanceId = reader.readUint32();
         const instanceId2 = indexVersionMinor === 2 ? reader.readUint32() : undefined;
+        const uncompressedSize = reader.readUint32();
 
-        const match = indexedFiles.find((file) => {
-          return (
-            file.typeId === typeId &&
-            file.groupId === groupId &&
-            file.instanceId === instanceId &&
-            file.instanceId2 === instanceId2
-          );
-        });
+        // skip empty dir entry
+        if (uncompressedSize > 0) {
+          const match = indexedFiles.find((file) => {
+            return (
+              file.typeId === typeId &&
+              file.groupId === groupId &&
+              file.instanceId === instanceId &&
+              file.instanceId2 === instanceId2
+            );
+          });
 
-        if (match) {
-          match.compressed = true;
-          matchCount++;
+          if (match) {
+            match.compressed = true;
+            matchCount++;
+          }
         }
       }
 
@@ -145,20 +150,32 @@ export function deserialize(buf: ArrayBuffer) {
     if (meta.typeId === TYPE_ID.DIR) return;
 
     reader.seekTo(meta.location);
-    const buffer = reader.readBuffer(meta.size);
+    let buffer = reader.readBuffer(meta.size);
 
     if (meta.compressed) {
-      console.log(`decompressing and deserializing ${getFileType(meta.typeId)}`);
+      const HEADER_SIZE = 9;
+
+      // check if file is actually compressed, as some programs write uncompressed files to the DIR
+      if (meta.size > HEADER_SIZE) {
+        const HEADER_SIGNATURE_HI = 0xFB;
+        const HEADER_SIGNATURE_LO = 0x10;
+
+        reader.seekTo(meta.location);
+        const header = reader.readUint8Array(HEADER_SIZE);
+
+        if (header[4] === HEADER_SIGNATURE_LO && header[5] === HEADER_SIGNATURE_HI) {
+          console.log(`decompressing and deserializing ${getFileType(meta.typeId)}`);
+          buffer = qfs.decompress(new Uint8Array(buffer).slice(4)).buffer;
+        }
+      }
     } else {
       console.log(`deserializing ${getFileType(meta.typeId)}`);
     }
 
-    const content = deserializeFile(
-      meta.typeId,
-      meta.compressed ? qfs.decompress(new Uint8Array(buffer).slice(4)).buffer : buffer
-    );
-
-    files.push({ meta, content });
+    files.push({
+      meta,
+      content: deserializeFile(meta.typeId, buffer),
+    });
   });
 
   return files;

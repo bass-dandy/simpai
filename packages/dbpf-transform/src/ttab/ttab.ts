@@ -84,13 +84,13 @@ export function deserialize(buf: ArrayBuffer) {
       attenuationValue: readFloat(reader),
       autonomy: reader.readUint32(),
       joinIndex: reader.readUint32(),
-      uiDisplayType: ttab.format > 69 ? reader.readUint16() : 0,
-      facialAnimation: ttab.format > 74 ? reader.readUint32() : 0,
-      memoryIterMult: ttab.format > 76 ? readFloat(reader) : 0,
-      objectType: ttab.format > 76 ? reader.readUint32() : 0,
-      modelTableId: ttab.format > 70 ? reader.readUint32() : 0,
+      uiDisplayType: ttab.format >= 69 ? reader.readUint16() : 0,
+      facialAnimation: ttab.format >= 74 ? reader.readUint32() : 0,
+      memoryIterMult: ttab.format >= 76 ? readFloat(reader) : 0,
+      objectType: ttab.format >= 76 ? reader.readUint32() : 0,
+      modelTableId: ttab.format >= 70 ? reader.readUint32() : 0,
       humanGroups: readMotiveTable(ttab.format, motiveCounts, 'human', reader),
-      animalGroups: ttab.format > 84 ? readMotiveTable(ttab.format, motiveCounts, 'animal', reader) : null,
+      animalGroups: ttab.format >= 84 ? readMotiveTable(ttab.format, motiveCounts, 'animal', reader) : null,
     });
   }
   return ttab;
