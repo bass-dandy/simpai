@@ -58,13 +58,23 @@ export type StrContent = {
   }[];
 };
 
-export type TtabMotiveTable = {
+export type HumanMotiveTable = {
   groups: {
     items: {
       min: number;
       delta: number;
       type: number;
     }[];
+  }[];
+};
+
+export type AnimalMotiveTable = {
+  groups: {
+    items: ({
+      min: number;
+      delta: number;
+      type: number;
+    }[])[];
   }[];
 };
 
@@ -86,8 +96,8 @@ export type TtabContent = {
     memoryIterMult: number;
     objectType: number;
     modelTableId: number;
-    humanGroups: TtabMotiveTable;
-    animalGroups: TtabMotiveTable | null;
+    humanGroups: HumanMotiveTable;
+    animalGroups: AnimalMotiveTable | null;
   }[];
 };
 
