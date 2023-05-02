@@ -5,6 +5,8 @@
 	import Subsection from '$components/shared/subsection.svelte';
 	import TextInput from '$components/shared/text-input.svelte';
 
+	import { simTypes, motives } from './consts';
+
 	export let content: TtabContent;
 	export let onChange: (newContent: TtabContent) => void;
 	export let index: number;
@@ -18,53 +20,6 @@
 		'Elder',
 		'Cat',
 		'Dog',
-	];
-
-	// ordered by value
-	const simTypes = [
-		'None',
-		'Nice',
-		'Grouchy',
-		'Active',
-		'Lazy',
-		'Generous',
-		'Selfish',
-		'Playful',
-		'Serious',
-		'Outgoing',
-		'Shy',
-		'Neat',
-		'Sloppy',
-		'Cleaning skill',
-		'Cooking skill',
-		'Charisma skill',
-		'Mechanical skill',
-		'Gardening skill',
-		'Music skill',
-		'Creative skill',
-		'Literacy skill',
-		'Physical skill',
-		'Logic skill',
-	];
-
-	// ordered by index
-	const motives = [
-		'Shopping',
-		'Scratch/chew',
-		'Unused',
-		'Mood',
-		'Mood + mem',
-		'Energy',
-		'Comfort',
-		'Hunger',
-		'Water/hygiene',
-		'Bladder',
-		'Unused',
-		'Sleep state',
-		'Amorous',
-		'Environment',
-		'Social',
-		'Fun',
 	];
 
 	$: motiveGroups = content.items[index]?.humanGroups.groups ?? [];

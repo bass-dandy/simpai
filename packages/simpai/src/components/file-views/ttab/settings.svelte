@@ -47,34 +47,34 @@
 			variant: 'hex',
 			maxLength: 4,
 			label: 'UI display type',
-			disabled: content.format <= 69,
+			disabled: content.format < 69,
 		},
 		{
 			key: 'objectType',
 			variant: 'hex',
 			maxLength: 8,
 			label: 'Object type',
-			disabled: content.format <= 76,
+			disabled: content.format < 76,
 		},
 		{
 			key: 'facialAnimation',
 			variant: 'hex',
 			maxLength: 8,
 			label: 'Facial animation ID',
-			disabled: content.format <= 74,
+			disabled: content.format < 74,
 		},
 		{
 			key: 'modelTableId',
 			variant: 'hex',
 			maxLength: 8,
 			label: 'Model table ID',
-			disabled: content.format <= 70,
+			disabled: content.format < 70,
 		},
 		{
 			key: 'memoryIterMult',
 			variant: 'float',
 			label: 'Memory iterative multiplier',
-			disabled: content.format <= 76,
+			disabled: content.format < 76,
 		},
 	];
 
@@ -98,8 +98,8 @@
 		return (i === 4 || i === 5 || i === 6) ? !bitStatus : bitStatus;
 	};
 
-	$: flagLabels = content.format > 84 ? flagsAlt : flags;
-	$: flag2Labels = content.format > 84 ? flags2Alt : flags2;
+	$: flagLabels = content.format >= 84 ? flagsAlt : flags;
+	$: flag2Labels = content.format >= 84 ? flags2Alt : flags2;
 
 	const handleChange = (key: GeneratedInputField, val: number | string) => onChange(
 		produce(content, (draft) => {

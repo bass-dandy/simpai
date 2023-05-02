@@ -74,3 +74,50 @@ export const flags2Alt = [
   null,
   null,
 ];
+
+// ordered by value
+export const simTypes = [
+  'None',
+  'Nice',
+  'Grouchy',
+  'Active',
+  'Lazy',
+  'Generous',
+  'Selfish',
+  'Playful',
+  'Serious',
+  'Outgoing',
+  'Shy',
+  'Neat',
+  'Sloppy',
+  'Cleaning skill',
+  'Cooking skill',
+  'Charisma skill',
+  'Mechanical skill',
+  'Gardening skill',
+  'Music skill',
+  'Creative skill',
+  'Literacy skill',
+  'Physical skill',
+  'Logic skill',
+];
+
+// ordered by index
+export const motives = [
+  'Shopping',
+  'Scratch/chew',
+  'Unused',
+  'Mood',
+  'Mood + mem',
+  'Energy',
+  'Comfort',
+  'Hunger',
+  'Water/hygiene',
+  'Bladder',
+  'Unused',
+  'Sleep state',
+  'Amorous',
+  'Environment',
+  'Social',
+  'Fun',
+];

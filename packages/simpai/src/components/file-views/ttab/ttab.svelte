@@ -12,7 +12,8 @@
 	import { packages } from '$lib/stores';
 	import { without } from '$lib/util';
 
-	import MotiveTables from './motive-tables.svelte';
+	import HumanMotives from './human-motives.svelte';
+	import AnimalMotives from './animal-motives.svelte';
 	import Settings from './settings.svelte';
 
 	export let content: TtabContent;
@@ -48,6 +49,11 @@
 	const handleFormatChange = (val: string | number) => onChange(
 		produce(content, (draft) => {
 			draft.format = val as number;
+
+			if (content.format >= 84 && val as number < 84) {
+				// switch tab since it's about to disappear
+				activeTab = 'settings';
+			}
 		})
 	);
 </script>
@@ -98,11 +104,19 @@
 					props: { content, onChange, index },
 				},
 				motives: {
-					title: 'Motive tables',
-					content: MotiveTables,
+					title: content.format >= 84 ? 'Human motives' : 'Motives',
+					content: HumanMotives,
 					hideClose: true,
 					props: { content, onChange, index },
 				},
+				...(content.format >= 84 ? {
+					animalMotives: {
+						title: 'Animal motives',
+						content: AnimalMotives,
+						hideClose: true,
+						props: { content, onChange, index },
+					},
+				} : {}),
 			}}
 			activeTab={activeTab}
 			onChange={(id) => activeTab = id}
