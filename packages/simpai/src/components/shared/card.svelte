@@ -13,7 +13,7 @@
 		display: block;
 		width: 100%;
 		padding: 5px 15px;
-		border: 1px solid var(--color-accent);
+		border: 1px solid var(--color-border);
 		background-color: var(--color-input);
 		transition: transform 0.1s ease-out;
 		text-align: left;

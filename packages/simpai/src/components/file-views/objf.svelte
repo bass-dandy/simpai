@@ -128,7 +128,7 @@
 		top: 0;
 		padding-top: var(--spacing-md);
 		background-color: var(--color-fg);
-		border-bottom: 1px solid var(--color-accent);
+		border-bottom: 1px solid var(--color-border);
 	}
 	th, td {
 		font-size: 1rem;

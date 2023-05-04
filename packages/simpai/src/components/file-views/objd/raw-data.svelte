@@ -79,7 +79,7 @@
 		position: sticky;
 		top: 0;
 		text-align: left;
-		border: 1px solid var(--color-accent);
+		border: 1px solid var(--color-border);
 		background-color: var(--color-fg);
 	}
 	td:first-child {

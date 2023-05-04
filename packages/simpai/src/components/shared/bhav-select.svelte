@@ -173,7 +173,7 @@
 	}
 	.popup-toggle {
 		background: var(--color-bg);
-		border: 1px solid var(--color-accent);
+		border: 1px solid var(--color-border);
 		border-top-right-radius: 3px;
 		border-bottom-right-radius: 3px;
 	}
@@ -189,7 +189,7 @@
 		padding: var(--spacing-sm);
 		background: var(--color-bg);
 		border-radius: 5px;
-		border: 1px solid var(--color-accent);
+		border: 1px solid var(--color-border);
 		box-shadow: 3px 3px 6px 0 rgba(0, 0, 0, 0.5);
 		z-index: 1000;
 	}
@@ -219,7 +219,7 @@
 	}
 	.tabs button.active {
 		background: var(--color-fg);
-		border: 1px solid var(--color-accent);
+		border: 1px solid var(--color-border);
 		border-bottom: 0;
 	}
 	.options {
@@ -228,6 +228,7 @@
 		padding: 0;
 		margin: 0;
 		overflow: auto;
+		border: 1px solid var(--color-border);
 	}
 	.options button {
 		width: 100%;
@@ -240,13 +241,13 @@
 		padding: var(--spacing-sm);
 	}
 	.options li {
-		background: var(--color-btn);
+		background: var(--color-fg);
 	}
 	.options li:nth-child(odd) {
 		background: var(--color-input);
 	}
 	.options li.active {
-		background: var(--color-bg);
+		background: var(--color-highlight);
 	}
 	.options li:hover {
 		background: var(--color-accent);

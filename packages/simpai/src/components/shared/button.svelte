@@ -49,7 +49,7 @@
 		display: inline-block;
 		width: min-content;
 		padding: 2px;
-		border: 1px solid var(--color-accent);
+		border: 1px solid var(--color-border);
 		border-radius: 50%;
 		box-shadow: 1px 1px 3px 0 var(--color-black);
 		background:
@@ -69,12 +69,23 @@
 			radial-gradient(at bottom right, transparent 0%, transparent 50%, rgba(89, 104, 158, 0.5), #eee 85%),
 			rgb(135, 179, 211);
 	}
+	:global(.dark) .skeuomorphic {
+		color: var(--color-bg);
+	}
+	:global(.high-contrast) .skeuomorphic {
+		color: var(--color-black);
+		background: var(--color-white);
+	}
 	.skeuomorphic:not(:disabled):hover {
 		color: var(--color-white);
 		text-shadow: 1px 1px 3px var(--color-bg);
 		background:
 			radial-gradient(at bottom right, transparent 0%, transparent 50%, rgba(76, 112, 88, 0.5), #eee 85%),
 			rgb(129, 219, 107);
+	}
+	:global(.high-contrast) .skeuomorphic:not(:disabled):hover {
+		color: var(--color-white);
+		background: var(--color-black);
 	}
 	.skeuomorphic:disabled {
 		color: rgb(72, 77, 94);
@@ -97,6 +108,7 @@
 	.link {
 		text-decoration: dotted underline;
 		text-underline-offset: 2px;
+		color: var(--color-link);
 	}
 	.link:hover {
 		text-decoration: underline;

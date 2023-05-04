@@ -59,7 +59,7 @@
 		width: 100%;
 		padding: 30px 0;
 		background-color: var(--color-input);
-		border: 2px dashed var(--color-accent);
+		border: 2px dashed var(--color-border);
 		border-radius: 15px;
 	}
 	input[type="file"] {

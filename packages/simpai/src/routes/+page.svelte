@@ -50,7 +50,7 @@
 	.layout {
 		display: flex;
 		height: 100vh;
-		padding: 30px;
+		padding: var(--spacing-md);
 	}
 	.left {
 		display: flex;
@@ -59,6 +59,6 @@
 	.right {
 		flex: 1;
 		min-width: 0;
-		margin-left: 15px;
+		margin-left: var(--spacing-md);
 	}
 </style>

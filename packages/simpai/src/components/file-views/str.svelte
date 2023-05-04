@@ -117,7 +117,7 @@
 		padding: var(--spacing-sm);
 		text-align: left;
 		font-size: 1rem;
-		border-bottom: 1px solid var(--color-accent);
+		border-bottom: 1px solid var(--color-border);
 		white-space: nowrap;
 		vertical-align: top;
 	}

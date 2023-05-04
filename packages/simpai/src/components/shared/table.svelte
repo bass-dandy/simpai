@@ -81,7 +81,7 @@
 		border-spacing: 0;
 	}
 	th, tr:not(:last-child) > td {
-		border-bottom: 1px solid var(--color-accent);
+		border-bottom: 1px solid var(--color-border);
 	}
 	th, td {
 		padding: 5px;

@@ -99,7 +99,7 @@
 		padding-right: 30px;
 	}
 	.tab:disabled {
-		border-color: var(--color-accent);
+		border-color: var(--color-border);
 		background-color: var(--color-fg);
 	}
 	.tab:not(:disabled) {

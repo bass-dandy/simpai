@@ -15,7 +15,7 @@
 	.subsection {
 		position: relative;
 		padding: 15px 5px 5px;
-		border: 1px solid var(--color-accent);
+		border: 1px solid var(--color-border);
 		border-radius: 5px;
 	}
 	h2, h3, h4, h5, h6 {

@@ -67,6 +67,7 @@
 						<CloseButton
 							onClick={() => remove(i)}
 							aria-label={`remove interaction ${i}`}
+							style={index === i ? { color: 'var(--color-input)' } : undefined}
 						/>
 						<button
 							class="interaction-option"
@@ -162,7 +163,7 @@
 		list-style: none;
 		padding: 0;
 		margin: 0;
-		border: 1px solid var(--color-accent);
+		border: 1px solid var(--color-border);
 	}
 	.interaction-select li {
 		display: flex;
@@ -172,10 +173,10 @@
 		background-color: var(--color-input);
 	}
 	.interaction-select li:nth-child(odd) {
-		background-color: var(--color-btn);
+		background-color: var(--color-fg);
 	}
 	.interaction-select li.active-interaction {
-		background-color: var(--color-bg);
+		background-color: var(--color-highlight);
 	}
 	.interaction-option {
 		display: block;

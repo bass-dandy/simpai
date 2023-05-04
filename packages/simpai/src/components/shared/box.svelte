@@ -36,7 +36,7 @@
 
 <style>
 	div, ul, ol, li {
-		border: 1px solid var(--color-accent);
+		border: 1px solid var(--color-border);
 		border-radius: 15px;
 		font-size: 1.2rem;
 	}

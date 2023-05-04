@@ -93,7 +93,7 @@
 		justify-content: space-between;
 		align-items: center;
 		margin-bottom: 10px;
-		border-bottom: 1px dashed var(--color-bg);
+		border-bottom: 1px dashed var(--color-border);
 	}
 	.filename {
 		white-space: nowrap;

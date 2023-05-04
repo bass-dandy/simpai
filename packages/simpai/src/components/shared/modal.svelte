@@ -55,6 +55,6 @@
 		margin: 0;
 		margin-bottom: 10px;
 		font-size: 1rem;
-		border-bottom: 1px solid var(--color-accent);
+		border-bottom: 1px solid var(--color-border);
 	}
 </style>
