@@ -18,3 +18,14 @@ export type PackagesStore = {
   activePackageId: string;
   packages: Record<string, Package>;
 };
+
+export enum displayMode {
+  light = 'light',
+  dark = 'dark',
+  highContrast = 'high-contrast',
+};
+
+export type DisplayModeContext = {
+  getDisplayMode: () => displayMode;
+  setDisplayMode: (mode: displayMode) => void;
+};

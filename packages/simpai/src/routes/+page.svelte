@@ -1,15 +1,40 @@
 <script lang="ts">
-	import type {ComponentProps} from 'svelte';
+	import { type ComponentProps, onMount, setContext } from 'svelte';
 
 	import TabPanel  from '$components/shared/tab-panel.svelte';
 	import FileList from '$components/file-list.svelte';
 	import FileViewer from '$components/file-viewer.svelte';
 	import Welcome from '$components/welcome.svelte';
-	import {packages} from '$lib/stores';
+	import { packages } from '$lib/stores';
 
 	import '../global.css';
+	import { displayMode } from '../types';
 
-	let tabs: ComponentProps<TabPanel>['tabs'];
+	const displayStorageKey = 'display_mode'
+
+	const getDisplayMode = () => {
+		return localStorage.getItem(displayStorageKey) as displayMode || (
+			window.matchMedia('(prefers-color-scheme: dark)').matches
+				? displayMode.dark
+				: displayMode.light
+		);
+	};
+
+	const setDisplayMode = (mode: displayMode) => {
+		const root = document.querySelector(':root');
+
+		root?.classList.remove(displayMode.light);
+		root?.classList.remove(displayMode.dark);
+		root?.classList.remove(displayMode.highContrast);
+
+		root?.classList.add(mode);
+
+		localStorage.setItem(displayStorageKey, mode);
+	}
+
+	setContext('display_mode', { getDisplayMode, setDisplayMode });
+
+	onMount(() => setDisplayMode(getDisplayMode()));
 
 	$: tabs = {
 		...Object.entries($packages.packages)

@@ -1,5 +1,7 @@
 <script lang="ts">
-	import {packages} from '$lib/stores';
+	import { getContext } from 'svelte';
+
+	import { packages } from '$lib/stores';
 
 	import PlusIcon from '$svg/plus.svg?component';
 	import DownloadIcon from '$svg/file-arrow-down.svg?component';
@@ -7,26 +9,16 @@
 	import CheckIcon from '$svg/check.svg?component';
 	import XIcon from '$svg/x.svg?component';
 
+	import { displayMode, type DisplayModeContext } from '../types';
 	import Button from './shared/button.svelte';
 	import Modal from './shared/modal.svelte';
 	import {views} from './file-views';
 
 	export let search = '';
 
-	const displayStorageKey = 'display_mode'
-
-	enum displayMode {
-		light = 'light',
-		dark = 'dark',
-		highContrast = 'high-contrast',
-	};
-
-	const getDisplayMode = () => {
-		return localStorage.getItem(displayStorageKey)
-			|| (window.matchMedia('(prefers-color-scheme: dark)').matches ? displayMode.dark : displayMode.light);
-	};
-
 	type ViewKey = keyof typeof views;
+
+	const { getDisplayMode, setDisplayMode } = getContext<DisplayModeContext>('display_mode');
 
 	let isNewResourceModalOpen = false;
 	let isSettingsModalOpen = false;
@@ -48,14 +40,7 @@
 		if (opts?.reset) {
 			currentDisplayMode = getDisplayMode();
 		} else {
-			const root = document.querySelector(':root');
-
-			root?.classList.remove(displayMode.light);
-			root?.classList.remove(displayMode.dark);
-			root?.classList.remove(displayMode.highContrast);
-
-			root?.classList.add(currentDisplayMode);
-			localStorage.setItem(displayStorageKey, currentDisplayMode);
+			setDisplayMode(currentDisplayMode);
 		}
 		isSettingsModalOpen = false;
 		toggleSettingsModalRef.focus();
