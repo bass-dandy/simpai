@@ -4,7 +4,7 @@
 
 	import Box from '$components/shared/box.svelte';
 	import Button from '$components/shared/button.svelte';
-	import CloseButton from '$components/shared/close-button.svelte';
+	import SelectList from '$components/shared/select-list.svelte';
 	import TabPanel from '$components/shared/tab-panel.svelte';
 	import TextInput from '$components/shared/text-input.svelte';
 	import { defaultFileData } from '$lib/consts';
@@ -61,25 +61,17 @@
 <div class="ttab-view">
 	<Box secondary>
 		<div class="controls-x">
-			<ol class="interaction-select" role="listbox">
-				{#each content.items as item, i}
-					<li class:active-interaction={index === i}>
-						<CloseButton
-							onClick={() => remove(i)}
-							aria-label={`remove interaction ${i}`}
-							style={index === i ? { color: 'var(--color-input)' } : undefined}
-						/>
-						<button
-							class="interaction-option"
-							on:click={() => { index = i; }}
-							role="option"
-							aria-selected={index === i}
-						>
-							({i}) {ttasItems?.[item.strIndex] ?? ''}
-						</button>
-					</li>
-				{/each}
-			</ol>
+			<SelectList
+				options={
+					content.items.map((item, i) => ({
+						label: `(${i}) ${ttasItems?.[item.strIndex] ?? ''}`,
+						isActive: index === i,
+						onSelect: () => index = i,
+						onRemove: () => remove(i),
+					}))
+				}
+				style="height: 100px; width: 100%;"
+			/>
 			<div class="controls-y">
 				<TextInput
 					label="Format"
@@ -155,38 +147,5 @@
 		flex-direction: column;
 		gap: var(--spacing-md);
 		white-space: nowrap;
-	}
-	.interaction-select {
-		width: 100%;
-		height: 100px;
-		overflow: auto;
-		list-style: none;
-		padding: 0;
-		margin: 0;
-		border: 1px solid var(--color-border);
-	}
-	.interaction-select li {
-		display: flex;
-		align-items: center;
-		gap: var(--spacing-sm);
-		padding: 0 var(--spacing-sm);
-		background-color: var(--color-input);
-	}
-	.interaction-select li:nth-child(odd) {
-		background-color: var(--color-fg);
-	}
-	.interaction-select li.active-interaction {
-		background-color: var(--color-highlight);
-	}
-	.interaction-option {
-		display: block;
-		flex: 1;
-		padding: var(--spacing-sm);
-		border: 0;
-		background-color: transparent;
-		text-align: left;
-	}
-	.interaction-select li.active-interaction .interaction-option {
-		color: var(--color-input);
 	}
 </style>

@@ -2,14 +2,16 @@
 	import type { BhavFile } from 'dbpf-transform';
 	import Popover from 'svelte-easy-popover';
 
-	import Button from '$components/shared/button.svelte';
-	import TextInput from '$components/shared/text-input.svelte';
 	import { clickOutside, globalEsc } from '$lib/actions';
 	import { globals, primitives } from '$lib/bhav';
 	import { select } from '$lib/selectors';
 	import { packages } from '$lib/stores';
 	import { formatHex } from '$lib/util';
 	import ChevronIcon from '$svg/chevron-down-solid.svg?component';
+
+	import Button from './button.svelte';
+	import SelectList from './select-list.svelte';
+	import TextInput from './text-input.svelte';
 
 	export let onChange: (instanceId: number) => void;
 	export let value: number;
@@ -127,15 +129,15 @@
 						</li>
 					{/each}
 				</ul>
-				<ul class="options">
-					{#each Object.entries(options) as [opcode, label]}
-						<li class:active={opcode === formatHex(value, 4)}>
-							<button on:click={() => handleChange(parseInt(opcode, 16))}>
-								({opcode}) {label}
-							</button>
-						</li>
-					{/each}
-				</ul>
+				<SelectList
+					options={
+						Object.entries(options).map(([opcode, label]) => ({
+							label: `(${opcode}) ${label}`,
+							isActive: opcode === formatHex(value, 4),
+							onSelect: () => handleChange(parseInt(opcode, 16)),
+						}))
+					}
+				/>
 			</div>
 		</Popover>
 	</div>
@@ -221,38 +223,5 @@
 		background: var(--color-fg);
 		border: 1px solid var(--color-border);
 		border-bottom: 0;
-	}
-	.options {
-		flex: 1;
-		list-style-type: none;
-		padding: 0;
-		margin: 0;
-		overflow: auto;
-		border: 1px solid var(--color-border);
-	}
-	.options button {
-		width: 100%;
-		text-align: left;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		background: transparent;
-		border: 0;
-		padding: var(--spacing-sm);
-	}
-	.options li {
-		background: var(--color-fg);
-	}
-	.options li:nth-child(odd) {
-		background: var(--color-input);
-	}
-	.options li.active {
-		background: var(--color-highlight);
-	}
-	.options li:hover {
-		background: var(--color-accent);
-	}
-	.options li:hover button, .options li.active button {
-		color: var(--color-input);
 	}
 </style>

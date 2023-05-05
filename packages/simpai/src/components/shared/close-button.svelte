@@ -18,7 +18,7 @@
 		border: 0;
 		line-height: 15px;
 		background-color: transparent;
-		color: var(--color-text);
+		color: currentColor;
 	}
 	button::after {
 		display: block;
