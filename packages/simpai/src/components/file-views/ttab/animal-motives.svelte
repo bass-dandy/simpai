@@ -2,9 +2,9 @@
 	import type { TtabContent } from 'dbpf-transform';
 	import produce from 'immer';
 
+	import Accordion from '$components/shared/accordion.svelte';
 	import Button from '$components/shared/button.svelte';
 	import Modal from '$components/shared/modal.svelte';
-	import Subsection from '$components/shared/subsection.svelte';
 	import TextInput from '$components/shared/text-input.svelte';
 
 	import { simTypes, motives } from './consts';
@@ -67,7 +67,12 @@
 
 <div class="motive-tables">
 	{#each ['0', '1', '2', '3', '4', '5', '6'] as title, groupIndex}
-		<Subsection {title} headingLevel="h4">
+		<Accordion
+			{title}
+			isInitiallyExpanded={groupIndex === 0}
+			id={`animal-motive-table-${title}`}
+			headingLevel="h4"
+		>
 			<table>
 				<thead>
 					<th />
@@ -90,7 +95,7 @@
 					{/each}
 				</tbody>
 			</table>
-		</Subsection>
+		</Accordion>
 	{/each}
 </div>
 
@@ -138,7 +143,7 @@
 	.motive-tables {
 		display: flex;
 		flex-direction: column;
-		gap: 30px;
+		gap: var(--spacing-sm);
 	}
 	table {
 		width: 100%;

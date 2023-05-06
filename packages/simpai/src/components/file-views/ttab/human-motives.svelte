@@ -2,7 +2,7 @@
 	import type { TtabContent } from 'dbpf-transform';
 	import produce from 'immer';
 
-	import Subsection from '$components/shared/subsection.svelte';
+	import Accordion from '$components/shared/accordion.svelte';
 	import TextInput from '$components/shared/text-input.svelte';
 
 	import { simTypes, motives } from './consts';
@@ -57,7 +57,12 @@
 
 <div class="motive-tables">
 	{#each tables as title, groupIndex}
-		<Subsection {title} headingLevel="h4">
+		<Accordion
+			{title}
+			headingLevel="h4"
+			id={`human-motive-table-${title}`}
+			isInitiallyExpanded={groupIndex === 0}
+		>
 			<table>
 				<thead>
 					<th />
@@ -105,7 +110,7 @@
 					{/each}
 				</tbody>
 			</table>
-		</Subsection>
+		</Accordion>
 	{/each}
 </div>
 
@@ -113,7 +118,7 @@
 	.motive-tables {
 		display: flex;
 		flex-direction: column;
-		gap: 30px;
+		gap: var(--spacing-sm);
 	}
 	table {
 		width: 100%;
