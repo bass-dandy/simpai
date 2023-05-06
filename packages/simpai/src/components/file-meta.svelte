@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type {SimsFileContent, SimsFileMeta} from 'dbpf-transform';
+	import {type SimsFileContent, type SimsFileMeta, getFileType} from 'dbpf-transform';
 	import produce from 'immer';
 
 	import Button from '$components/shared/button.svelte';
@@ -46,12 +46,15 @@
 </script>
 
 <div>
+	<span class="type">
+		[{getFileType(meta?.typeId ?? '')}]
+	</span>
 	{#if content && !(content instanceof ArrayBuffer) && Object.hasOwn(content, 'filename')}
 		<TextInput
 			label="File name"
 			value={content?.filename}
 			onChange={handleFilenameChange}
-			style="margin-bottom: 15px; width: 100%;"
+			style="width: 100%;"
 		/>
 	{/if}
 	<div class="meta">
@@ -129,6 +132,10 @@
 </div>
 
 <style>
+	.type {
+		color: var(--color-highlight);
+		font-size: 1rem;
+	}
 	.actions {
 		position: absolute;
 		bottom: 0;
@@ -136,6 +143,7 @@
 	}
 	.meta {
 		display: flex;
+		margin-top: var(--spacing-md);
 	}
 	.input-wrapper {
 		flex: 1;
