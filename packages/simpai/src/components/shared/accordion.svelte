@@ -7,12 +7,29 @@
 	export let isInitiallyExpanded = false;
 
 	let isExpanded = isInitiallyExpanded;
+	let isContentHidden = !isExpanded;
+	let timeoutId: NodeJS.Timeout | undefined = undefined;
+	let contentRef: HTMLDivElement;
+
+	const toggle = () => {
+		clearTimeout(timeoutId);
+
+		if (!isExpanded) {
+			isExpanded = true;
+			isContentHidden = false;
+		} else {
+			isExpanded = false;
+			timeoutId = setTimeout(() => {
+				isContentHidden = true;
+			}, 200)
+		}
+	};
 </script>
 
 <div class="accordion">
 	<button
 		class="toggle"
-		on:click={() => ( isExpanded = !isExpanded )}
+		on:click={toggle}
 		aria-expanded={isExpanded}
 		aria-controls={id}
 	>
@@ -23,11 +40,20 @@
 			<ChevronIcon height={10} />
 		</div>
 	</button>
-	{#if isExpanded}
-		<div class="content" {id}>
+	<div
+		{id}
+		class="expander"
+		class:expanded={isExpanded}
+		style={isExpanded && contentRef ? `height: ${contentRef.clientHeight}px` : ''}
+	>
+		<div
+			class="content"
+			class:hidden={isContentHidden}
+			bind:this={contentRef}
+		>
 			<slot />
 		</div>
-	{/if}
+	</div>
 </div>
 
 <style>
@@ -54,12 +80,22 @@
 	}
 	.icon {
 		transform: rotate(-90deg);
-		transition: transform 0.1s ease-out;
+		transition: transform 0.2s ease-out;
 	}
 	.icon.expanded {
 		transform: rotate(0deg);
 	}
+	.expander {
+		overflow: hidden;
+		transition: height 0.2s ease-out;
+	}
+	.expander:not(.expanded) {
+		height: 0px;
+	}
 	.content {
 		padding: var(--spacing-md);
+	}
+	.content.hidden {
+		display: none;
 	}
 </style>
