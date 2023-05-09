@@ -1,13 +1,22 @@
+import fs from 'fs/promises';
 import path from 'path';
-import { serialize } from './glob.js';
+import { deserialize, serialize } from './glob.js';
+
+const fileData = {
+  filename: 'semi global file',
+  semiglobal: 'JobDataGlobals',
+};
+
+const filePath = path.join(__dirname, 'fixtures/valid.glob');
 
 describe('GLOB', () => {
-  it('can serialize GLOB files', async () => {
-    const serializedFile = serialize({
-      filename: 'semi global file',
-      semiglobal: 'JobDataGlobals',
-    });
+  it('can deserialize GLOB files', async () => {
+    const buf = (await fs.readFile(filePath)).buffer;
+    expect(deserialize(buf)).toEqual(fileData);
+  });
 
-    await expect(serializedFile).toMatchFile(path.join(__dirname, 'fixtures/valid.glob'));
+  it('can serialize GLOB files', async () => {
+    const serializedFile = serialize(fileData);
+    await expect(serializedFile).toMatchFile(filePath);
   });
 });

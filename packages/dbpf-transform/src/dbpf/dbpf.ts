@@ -181,6 +181,32 @@ export function deserialize(buf: ArrayBuffer) {
   return files;
 }
 
+function serializeFile(file: SimsFile) {
+  if (isBconFile(file)) {
+    return BCON.serialize(file.content);
+  } else if (isBhavFile(file)) {
+    return BHAV.serialize(file.content);
+  } else if (isGlobFile(file)) {
+    return GLOB.serialize(file.content);
+  } else if (isNrefFile(file)) {
+    return NREF.serialize(file.content);
+  } else if (isObjdFile(file)) {
+    return OBJD.serialize(file.content);
+  } else if (isObjfFile(file)) {
+    return OBJF.serialize(file.content);
+  } else if (isStrFile(file)) {
+    return STR.serialize(file.content);
+  } else if (isTtabFile(file)) {
+    return TTAB.serialize(file.content);
+  } else if (isTprpFile(file)) {
+    return TPRP.serialize(file.content);
+  } else if (isTrcnFile(file)) {
+    return TRCN.serialize(file.content);
+  } else {
+    return file.content as ArrayBuffer;
+  }
+}
+
 export function serialize(files: SimsFile[]) {
   const writer = new BufferWriter();
 
@@ -201,31 +227,7 @@ export function serialize(files: SimsFile[]) {
   const indexTable: SimsFileMeta[] = [];
 
   files.forEach((file) => {
-    let serializedFile = new ArrayBuffer(0);
-
-    if (isBconFile(file)) {
-      serializedFile = BCON.serialize(file.content);
-    } else if (isBhavFile(file)) {
-      serializedFile = BHAV.serialize(file.content);
-    } else if (isGlobFile(file)) {
-      serializedFile = GLOB.serialize(file.content);
-    } else if (isNrefFile(file)) {
-      serializedFile = NREF.serialize(file.content);
-    } else if (isObjdFile(file)) {
-      serializedFile = OBJD.serialize(file.content);
-    } else if (isObjfFile(file)) {
-      serializedFile = OBJF.serialize(file.content);
-    } else if (isStrFile(file)) {
-      serializedFile = STR.serialize(file.content);
-    } else if (isTtabFile(file)) {
-      serializedFile = TTAB.serialize(file.content);
-    } else if (isTprpFile(file)) {
-      serializedFile = TPRP.serialize(file.content);
-    } else if (isTrcnFile(file)) {
-      serializedFile = TRCN.serialize(file.content);
-    } else {
-      serializedFile = file.content as ArrayBuffer;
-    }
+    const serializedFile = serializeFile(file);
 
     indexTable.push({
       ...file.meta,
