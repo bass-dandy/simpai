@@ -93,6 +93,7 @@
 		background-color: var(--color-fg);
 		padding-top: 15px;
 		padding-bottom: 10px;
+		z-index: 1;
 	}
 	.stretch {
 		width: 100%;
