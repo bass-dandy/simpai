@@ -44,7 +44,7 @@
 			<Card
 				onClick={() => onChange(i)}
 				isActive={activeIndex === i}
-				activeStyle="background-color: var(--color-bg); color: var(--color-input)"
+				activeStyle="outline: 2px solid var(--color-highlight)"
 			>
 				<div class="card-content">
 					<div class="left">
@@ -62,10 +62,7 @@
 						{#if getSpecialReturn(instruction.gotoOnTrue)}
 							{getSpecialReturn(instruction.gotoOnTrue)}
 						{:else}
-							<Button
-								onClick={() => onChange(instruction.gotoOnTrue)}
-								style={activeIndex === i ? 'color: var(--color-input);' : ''}
-							>
+							<Button onClick={() => onChange(instruction.gotoOnTrue)}>
 								{formatHex(instruction.gotoOnTrue, 4)}
 							</Button>
 						{/if}
@@ -75,10 +72,7 @@
 						{#if getSpecialReturn(instruction.gotoOnFalse)}
 							{getSpecialReturn(instruction.gotoOnFalse)}
 						{:else}
-							<Button
-								onClick={() => onChange(instruction.gotoOnFalse)}
-								style={activeIndex === i ? 'color: var(--color-input);' : ''}
-							>
+							<Button onClick={() => onChange(instruction.gotoOnFalse)}>
 								{formatHex(instruction.gotoOnFalse, 4)}
 							</Button>
 						{/if}

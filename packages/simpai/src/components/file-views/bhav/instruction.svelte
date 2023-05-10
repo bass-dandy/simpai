@@ -4,7 +4,7 @@
 
 	import BhavSelect from '$components/shared/bhav-select.svelte';
 	import TextInput from '$components/shared/text-input.svelte';
-	import { getBhavName } from '$lib/bhav';
+	import { getBhavName, getBhavLabels } from '$lib/bhav';
 	import { formatHex } from '$lib/util';
 
 	export let content: BhavContent;
@@ -12,6 +12,8 @@
 	export let index: number;
 
 	$: instruction = content.instructions[index];
+
+	$: labels = getBhavLabels(instruction?.opcode);
 
 	$: targets = content.instructions.map((inst, i) => ({
 		label: `(${formatHex(i, 4)}) ${getBhavName(inst.opcode)}`,
@@ -86,6 +88,26 @@
 			/>
 		{/each}
 	</div>
+	{#if labels.args.length || labels.locals.length}
+		<div class="labels">
+			<div class="label-group">
+				<h3>{labels.args.length} args:</h3>
+				<ul>
+					{#each labels.args as arg}
+						<li>{arg}</li>
+					{/each}
+				</ul>
+			</div>
+			<div class="label-group">
+				<h3>{labels.locals.length} locals:</h3>
+				<ul>
+					{#each labels.locals as local}
+						<li>{local}</li>
+					{/each}
+				</ul>
+			</div>
+		</div>
+	{/if}
 {/if}
 
 <style>
@@ -113,5 +135,29 @@
 		display: grid;
 		grid-template-columns: repeat(8, 1fr);
 		gap: var(--spacing-xs);
+	}
+	.labels {
+		display: flex;
+		gap: var(--spacing-md);
+		margin-top: var(--spacing-md);
+	}
+	.label-group {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+	}
+	.label-group ul {
+		flex: 1;
+		max-height: 75px;
+		overflow: auto;
+		margin: 0;
+		padding: 0;
+		border: 1px solid var(--color-border);
+		background-color: var(--color-input);
+		list-style-type: none;
+		font-size: 1rem;
+	}
+	.label-group ul li {
+		padding: var(--spacing-xs) var(--spacing-sm);
 	}
 </style>
