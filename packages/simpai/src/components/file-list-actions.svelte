@@ -6,8 +6,6 @@
 	import PlusIcon from '$svg/plus.svg?component';
 	import DownloadIcon from '$svg/file-arrow-down.svg?component';
 	import GearIcon from '$svg/gear-solid.svg?component';
-	import CheckIcon from '$svg/check.svg?component';
-	import XIcon from '$svg/x.svg?component';
 
 	import { displayMode, type DisplayModeContext } from '../types';
 	import Button from './shared/button.svelte';
@@ -107,6 +105,10 @@
 	title="Add new resource"
 	isOpen={isNewResourceModalOpen}
 	onClose={onNewResourceModalClose}
+	onSubmit={() => {
+		packages.createNewResource(newResourceType);
+		onNewResourceModalClose();
+	}}
 >
 	<label class="modal-content">
 		Type:
@@ -120,34 +122,13 @@
 		{/each}
 		</select>
 	</label>
-	<div class="modal-controls">
-		<Button
-			variant="skeuomorphic"
-			size={25}
-			onClick={onNewResourceModalClose}
-			aria-label="cancel"
-			style="margin-right: 5px;"
-		>
-			<XIcon height={20} />
-		</Button>
-		<Button
-			variant="skeuomorphic"
-			size={25}
-			onClick={() => {
-				packages.createNewResource(newResourceType);
-				onNewResourceModalClose();
-			}}
-			aria-label="submit"
-		>
-			<CheckIcon height={20} />
-		</Button>
-	</div>
 </Modal>
 
 <Modal
 	title="Settings"
 	isOpen={isSettingsModalOpen}
 	onClose={() => onSettingsModalClose({ reset: true })}
+	onSubmit={onSettingsModalClose}
 >
 	<label class="modal-content">
 		Display mode:
@@ -167,25 +148,6 @@
 			</option>
 		</select>
 	</label>
-	<div class="modal-controls">
-		<Button
-			variant="skeuomorphic"
-			size={25}
-			onClick={() => onSettingsModalClose({ reset: true })}
-			aria-label="cancel"
-			style="margin-right: 5px;"
-		>
-			<XIcon height={20} />
-		</Button>
-		<Button
-			variant="skeuomorphic"
-			size={25}
-			onClick={onSettingsModalClose}
-			aria-label="submit"
-		>
-			<CheckIcon height={20} />
-		</Button>
-	</div>
 </Modal>
 
 <style>
@@ -206,12 +168,5 @@
 	.modal-content {
 		display: block;
 		padding-bottom: 15px;
-	}
-	.modal-controls {
-		display: flex;
-		position: absolute;
-		right: 15px;
-		top: 100%;
-		transform: translateY(-50%);
 	}
 </style>
