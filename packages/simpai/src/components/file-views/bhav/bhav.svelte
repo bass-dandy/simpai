@@ -3,14 +3,20 @@
 	import produce from 'immer';
 
 	import Box from '$components/shared/box.svelte';
+	import Button from '$components/shared/button.svelte';
 	import TextInput from '$components/shared/text-input.svelte';
-	import { formatHex } from '$lib/util';
+	import { defaultFileData } from '$lib/consts';
+	import { packages } from '$lib/stores';
+	import { select } from '$lib/selectors';
+	import { formatHex, times } from '$lib/util';
 
 	import Instruction from './instruction.svelte';
 	import Instructions from './instructions.svelte';
 
 	export let content: BhavContent;
 	export let onChange: (newContent: BhavContent) => void;
+
+	$: tprpId = select($packages).linkedResourceId('TPRP');
 
 	let activeIndex = 0;
 
@@ -76,6 +82,27 @@
 					style="width: 100%"
 				/>
 			{/each}
+			{#if tprpId}
+				<Button
+					onClick={() => tprpId ? packages.openResource(tprpId) : null}
+					style="padding-bottom: var(--spacing-sm)"
+				>
+					Edit TPRP
+				</Button>
+			{:else}
+				<Button
+					onClick={() => {
+						packages.createLinkedResource('TPRP', {
+							...defaultFileData.TPRP,
+							params: times(content.argCount, () => ({ label: '', pdata: 1 })),
+							locals: times(content.localCount, () => ''),
+						});
+					}}
+					style="padding-bottom: var(--spacing-sm)"
+				>
+					Create TPRP
+				</Button>
+			{/if}
 		</div>
 	</Box>
 	<Box secondary>
