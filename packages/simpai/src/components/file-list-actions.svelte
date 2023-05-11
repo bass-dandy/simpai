@@ -1,58 +1,12 @@
 <script lang="ts">
-	import { getContext } from 'svelte';
-
 	import { packages } from '$lib/stores';
-
-	import PlusIcon from '$svg/plus.svg?component';
 	import DownloadIcon from '$svg/file-arrow-down.svg?component';
-	import GearIcon from '$svg/gear-solid.svg?component';
 
-	import { displayMode, type DisplayModeContext } from '../types';
 	import Button from './shared/button.svelte';
-	import Modal from './shared/modal.svelte';
-	import {views} from './file-views';
+	import AddResource from './add-resource.svelte';
+	import Settings from './settings.svelte';
 
 	export let search = '';
-
-	type ViewKey = keyof typeof views;
-
-	const { getDisplayMode, setDisplayMode } = getContext<DisplayModeContext>('display_mode');
-
-	let isNewResourceModalOpen = false;
-	let isSettingsModalOpen = false;
-
-	let selectRef: HTMLSelectElement;
-	let toggleNewResourceModalRef: Button;
-	let toggleSettingsModalRef: Button;
-
-	let newResourceType = Object.keys(views)[0] as ViewKey;
-	let currentDisplayMode = getDisplayMode();
-
-	const onNewResourceModalClose = () => {
-		isNewResourceModalOpen = false;
-		newResourceType = Object.keys(views)[0] as ViewKey;
-		toggleNewResourceModalRef.focus();
-	};
-
-	const onSettingsModalClose = (opts?: { reset: boolean }) => {
-		if (opts?.reset) {
-			currentDisplayMode = getDisplayMode();
-		} else {
-			setDisplayMode(currentDisplayMode);
-		}
-		isSettingsModalOpen = false;
-		toggleSettingsModalRef.focus();
-	};
-
-	const handleTypeSelect = (e: Event) => {
-		newResourceType = (e.target as HTMLSelectElement).value as ViewKey;
-	};
-
-	const handleDisplaySelect = (e: Event) => {
-		currentDisplayMode = (e.target as HTMLSelectElement).value as displayMode;
-	};
-
-	$: selectRef?.focus();
 </script>
 
 <div>
@@ -76,79 +30,10 @@
 		>
 			<DownloadIcon height={20} />
 		</Button>
-		<Button
-			variant="skeuomorphic"
-			size={25}
-			style="padding: 1px;"
-			onClick={() => { isNewResourceModalOpen = true; }}
-			tooltip="Add resource"
-			aria-label="add resource"
-			bind:this={toggleNewResourceModalRef}
-		>
-			<PlusIcon height={20} />
-		</Button>
-		<Button
-			variant="skeuomorphic"
-			size={25}
-			style="padding: 1px;"
-			onClick={() => { isSettingsModalOpen = true; }}
-			tooltip="Settings"
-			aria-label="open settings menu"
-			bind:this={toggleSettingsModalRef}
-		>
-			<GearIcon height={20} />
-		</Button>
+		<AddResource />
+		<Settings />
 	</div>
 </div>
-
-<Modal
-	title="Add new resource"
-	isOpen={isNewResourceModalOpen}
-	onClose={onNewResourceModalClose}
-	onSubmit={() => {
-		packages.createNewResource(newResourceType);
-		onNewResourceModalClose();
-	}}
->
-	<label class="modal-content">
-		Type:
-		<select
-			value={newResourceType}
-			on:input={handleTypeSelect}
-			bind:this={selectRef}
-		>
-		{#each Object.keys(views) as fileType (fileType)}
-			<option value={fileType}>{fileType}</option>
-		{/each}
-		</select>
-	</label>
-</Modal>
-
-<Modal
-	title="Settings"
-	isOpen={isSettingsModalOpen}
-	onClose={() => onSettingsModalClose({ reset: true })}
-	onSubmit={onSettingsModalClose}
->
-	<label class="modal-content">
-		Display mode:
-		<select
-			value={currentDisplayMode}
-			on:input={handleDisplaySelect}
-			bind:this={selectRef}
-		>
-			<option value={displayMode.light}>
-				Light
-			</option>
-			<option value={displayMode.dark}>
-				Dark
-			</option>
-			<option value={displayMode.highContrast}>
-				High Contrast
-			</option>
-		</select>
-	</label>
-</Modal>
 
 <style>
 	.search-label, .actions {
@@ -161,12 +46,5 @@
 	}
 	#file-search {
 		flex: 1;
-	}
-	select {
-		margin-left: 15px;
-	}
-	.modal-content {
-		display: block;
-		padding-bottom: 15px;
 	}
 </style>

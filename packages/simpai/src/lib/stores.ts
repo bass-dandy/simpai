@@ -2,6 +2,7 @@ import { browser } from '$app/environment';
 import { decode, encode } from 'base64-arraybuffer';
 import {
   deserialize,
+  deserializeFile,
   getFileType,
   serialize,
   serializeFile,
@@ -287,6 +288,34 @@ export const packages = {
 
       downloadBuffer(data, `${filename}.${getFileType(resourceToExport.meta.typeId).toLowerCase()}`);
     }
+  },
+
+  async importResource(file: File) {
+    const buf = await file.arrayBuffer();
+    const fileType = file.name.split('.').pop()?.toUpperCase() as keyof typeof TYPE_ID;
+
+    packagesStore.update((store) =>
+      produce(store, (draft) => {
+        const activePkg = select(draft).activePackage();
+        const newResourceId = uuid();
+
+        if (activePkg) {
+          activePkg.resources[newResourceId] = {
+            meta: {
+              typeId: TYPE_ID[fileType],
+              groupId: 0,
+              instanceId: 0,
+              instanceId2: 0,
+              location: 0,
+              size: 0,
+            },
+            content: deserializeFile(TYPE_ID[fileType], buf),
+            isOpen: true,
+          };
+          activePkg.activeResourceId = newResourceId;
+        }
+      })
+    );
   },
 
   createNewResource(fileType: keyof typeof defaultFileData) {

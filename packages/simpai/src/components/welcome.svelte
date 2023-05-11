@@ -2,7 +2,8 @@
 	import Button from '$components/shared/button.svelte';
 	import {packages} from '$lib/stores';
 
-	import DropZone from './drop-zone.svelte';
+	import DropZone from './shared/drop-zone.svelte';
+	import Plumbob from './shared/plumbob.svelte';
 
 	const openTemplate = async (filename: string) => {
 		const res = await fetch(`/simpai/templates/${filename}`);
@@ -18,7 +19,16 @@
 		<h1>SIMPAI</h1>
 		Sims 2 Package Alteration Interface
 	</div>
-	<DropZone />
+	<DropZone
+		accept=".package"
+		onDrop={packages.addPackage}
+		style="margin: var(--spacing-sm) var(--spacing-md)"
+	>
+		<Plumbob size={50} />
+		<span class="dropzone-text">
+			Drag .package file here or
+		</span>
+	</DropZone>
 	<div class="help">
 		Or start from one of these templates:<br />
 		<ul class="template-list">
@@ -70,5 +80,8 @@
 		margin: auto;
 		padding: 0;
 		text-align: left;
+	}
+	.dropzone-text {
+		margin-top: 10px;
 	}
 </style>
