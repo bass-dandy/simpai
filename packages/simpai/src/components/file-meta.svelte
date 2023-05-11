@@ -9,6 +9,7 @@
 	import {activeResource, packages} from '$lib/stores';
 
 	import Copy from '$svg/copy.svg?component';
+	import Download from '$svg/file-arrow-down.svg?component';
 	import Save from '$svg/save.svg?component';
 	import SaveOutline from '$svg/save-outline.svg?component';
 	import Trash from '$svg/trash.svg?component';
@@ -127,6 +128,14 @@
 			aria-label="Delete resource"
 		>
 			<Trash height={20} />
+		</Button>
+		<Button
+			onClick={() => packages.exportActiveResource()}
+			variant="skeuomorphic"
+			tooltip="Export resource"
+			aria-label="Export resource"
+		>
+			<Download height={20} />
 		</Button>
 	</div>
 </div>

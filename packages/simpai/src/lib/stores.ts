@@ -2,8 +2,10 @@ import { browser } from '$app/environment';
 import { decode, encode } from 'base64-arraybuffer';
 import {
   deserialize,
-  TYPE_ID,
+  getFileType,
   serialize,
+  serializeFile,
+  TYPE_ID,
   type SimsFile,
   type SimsFileMeta,
   type SimsFileContent,
@@ -15,7 +17,7 @@ import { v4 as uuid } from 'uuid';
 import type { PackagesStore } from '../types';
 import { defaultFileData } from './consts';
 import { select } from './selectors';
-import { debounce } from './util';
+import { debounce, downloadBuffer } from './util';
 
 const localStorageKey = 'editorState';
 const base64Prefix = 'base64:';
@@ -132,15 +134,7 @@ export const packages = {
     if (!activePkg) return console.error('Failed to find active package, unable to download');
 
     const data = serialize(Object.values(activePkg.resources));
-    const blob = new Blob([new Uint8Array(data)], { type: 'octet/stream' }),
-      url = window.URL.createObjectURL(blob);
-
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = activePkg.filename;
-    a.click();
-
-    window.URL.revokeObjectURL(url);
+    downloadBuffer(data, activePkg.filename);
   },
 
   openResource(resourceId: string) {
@@ -271,6 +265,28 @@ export const packages = {
         }
       })
     );
+  },
+
+  exportActiveResource() {
+    const store = get(packagesStore);
+    const resourceToExport = select(store).activeResource();
+
+    if (resourceToExport) {
+      if (
+        (resourceToExport.metaChanges || resourceToExport.contentChanges)
+        && window.confirm('Would you like to save changes before exporting?')
+      ) {
+        this.saveActiveResource();
+      }
+
+      const data = serializeFile(resourceToExport);
+
+      const filename = !(resourceToExport.content instanceof ArrayBuffer)
+        ? resourceToExport.content.filename
+        : 'resource';
+
+      downloadBuffer(data, `${filename}.${getFileType(resourceToExport.meta.typeId).toLowerCase()}`);
+    }
   },
 
   createNewResource(fileType: keyof typeof defaultFileData) {

@@ -66,3 +66,15 @@ export function times<T>(
 
   return ret;
 }
+
+export function downloadBuffer(data: ArrayBuffer, filename: string) {
+  const blob = new Blob([new Uint8Array(data)], { type: 'octet/stream' }),
+    url = window.URL.createObjectURL(blob);
+
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+
+  window.URL.revokeObjectURL(url);
+}
