@@ -27,7 +27,7 @@ import * as TTAB from '../ttab/index.js';
 import * as TPRP from '../tprp/index.js';
 import * as TRCN from '../trcn/index.js';
 
-function deserializeFile(typeId: string, buffer: ArrayBuffer) {
+export function deserializeFile(typeId: string, buffer: ArrayBuffer) {
   switch (typeId) {
     case TYPE_ID.BCON:
       return BCON.deserialize(buffer);
@@ -181,7 +181,7 @@ export function deserialize(buf: ArrayBuffer) {
   return files;
 }
 
-function serializeFile(file: SimsFile) {
+export function serializeFile(file: SimsFile) {
   if (isBconFile(file)) {
     return BCON.serialize(file.content);
   } else if (isBhavFile(file)) {
