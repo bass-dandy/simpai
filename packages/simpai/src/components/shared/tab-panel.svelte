@@ -77,17 +77,16 @@
 		position: relative;
 		top: 1px;
 		z-index: 1;
-		margin: 0 15px;
+		margin: 0 var(--spacing-md);
 		display: flex;
 		align-items: flex-end;
 		overflow: auto;
 	}
 	div[role="tab"] {
 		position: relative;
-		white-space: nowrap;
 	}
 	.tab {
-		padding: 10px 15px;
+		padding: 10px var(--spacing-lg) 10px var(--spacing-md);
 		border: 0;
 		background-color: transparent;
 		border: 1px solid transparent;
@@ -109,9 +108,13 @@
 		background-color: rgba(0, 0, 0, 0.1);
 	}
 	.tab-text {
+		max-width: 175px;
 		margin: 0;
 		padding: 0;
 		font-size: 1rem;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
 		vertical-align: sub;
 	}
 </style>

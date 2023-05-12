@@ -64,7 +64,7 @@
 			<li>
 				<Accordion
 					title={
-						`[${fileType}] ${descriptionsByFileType[fileType] ?? ''}`
+						`[${fileType}] ${descriptionsByFileType[fileType] ?? ''} (${resources.length})`
 					}
 					headingLevel="h2"
 					id={fileType}
