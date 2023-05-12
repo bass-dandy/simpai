@@ -194,5 +194,9 @@ export function serialize(data: TtabContent) {
       writeAnimalMotiveTable(item.animalGroups, writer);
     }
   });
+
+  writer.writeUint32(data.filename.length);
+  writer.writeBuffer(encodedFilename);
+
   return writer.buffer;
 }
