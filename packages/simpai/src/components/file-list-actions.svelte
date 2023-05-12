@@ -17,7 +17,7 @@
 		<input
 			id="file-search"
 			type="text"
-			placeholder="File name, file type, group ID, or instance ID"
+			placeholder="File name, group ID, or instance ID"
 			bind:value={search}
 		/>
 		<Button

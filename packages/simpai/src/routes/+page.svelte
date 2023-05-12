@@ -79,7 +79,7 @@
 	}
 	.left {
 		display: flex;
-		max-width: 550px;
+		width: 450px;
 	}
 	.right {
 		flex: 1;

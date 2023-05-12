@@ -5,6 +5,9 @@
 	export let id: string;
 	export let headingLevel: 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 	export let isInitiallyExpanded = false;
+	export let style = '';
+	export let toggleStyle = '';
+	export let contentStyle = '';
 
 	let isExpanded = isInitiallyExpanded;
 	let isContentHidden = !isExpanded;
@@ -26,12 +29,13 @@
 	};
 </script>
 
-<div class="accordion">
+<div class="accordion" {style}>
 	<button
 		class="toggle"
 		on:click={toggle}
 		aria-expanded={isExpanded}
 		aria-controls={id}
+		style={toggleStyle}
 	>
 		<svelte:element this={headingLevel} class="heading">
 			{title}
@@ -50,6 +54,7 @@
 			class="content"
 			class:hidden={isContentHidden}
 			bind:this={contentRef}
+			style={contentStyle}
 		>
 			<slot />
 		</div>

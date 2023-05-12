@@ -1,71 +1,108 @@
 <script lang="ts">
-	import {getFileType} from 'dbpf-transform';
+	import { getFileType } from 'dbpf-transform';
 
-	import {defaultFileName} from '$lib/consts';
-	import {packages, activePackage} from '$lib/stores';
-	import {formatHex} from '$lib/util';
+	import { packages, activePackage } from '$lib/stores';
+	import { formatHex } from '$lib/util';
 
-	import type {Resource} from '../types';
+	import type { Resource } from '../types';
+	import Accordion from './shared/accordion.svelte';
 	import Card from './shared/card.svelte';
 	import FileListActions from './file-list-actions.svelte';
 
-	let search = '';
-	let resources: [string, Resource][];
+	const descriptionsByFileType: Record<string, string> = {
+		BCON: 'Behavior constant',
+		BHAV: 'Behavior function',
+		CTSS: 'Catalogue description',
+		GLOB: 'Semiglobal',
+		JFIF: 'Image',
+		NREF: 'Name reference',
+		OBJD: 'Object data',
+		OBJF: 'Object functions',
+		STR: 'Text lists',
+		TGA: 'Image',
+		TPRP: 'BHAV labels',
+		TRCN: 'BCON labels',
+		TTAB: 'Pie menu functions',
+		TTAS: 'TTAB labels',
+	};
 
-	const getFileName = (resource: Resource) =>
-		(resource.content as { filename: string })?.filename
-			|| defaultFileName[
-				getFileType(resource.meta.typeId) as keyof typeof defaultFileName
-			]
-			|| '';
+	const getFileName = (resource: Resource) => (resource.content as { filename: string })?.filename ?? '';
+
+	let search = '';
+	let resourcesByFileType: Record<string, [string, Resource][]>;
 
 	$: {
 		const regex = new RegExp(search, 'i');
 
-		resources = search
+		const filteredResources = search
 			? Object.entries($activePackage?.resources ?? {})
 				.filter(([, resource]) => {
 					return formatHex(resource.meta.groupId, 8).match(regex)
 						|| formatHex(resource.meta.instanceId, 8).match(regex)
 						|| formatHex(resource.meta.instanceId2, 8).match(regex)
-						|| getFileName(resource).toUpperCase().match(regex)
-						|| getFileType(resource.meta.typeId).match(regex);
+						|| getFileName(resource).match(regex);
 				})
 			: Object.entries($activePackage?.resources ?? {});
+
+		resourcesByFileType = filteredResources
+			.reduce((acc: Record<string, [string, Resource][]>, [resourceId, resource]) => {
+				const fileType = getFileType(resource.meta.typeId);
+
+				const tgt: [string, Resource][] = acc[fileType] ?? [];
+				tgt.push([resourceId, resource]);
+
+				acc[fileType] = tgt;
+				return acc;
+			}, {});
 	}
 </script>
 
 <div class="file-list">
 	<FileListActions bind:search />
-	<ul>
-	{#each resources as [resourceId, resource] (resourceId)}
-		<li>
-			<Card onClick={() => packages.openResource(resourceId)}>
-				<div class="file-info">
-					<div class="filename">
-						{getFileName(resource)}
-					</div>
-					<div class="type">
-						{getFileType(resource.meta.typeId)}
-					</div>
-				</div>
-				<dl>
-					<div class="file-meta">
-						<dt>Group</dt>
-						<dd>{formatHex(resource.meta.groupId)}</dd>
-					</div>
-					<div class="file-meta">
-						<dt>Instance (High)</dt>
-						<dd>{formatHex(resource.meta.instanceId2, 8)}</dd>
-					</div>
-					<div class="file-meta">
-						<dt>Instance</dt>
-						<dd>{formatHex(resource.meta.instanceId, 8)}</dd>
-					</div>
-				</dl>
-			</Card>
-		</li>
-	{/each}
+	<ul class="type-list">
+		{#each Object.entries(resourcesByFileType).sort() as [fileType, resources] (fileType)}
+			<li>
+				<Accordion
+					title={
+						`[${fileType}] ${descriptionsByFileType[fileType] ?? ''}`
+					}
+					headingLevel="h2"
+					id={fileType}
+					contentStyle="padding: var(--spacing-sm)"
+				>
+					<ul class="resource-list">
+						{#each resources as [resourceId, resource] (resourceId)}
+							<li>
+								<Card onClick={() => packages.openResource(resourceId)}>
+									<div class="file-info">
+										<div class="filename">
+											{getFileName(resource)}
+										</div>
+										<div class="type">
+											{fileType}
+										</div>
+									</div>
+									<dl>
+										<div class="file-meta">
+											<dt>Group</dt>
+											<dd>{formatHex(resource.meta.groupId)}</dd>
+										</div>
+										<div class="file-meta">
+											<dt>Instance (High)</dt>
+											<dd>{formatHex(resource.meta.instanceId2, 8)}</dd>
+										</div>
+										<div class="file-meta">
+											<dt>Instance</dt>
+											<dd>{formatHex(resource.meta.instanceId, 8)}</dd>
+										</div>
+									</dl>
+								</Card>
+							</li>
+						{/each}
+					</ul>
+				</Accordion>
+			</li>
+		{/each}
 	</ul>
 </div>
 
@@ -75,17 +112,25 @@
 		flex-direction: column;
 		height: 100%;
 	}
-	ul {
+	.type-list {
 		flex: 1;
-		margin: 10px 0 0;
-		padding: 5px 15px;
+		display: flex;
+		flex-direction: column;
+		gap: var(--spacing-sm);
+		list-style-type: none;
+		margin: var(--spacing-md) 0 0;
+		padding: 0 var(--spacing-md);
 		overflow: auto;
-		list-style: none;
 	}
-	li {
+	.resource-list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+	.resource-list li {
 		width: 100%;
 	}
-	li:not(:first-child) {
+	.resource-list li:not(:first-child) {
 		margin-top: 5px;
 	}
 	.file-info {

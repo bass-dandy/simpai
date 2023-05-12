@@ -35,18 +35,6 @@ export const languages = [
   'Czech',
 ] as const;
 
-export const defaultFileName: Partial<Record<keyof typeof TYPE_ID, string>> = {
-  TGA: '[image file]',
-  NREF: '[name reference]',
-  BCON: '[behavior constant]',
-  BHAV: '[behavior function]',
-  CTSS: '[catalogue description]',
-  GLOB: '[global data]',
-  OBJD: '[object data]',
-  OBJF: '[object functions]',
-  STR: '[text lists]',
-};
-
 const defaultStrData: StrContent = {
   filename: '',
   formatCode: 3,
