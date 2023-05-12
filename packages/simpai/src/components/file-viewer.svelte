@@ -36,31 +36,33 @@
 </script>
 
 {#if $activePackage && $activeResource}
-<div class="file-viewer">
-	<TabPanel
-		tabs={tabs}
-		activeTab={$activePackage.activeResourceId}
-		onChange={(resourceId) => packages.setActiveResource(resourceId)}
-		onClose={(resourceId) => packages.closeResource(resourceId)}
-		headingLevel="h2"
-		style={{ 'flex-shrink': '0' }}
-		contentStyle={{ 'padding-bottom': '30px', 'position': 'relative' }}
-	/>
-	<Box
-		style={{
-			'flex-shrink': '1',
-			'min-height': '0',
-			'margin-top': '30px',
-			overflow: 'hidden',
-		}}
-	>
-		<svelte:component
-			this={getViewForFileType($activeResource)}
-			content={$activeResource.contentChanges ?? $activeResource.content}
-			onChange={handleChange}
+	<div class="file-viewer">
+		<TabPanel
+			tabs={tabs}
+			activeTab={$activePackage.activeResourceId}
+			onChange={(resourceId) => packages.setActiveResource(resourceId)}
+			onClose={(resourceId) => packages.closeResource(resourceId)}
+			headingLevel="h2"
+			style={{ 'flex-shrink': '0' }}
+			contentStyle={{ 'padding-bottom': '30px', 'position': 'relative' }}
 		/>
-	</Box>
-</div>
+		<Box
+			style={{
+				'flex-shrink': '1',
+				'min-height': '0',
+				'margin-top': '30px',
+				overflow: 'hidden',
+			}}
+		>
+			{#key $activePackage.activeResourceId}
+				<svelte:component
+					this={getViewForFileType($activeResource)}
+					content={$activeResource.contentChanges ?? $activeResource.content}
+					onChange={handleChange}
+				/>
+			{/key}
+		</Box>
+	</div>
 {/if}
 
 <style>
