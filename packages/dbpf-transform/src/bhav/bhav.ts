@@ -25,6 +25,8 @@ export function deserialize(buf: ArrayBuffer) {
   const format = reader.readUint16();
   const count = reader.readUint16();
 
+  console.log(filename, format);
+
   const bhav: BhavContent = {
     filename,
     format,
@@ -33,6 +35,7 @@ export function deserialize(buf: ArrayBuffer) {
     localCount: reader.readUint8(),
     headerFlag: reader.readUint8(),
     treeVersion: reader.readUint32(),
+    cacheFlags: format === 0x8009 ? reader.readUint8() : undefined,
     instructions: [],
   };
 
@@ -42,7 +45,6 @@ export function deserialize(buf: ArrayBuffer) {
       gotoOnTrue: 0,
       gotoOnFalse: 0,
       nodeVersion: undefined,
-      cacheFlags: undefined,
       operands: [],
     };
 
@@ -64,8 +66,6 @@ export function deserialize(buf: ArrayBuffer) {
       instruction.gotoOnFalse = reader.readUint16();
       instruction.nodeVersion = reader.readUint8();
       instruction.operands = reader.readUint8Array(16);
-
-      if (bhav.format === 0x8009) instruction.cacheFlags = reader.readUint8();
     }
 
     bhav.instructions.push(instruction);
@@ -90,6 +90,8 @@ export function serialize(data: BhavContent) {
   writer.writeUint8(data.headerFlag);
   writer.writeUint32(data.treeVersion);
 
+  if (data.format === 0x8009) writer.writeUint8(data.cacheFlags ?? 0);
+
   data.instructions.forEach((instruction) => {
     writer.writeUint16(instruction.opcode);
 
@@ -107,8 +109,6 @@ export function serialize(data: BhavContent) {
       writer.writeUint16(instruction.gotoOnFalse);
       writer.writeUint8(instruction.nodeVersion ?? 0);
       writer.writeUint8Array(instruction.operands);
-
-      if (data.format === 0x8009) writer.writeUint8(instruction.cacheFlags ?? 0);
     }
   });
 

@@ -12,7 +12,6 @@ export type BhavInstruction = {
   gotoOnTrue: number;
   gotoOnFalse: number;
   nodeVersion?: number;
-  cacheFlags?: number;
   operands: number[];
 };
 
@@ -24,6 +23,7 @@ export type BhavContent = {
   localCount: number;
   headerFlag: number;
   treeVersion: number;
+  cacheFlags?: number;
   instructions: BhavInstruction[];
 };
 

@@ -4,7 +4,7 @@ const trueTgtShort = 0xFE;
 
 const errorTgtLong = 0xFFFC;
 const trueTgtLong = 0xFFFD;
-// const falseTgtLong = 0xFFFE;
+const falseTgtLong = 0xFFFE;
 
 export const testData = [
   {
@@ -67,6 +67,32 @@ export const testData = [
         gotoOnFalse: errorTgtLong,
         nodeVersion: 0,
         operands: [0, 0, 6, 95, 0, 9, 2, 26, 0, 0, 0, 0, 0, 0, 0, 0],
+      },
+    ],
+  },
+  {
+    filename: 'CT - Add Memory',
+    format: 0x8009,
+    type: 0,
+    argCount: 2,
+    localCount: 2,
+    headerFlag: 0,
+    treeVersion: 0xFFFF8018,
+    cacheFlags: 0,
+    instructions: [
+      {
+        opcode: 0x1003,
+        gotoOnTrue: 1,
+        gotoOnFalse: errorTgtLong,
+        nodeVersion: 1,
+        operands: [255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 0],
+      },
+      {
+        opcode: 0x200D,
+        gotoOnTrue: trueTgtLong,
+        gotoOnFalse: falseTgtLong,
+        nodeVersion: 1,
+        operands: [9, 0, 0, 9, 1, 0, 0x1A, 0, 0x21, 0x1A, 0x80, 0x22, 1, 0, 0, 0],
       },
     ],
   },
