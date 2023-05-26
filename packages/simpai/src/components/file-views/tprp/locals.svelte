@@ -29,6 +29,7 @@
 			columns={['', 'Index', 'Label']}
 			columnConfig={{
 				Label: { stretch: true },
+				Index: { hideTitle: true },
 			}}
 			rows={content.locals.map((local, i) => ({
 				'': {
@@ -38,7 +39,7 @@
 						'aria-label': `remove local ${i}`,
 					},
 				},
-				Index: formatHex(i, 4),
+				Index: `(${formatHex(i, 4)})`,
 				Label: {
 					component: TextInput,
 					props: {

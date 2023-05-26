@@ -95,11 +95,16 @@
 		<Table
 			columns={[
 				'',
+				'Index',
 				'Value',
 				...(trcnLabels ? ['Label', 'Default', 'Min', 'Max', 'Used'] : [])
 			]}
 			columnConfig={{
 				'': { shrink: true },
+				Index: {
+					shrink: true,
+					hideTitle: true,
+				},
 			}}
 			rows={content.items.map((item, i) => ({
 				'': {
@@ -115,6 +120,7 @@
 						'aria-label': `delete line ${i}`,
 					},
 				},
+				Index: `(${formatHex(i, 4)})`,
 				Value: {
 					component: TextInput,
 					props: {

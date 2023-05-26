@@ -17,6 +17,7 @@
 		[key: string]: {
 			stretch?: boolean;
 			shrink?: boolean;
+			hideTitle?: boolean;
 		};
 	} | undefined = undefined;
 
@@ -42,7 +43,9 @@
 				class:stretch="{columnConfig?.[column]?.stretch}"
 				class:shrink="{columnConfig?.[column]?.shrink}"
 			>
-				{column}
+				{#if !columnConfig?.[column]?.hideTitle}
+					{column}
+				{/if}
 			</th>
 		{/each}
 	</thead>

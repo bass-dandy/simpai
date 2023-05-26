@@ -38,6 +38,7 @@
 			columns={['', 'Index', 'Label', 'pData']}
 			columnConfig={{
 				Label: { stretch: true },
+				Index: { hideTitle: true },
 			}}
 			rows={content.params.map((param, i) => ({
 				'': {
@@ -47,7 +48,7 @@
 						'aria-label': `remove param ${i}`,
 					},
 				},
-				Index: formatHex(i, 4),
+				Index: `(${formatHex(i, 4)})`,
 				Label: {
 					component: TextInput,
 					props: {

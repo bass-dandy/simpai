@@ -97,9 +97,13 @@
 		}}
 	>
 		<Table
-			columns={['', 'Value', 'Label', 'Default', 'Min', 'Max', 'Used']}
+			columns={['', 'Index', 'Value', 'Label', 'Default', 'Min', 'Max', 'Used']}
 			columnConfig={{
-				'': { shrink: true }
+				'': { shrink: true },
+				Index: {
+					shrink: true,
+					hideTitle: true,
+				},
 			}}
 			rows={times(Math.max(content.items.length, bconValues?.length ?? 0), (i) => {
 				const item = content.items[i];
@@ -119,6 +123,7 @@
 							'aria-label': `delete line ${i}`,
 						},
 					} : '',
+					Index: `(${formatHex(i, 4)})`,
 					Value: bconValues?.[i] !== undefined ? formatHex(bconValues[i], 4) : undefined,
 					Label: getTextInput('constName', 'text', i),
 					Default: getTextInput('value', 'hex', i),
