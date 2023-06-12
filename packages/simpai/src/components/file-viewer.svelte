@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { Boundary } from '@crownframework/svelte-error-boundary';
 	import type {ComponentProps} from 'svelte';
 	import {getFileType, type SimsFileContent} from 'dbpf-transform';
 
@@ -55,11 +56,13 @@
 			}}
 		>
 			{#key $activePackage.activeResourceId}
-				<svelte:component
-					this={getViewForFileType($activeResource)}
-					content={$activeResource.contentChanges ?? $activeResource.content}
-					onChange={handleChange}
-				/>
+				<Boundary>
+					<svelte:component
+						this={getViewForFileType($activeResource)}
+						content={$activeResource.contentChanges ?? $activeResource.content}
+						onChange={handleChange}
+					/>
+				</Boundary>
 			{/key}
 		</Box>
 	</div>

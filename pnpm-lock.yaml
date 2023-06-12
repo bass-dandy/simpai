@@ -50,6 +50,9 @@ importers:
 
   packages/simpai:
     dependencies:
+      '@crownframework/svelte-error-boundary':
+        specifier: ^1.0.3
+        version: 1.0.3
       base64-arraybuffer:
         specifier: ^1.0.2
         version: 1.0.2
@@ -451,6 +454,10 @@ packages:
   /@bcoe/v8-coverage@0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
     dev: true
+
+  /@crownframework/svelte-error-boundary@1.0.3:
+    resolution: {integrity: sha512-ZtfYF9if48Ok8BTx/fn7bERJFKHKO6Ih5d/fkY6/pC3DQEnJq4vy6JOBFcisnpKYcZbjG5F/D4r06kqX7JKyqw==}
+    dev: false
 
   /@esbuild/android-arm64@0.17.15:
     resolution: {integrity: sha512-0kOB6Y7Br3KDVgHeg8PRcvfLkq+AccreK///B4Z6fNZGr/tNHX0z2VywCc7PTeWp+bPvjA5WMvNXltHw5QjAIA==}
