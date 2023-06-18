@@ -15,5 +15,45 @@ jobs:
     steps:
       - uses: google-github-actions/release-please-action@v3
         with:
-          release-type: node
-          package-name: release-please-action
+          command: manifest
+
+      # build if release was created
+      - uses: actions/checkout@v3
+        if: ${{ steps.release.outputs.releases_created }}
+      - name: Setup node
+        uses: actions/setup-node@v3
+        if: ${{ steps.release.outputs.releases_created }}
+        with:
+          node-version: '18.15.0'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v2
+        if: ${{ steps.release.outputs.releases_created }}
+        with:
+          version: 8.1.0
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile]
+
+      # build and deploy gh pages for simpai release
+      - run: pnpm build
+        if: ${{ steps.release.outputs['packages/simpai--release-created'] }}
+      - name: Deploy
+        if: ${{ steps.release.outputs['packages/simpai--release-created'] }}
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./packages/simpai/build
+
+      # build and publish npm package for other releases
+      - name: Get package name
+        if: ${{ steps.release.outputs.releases_created && !steps.release.outputs['packages/simpai--release-created'] }}
+        run: |
+          tag_name="${{ steps.release.outputs.tag_name }}"
+          words=($tag_name)
+          package_to_publish=${words[0]}
+          echo "package_to_publish=${package_to_publish}" >> $GITHUB_ENV
+      - run: pnpm --filter "${{ env.package_to_publish }}" publish --no-git-checks
+        if: ${{ steps.release.outputs.releases_created && !steps.release.outputs['packages/simpai--release-created'] }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
