@@ -6,6 +6,7 @@
   "bootstrap-sha": "2dac130b4469c659303335fca7477d600a27c440",
   "bump-minor-pre-major": true,
   "bump-patch-for-minor-pre-major": true,
+  "include-v-in-tag": false,
   "separate-pull-requests": true,
   "tag-separator": "@"
 }
