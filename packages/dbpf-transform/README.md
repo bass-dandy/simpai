@@ -4,6 +4,8 @@ Browser-friendly TypeScript library for serializing and deserializing DBPF packa
 
 This may or may not work for DBPF files used by other EA games from that era, but I've only tested The Sims 2!
 
+Note: this package is experimental. Minor version upgrades denote breaking changes.
+
 ## Usage
 
 ```ts
@@ -57,7 +59,6 @@ Currently supported resource types:
 type BconContent = {
 	filename: string;
 	flag: boolean;
-	itemCount: number;
 	items: number[];
 }
 ```
@@ -67,18 +68,17 @@ type BconContent = {
 type BhavContent = {
 	filename: string;
 	format: number;
-	count: number;
 	type: number;
-	argc: number;
-	locals: number;
+	argCount: number;
+	localCount: number;
 	headerFlag: number;
 	treeVersion: number;
+	cacheFlags?: number;
 	instructions: {
 		opcode: number;
 		gotoOnTrue: number;
 		gotoOnFalse: number;
 		nodeVersion?: number;
-		cacheFlags?: number;
 		operands: number[];
 	}[];
 }
@@ -88,7 +88,6 @@ type BhavContent = {
 ```ts
 type GlobContent = {
 	filename: string;
-	length: number;
 	semiglobal: string;
 }
 ```
@@ -104,11 +103,7 @@ type NrefContent = {
 ```ts
 type ObjdContent = {
 	filename: string;
-	type: number;
-	guid: number;
-	proxyGuid: number;
-	originalGuid: number;
-	data: number[];
+	data: // see src/objd/consts.ts
 }
 ```
 
@@ -117,7 +112,6 @@ type ObjdContent = {
 type ObjfContent = {
 	filename: string;
 	header: number[];
-	count: number;
 	functions: {
 		guard: number;
 		action: number;
@@ -130,7 +124,6 @@ type ObjfContent = {
 type StrContent = {
 	filename: string;
 	formatCode: number;
-	stringSetCount: number;
 	stringSets: {
 		languageId: number;
 		value: string;
@@ -149,7 +142,6 @@ type TprpContent = {
 		pdata: number;
 	}[];
 	locals: string[];
-	trailer: number[];
 };
 ```
 
@@ -157,12 +149,11 @@ type TprpContent = {
 ```ts
 type TrcnContent = {
 	filename: string;
-	header: number[];
-	itemCount: number;
+	version: number;
 	items: {
 		used: number;
-		id: number;
-		name: string;
+		constId: number;
+		constName: string;
 		desc: string;
 		value: number;
 		minValue: number;
@@ -173,17 +164,29 @@ type TrcnContent = {
 
 ### TTAB
 ```ts
-type TtabMotiveTable = {
+type HumanMotiveTable = {
 	groups: {
-		items: (
-			number | { values: number[] }
-		)[];
+		items: {
+			min: number;
+			delta: number;
+			type: number;
+		}[];
 	}[];
 }
 
+type AnimalMotiveTable = {
+	groups: {
+		items: ({
+			min: number;
+			delta: number;
+			type: number;
+		}[])[];
+	}[];
+};
+
 type TtabContent = {
 	filename: string;
-	header: number[];
+	format: number;
 	items: {
 		action: number;
 		guard: number;
@@ -200,8 +203,8 @@ type TtabContent = {
 		memoryIterMult: number;
 		objectType: number;
 		modelTableId: number;
-		humanGroups: TtabMotiveTable;
-		animalGroups: TtabMotiveTable | null;
+		humanGroups: HumanMotiveTable;
+		animalGroups: AnimalMotiveTable | null;
 	}[];
 }
 ```
