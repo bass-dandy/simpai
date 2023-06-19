@@ -1,4 +1,4 @@
-# SimPAI (Sims 2 Package Alteration Interface)
+# Simpai (Sims 2 Package Alteration Interface)
 
 Powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
 
