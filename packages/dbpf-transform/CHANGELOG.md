@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/bass-dandy/simpai/compare/dbpf-transform@0.1.0...dbpf-transform@0.1.1) (2023-06-19)
+
+
+### Features
+
+* **dbpf-transform:** test patch bump ([65feb03](https://github.com/bass-dandy/simpai/commit/65feb0319d12debcf775a7eb3d3b865144aede5c))
+
 ## [0.1.0](https://github.com/bass-dandy/simpai/compare/dbpf-transform@0.0.3...dbpf-transform@0.1.0) (2023-06-19)
 
 
