@@ -14,6 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: google-github-actions/release-please-action@v3
+        id: release
         with:
           command: manifest
 
@@ -46,14 +47,8 @@ jobs:
           publish_dir: ./packages/simpai/build
 
       # build and publish npm package for other releases
-      - name: Get package name
+      - name: Publish
         if: ${{ steps.release.outputs.releases_created && !steps.release.outputs['packages/simpai--release-created'] }}
-        run: |
-          tag_name="${{ steps.release.outputs.tag_name }}"
-          words=($tag_name)
-          package_to_publish=${words[0]}
-          echo "package_to_publish=${package_to_publish}" >> $GITHUB_ENV
-      - run: pnpm --filter "${{ env.package_to_publish }}" publish --no-git-checks
-        if: ${{ steps.release.outputs.releases_created && !steps.release.outputs['packages/simpai--release-created'] }}
+        run: pnpm publish -r --no-git-checks --filter=!simpai
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
