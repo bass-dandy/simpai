@@ -50,8 +50,7 @@ jobs:
         if: ${{ steps.release.outputs.releases_created && !steps.release.outputs['packages/simpai--release-created'] }}
         run: |
           tag_name="${{ steps.release.outputs.tag_name }}"
-          words=($tag_name)
-          package_to_publish=${words[0]}
+          package_to_publish=${tag_name%%@*}
           echo "package_to_publish=${package_to_publish}" >> $GITHUB_ENV
       - run: pnpm --filter "${{ env.package_to_publish }}" publish --no-git-checks
         if: ${{ steps.release.outputs.releases_created && !steps.release.outputs['packages/simpai--release-created'] }}
