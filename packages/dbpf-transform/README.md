@@ -1,8 +1,7 @@
 # dbpf-transform
 
-Browser-friendly TypeScript library for serializing and deserializing DBPF package files used by The Sims 2*
-
-*This may or may not work for DBPF files used by other EA games from that era, I've only tested The Sims 2!
+Browser-friendly TypeScript library for serializing and deserializing DBPF package files used by The Sims 2. 
+This may or may not work for DBPF files used by other EA games from that era - I've only tested The Sims 2!
 
 [Note: this package is experimental. Minor version upgrades denote breaking changes.]
 
