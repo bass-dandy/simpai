@@ -38,9 +38,9 @@ jobs:
 
       # build and deploy gh pages for simpai release
       - run: pnpm build
-        if: ${{ steps.release.outputs['packages/simpai--release-created'] }}
+        if: ${{ steps.release.outputs['packages/simpai--release_created'] }}
       - name: Deploy
-        if: ${{ steps.release.outputs['packages/simpai--release-created'] }}
+        if: ${{ steps.release.outputs['packages/simpai--release_created'] }}
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -48,7 +48,7 @@ jobs:
 
       # build and publish npm package for other releases
       - name: Publish
-        if: ${{ steps.release.outputs.releases_created && !steps.release.outputs['packages/simpai--release-created'] }}
+        if: ${{ steps.release.outputs.releases_created && !steps.release.outputs['packages/simpai--release_created'] }}
         run: pnpm publish -r --no-git-checks --filter=!simpai
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
