@@ -1,6 +1,6 @@
 {
   "name": "dbpf-transform",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "bass_dandy",
   "license": "ISC",
   "description": "Browser-friendly TypeScript library for serializing and deserializing DBPF package files used by The Sims 2",
