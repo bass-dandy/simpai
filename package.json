@@ -19,6 +19,7 @@
     "typescript": "^5.0.0"
   },
   "scripts": {
+    "prepare": "husky install",
     "start": "pnpm -r --parallel dev",
     "build": "pnpm -r build",
     "check": "pnpm -r check",
