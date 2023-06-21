@@ -64,3 +64,10 @@ has unreleased changes. Merging that PR will release those changes, which includ
 
 For versioning, `fix` indicates a [SemVer](https://semver.org/) patch bump, `feat` indicates a SemVer minor bump (or patch if < 1.0.0), and a trailing `!` indicates
 a SemVer major bump (or minor if < 1.0.0). All other types are not considered user-facing and do not indicate a bump of any kind.
+
+## Adding a new package
+
+- add new directory to `packages/`
+- add a `package.json`
+- add the package path to `release-please-config.json` ([see config options](https://github.com/googleapis/release-please/blob/main/docs/manifest-releaser.md#configfile))
+- add the package path and initial version to `.release-please-manifest.json`
