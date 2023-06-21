@@ -49,6 +49,6 @@ jobs:
       # build and publish npm package for other releases
       - name: Publish
         if: ${{ steps.release.outputs.releases_created && !steps.release.outputs['packages/simpai--release_created'] }}
-        run: pnpm publish -r --no-git-checks --filter=!simpai
+        run: pnpm publish -r --no-git-checks --filter=!simpai --filter=!sims-2-tools
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
